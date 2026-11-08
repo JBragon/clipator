@@ -1,0 +1,58 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-pixel-em-cena",
+  "nome": "Pixel em Cena",
+  "familia": "Cortes guiados pela fala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Cenário tridimensional com textura de pixels e personagens em sprites que percorrem os lugares e executam ações mencionadas no corte.",
+  "usar_em": "Pixel art HD-2D: mundo 3D com sprites",
+  "composicao": "Volumes reais para piso, construções e objetos; texturas pixeladas com amostragem nearest e sprites voltados à câmera. Profundidade por sobreposição, luz e escala coerentes. HUD e legenda usam resolução normal e permanecem nítidos. A amostra própria é noturna, com cúpula clara e luz âmbar.",
+  "material_e_luz": "Volumes reais para piso, construções e objetos; texturas pixeladas com amostragem nearest e sprites voltados à câmera. Profundidade por sobreposição, luz e escala coerentes. HUD e legenda usam resolução normal e permanecem nítidos. A amostra própria é noturna, com cúpula clara e luz âmbar.",
+  "movimento": "Deslocamento curto de câmera mostra o caminho; um sprite caminha até o objeto citado e para para a explicação. Ao falar de uma nova ação, troca de pose ou interação. Manter o cenário persistente entre as frases do mesmo assunto, sem gerar uma tela genérica para cada palavra.",
+  "construcao": "Separar geometria 3D, atlas de textura e sprites próprios. Usar billboard para personagens, piso com sombras e nearest para os texels. A câmera pode mover-se suavemente enquanto poses de sprite são quantizadas. Gerar o quadro por seek absoluto; nunca depender de game loop. No renderer de produção, confirmar oclusão e profundidade reais.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos com os lugares citados, sem o personagem.",
+  "parametros_visuais": {
+    "tamanho_pixel": 4,
+    "passo_sprite_s": 0.16,
+    "noite": true,
+    "aproximacao": 0.3
+  },
+  "fases": [],
+  "criterios": [
+    "A ação do sprite precisa representar um verbo da fala, não apenas andar sem destino.",
+    "Zoom não pode transformar pixels em manchas borradas; aplicar desfoque de profundidade só fora do foco.",
+    "Não empregar sprites de jogos conhecidos."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "tamanho_pixel": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 8
+    },
+    "passo_sprite_s": {
+      "tipo": "numero",
+      "minimo": 0.08,
+      "maximo": 0.4
+    },
+    "noite": {
+      "tipo": "booleano"
+    },
+    "aproximacao": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.6
+    }
+  }
+}

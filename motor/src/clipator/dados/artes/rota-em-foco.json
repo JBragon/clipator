@@ -1,0 +1,58 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-rota-em-foco",
+  "nome": "Rota em Foco",
+  "familia": "Cortes guiados pela fala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um mapa de relevo escuro, percursos e chamadas editoriais acompanha lugares e deslocamentos mencionados na fala.",
+  "usar_em": "Mapa Documental",
+  "composicao": "Base cartográfica escura com textura de relevo, grade fina, limites discretos e rotas de alto contraste. Chamadas com linhas de cotovelo, marcos e legenda factual. A amostra usa uma ilha fictícia, explicitamente indicada na tela, e não atribui relevo inventado a um lugar real.",
+  "material_e_luz": "Base cartográfica escura com textura de relevo, grade fina, limites discretos e rotas de alto contraste. Chamadas com linhas de cotovelo, marcos e legenda factual. A amostra usa uma ilha fictícia, explicitamente indicada na tela, e não atribui relevo inventado a um lugar real.",
+  "movimento": "A câmera enquadra o local que está sendo dito, uma linha percorre a rota e uma chamada nomeia o marco quando ele é mencionado. Pausar movimento de câmera enquanto uma informação exige leitura. Lugares não citados podem ser contexto discreto, nunca novas conclusões.",
+  "construcao": "Para dados reais, usar base geográfica local com proveniência, projeção e limites conhecidos. Para exemplo sintético, usar apenas geometria fictícia identificada. Animar posição pelo comprimento de rota e camera por keyframes de bounds. Marcos, percurso e rótulos precisam permanecer coerentes ao zoom.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos com os lugares na ordem da fala.",
+  "parametros_visuais": {
+    "relevo": 0.6,
+    "grade": true,
+    "espessura_rota": 1.0,
+    "aproximacao": 0.3
+  },
+  "fases": [],
+  "criterios": [
+    "Sem coordenadas de um lugar real, não desenhar um contorno inventado e apresentá-lo como geografia verdadeira.",
+    "Uma rota representa deslocamento; expansão territorial exige fala e dados que a sustentem.",
+    "O canto ocupado pelo vídeo deve ser excluído da busca de posição de rótulos."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "relevo": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 1.5
+    },
+    "grade": {
+      "tipo": "booleano"
+    },
+    "espessura_rota": {
+      "tipo": "numero",
+      "minimo": 0.5,
+      "maximo": 2.5
+    },
+    "aproximacao": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.6
+    }
+  }
+}

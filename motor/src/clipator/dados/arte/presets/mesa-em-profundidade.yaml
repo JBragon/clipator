@@ -1,0 +1,51 @@
+# Mesa em profundidade: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-mesa-em-profundidade/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Mesa em profundidade
+conceito:
+  frase: Cartões fotográficos são distribuídos em uma mesa vista de lado, revelando profundidade por sombras e deslocamento
+    suave.
+  palavras_chave: [colagem espacial, linha de raciocínio, sequência de fotos, apresentação de alternativas]
+  faca: ['Três cartões em trilhos de profundidade, com o principal à frente e os dois seguintes parcialmente visíveis.',
+    Uma guia lateral conecta a ordem de leitura., 'Cartão grosso com borda neutra, fotografia sem contorno de adesivo
+      e mesa fosca.', Sombras têm distância proporcional à altura do cartão.]
+  nao_faca: [Adesivos recortados copiados., Batidas repetidas na mesa., Profundidade exagerada que distorce rostos.]
+cor:
+  paleta: {fundo: '#213638', superficie: '#365153', texto: '#F0E8D8', texto_suave: '#A8BCB7', primaria: '#D39362',
+    destaque: '#88B1C2', secundaria: '#71604B', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: [O cartão ativo desliza para a frente e para; câmera faz deslocamento horizontal de até 3%., 'Ao trocar
+      de assunto, o cartão volta ao trilho e o próximo avança.']
+cenas:
+  tom: Para linha de raciocínio, sequência de fotos e apresentação de alternativas.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir a mesa com três cartões; Avançar o primeiro assunto e revelar sua nota;
+      Recuar o primeiro e avançar o segundo; Alinhar os cartões numa vista final de conjunto.', O cartão em leitura
+      não fica coberto por outro., O texto permanece nítido quando o cartão avança., Trocar a foto não muda a ordem
+      temporal.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-mesa-em-profundidade
+  backend_sugerido: hibrido
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Cartões sobrepostos em 2D com escala e sombra fixas; manter a ordem e o avanço por posição.
+  construcao: Posicione cartões por profundidade normalizada e calcule escala, deslocamento e sombra a partir dela.
+    Na alternativa CSS use perspectiva fixa; não acumule transformações de um seek anterior.
+  parametros_visuais: {cartoes: 3, paralaxe_maxima: 0.03, avanco_relativo: 0.18, rotacao_maxima_graus: 2}
+graficos:
+  selo: {cor_texto: neutro-1}

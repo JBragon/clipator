@@ -1,0 +1,13 @@
+/* Recorte de revista: cada palavra num pedaço de papel colado, com cor e ângulo próprios. */
+.frase { gap: 0.12em; }
+.linha { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.12em; }
+.p {
+  -webkit-text-stroke: 0; text-shadow: none; padding: 0.04em 0.16em; color: #111; background: #f4f1ea;
+  box-shadow: 0.05em 0.07em 0 rgba(0,0,0,.35); font-family: 'Anton', sans-serif; font-weight: 400;
+  animation: cola 0.16s cubic-bezier(.2, 1.5, .4, 1) both; animation-delay: var(--t);
+}
+.p:nth-child(3n+1) { background: #111; color: #fff; transform: rotate(-3deg); font-family: 'Bebas Neue', sans-serif; }
+.p:nth-child(3n+2) { background: #f4f1ea; transform: rotate(2deg); }
+.p:nth-child(3n) { background: var(--destaque); transform: rotate(-1deg); font-family: 'Special Elite', monospace; }
+.p.destaque { background: #d62828; color: #fff; }
+@keyframes cola { from { opacity: 0; scale: 1.6; } to { opacity: 1; scale: 1; } }

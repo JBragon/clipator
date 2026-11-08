@@ -1,0 +1,68 @@
+name: instalador
+
+# Roda o instalador de verdade em cada sistema, a partir desta cópia do repositório.
+# Pula o download dos modelos, o app e a pergunta da IA, que dependem de conta e de release.
+on:
+  push:
+    branches: [main]
+    paths: ["install.sh", "install.ps1", "motor/pyproject.toml", "motor/src/clipator/instalacao.py", ".github/workflows/instalador.yml"]
+  pull_request:
+    paths: ["install.sh", "install.ps1", "motor/pyproject.toml", "motor/src/clipator/instalacao.py", ".github/workflows/instalador.yml"]
+
+jobs:
+  unix:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bibliotecas de vídeo do OpenCV (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1
+      - name: install.sh
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codex
+        run: |
+          mkdir -p "$CODEX_HOME"
+          ./install.sh --sim --sem-modelos --sem-app
+          export PATH="$HOME/.local/bin:$PATH"
+          clipator --version
+          clipator doctor
+          grep -q '\[mcp_servers.clipator\]' "$CODEX_HOME/config.toml"
+          clipator desinstalar --sim
+          ! grep -q clipator "$CODEX_HOME/config.toml"
+
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]   # Windows PowerShell 5.1, o padrão do usuário, e o PowerShell 7
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: install.ps1
+        env:
+          CODEX_HOME: ${{ runner.temp }}\codex
+        run: |
+          New-Item -ItemType Directory -Force $env:CODEX_HOME | Out-Null
+          if ('${{ matrix.shell }}' -eq 'powershell') {
+            # Como o usuário comum: política Restricted (bloqueia .ps1, inclusive o npm.ps1) e `irm | iex`.
+            Set-ExecutionPolicy -Scope Process Restricted -Force
+            $env:CLIPATOR_SIM = '1'; $env:CLIPATOR_SEM_MODELOS = '1'; $env:CLIPATOR_SEM_APP = '1'
+            $env:CLIPATOR_FONTE = "$PWD\motor[visao]"   # pelo iex não há $PSScriptRoot; instala o motor deste PR
+            Get-Content -Raw -Encoding UTF8 .\install.ps1 | Invoke-Expression
+            if (-not (Test-Path "$HOME\.clipator\hyperframes\node_modules\hyperframes")) { Write-Host 'HyperFrames não instalado'; exit 1 }
+          } else {
+            .\install.ps1 -Sim -SemModelos -SemApp
+          }
+          clipator --version
+          clipator doctor
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          if (-not (Select-String -Quiet -Path "$env:CODEX_HOME\config.toml" -Pattern 'mcp_servers.clipator')) { exit 1 }
+          clipator desinstalar --sim
+          if (Select-String -Quiet -Path "$env:CODEX_HOME\config.toml" -Pattern 'clipator') { exit 1 }

@@ -1,0 +1,95 @@
+# Investigação e denúncia: cada tela parece uma folha de processo carimbada.
+herda: base
+nome: Arquivo confidencial
+conceito:
+  frase: "Carvão quente, papel de processo e um vermelho de carimbo: cada tela é uma prova sendo anexada."
+  palavras_chave: [investigativo, sóbrio, documental, tenso, carimbado]
+  faca:
+    - Blocos retos, sem canto arredondado, como fichas de arquivo.
+    - Datas, valores e nomes em fonte de máquina de escrever.
+    - O vermelho aparece só onde há algo grave (o carimbo, o número que pesa).
+    - Revelar o bloco por máscara e só depois mostrar o texto.
+    - Foto de pessoa em preto e branco, com contorno vermelho na thumb.
+  nao_faca:
+    - Gradiente, brilho ou neon.
+    - Animação que quica ou gira.
+    - Emoji e figurinha.
+    - Mais de um vermelho na mesma tela.
+cor:
+  paleta:
+    fundo: "#15120F"
+    superficie: "#231E1A"
+    texto: "#EFE6D6"
+    texto_suave: "#B4A890"
+    primaria: "#E0392C"
+    secundaria: "#4B4036"
+    destaque: "#E8D49B"
+    positivo: "#7BC47F"
+    negativo: "#F06A5E"
+    alerta: "#EFA53A"
+  serie: [primaria, destaque, texto, texto_suave, "#7E9AA8", "#9C7A5B"]
+  gradientes:
+    papel: {tipo: linear, angulo: 180, paradas: [[superficie, 0], [fundo, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.03, entrelinha: 0.98}
+    subtitulo: {familia: Special Elite, reserva: Courier New, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.1}
+    corpo: {familia: Special Elite, reserva: Courier New, peso: 400, entrelinha: 1.3}
+    dados: {familia: Special Elite, reserva: Courier New, peso: 400, entrelinha: 1.15}
+    legenda: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+  escala: {display: 0.14, h1: 0.092, h2: 0.062, h3: 0.045, corpo: 0.032, nota: 0.025}
+layout: {raio: 0, traco: 0.006, sombra: null, densidade: media, margem: 0.07}
+movimento:
+  curvas:
+    entrada: [0.16, 1, 0.3, 1]
+    saida: [0.7, 0, 0.84, 0]
+    enfase: [0.87, 0, 0.13, 1]
+    suave: [0.45, 0, 0.55, 1]
+  duracoes: {micro: 0.12, curta: 0.3, media: 0.5, longa: 0.95}
+  escalonamento: 0.08
+  entrada: mascara
+  saida: corte
+  transicao_padrao: corte
+  transicoes: [corte, mascara, fade]
+  principios:
+    - A máscara abre o bloco de cima para baixo; o texto aparece quando ela termina.
+    - Nada quica, nada gira; a câmera não tremula.
+    - O carimbo entra seco, em um quadro, com som de impacto.
+tratamento:
+  contraste: 1.1
+  saturacao: 0.72
+  temperatura: 12
+  grao: 7
+  vinheta: 0.4
+  nitidez: 0.15
+legenda:
+  estilo: karaoke
+  tamanho: 0.066
+  cor: neutro-2
+  cor_destaque: destaque
+  contorno: {cor: neutro-1, espessura: 0.12}
+  sombra: null
+  max_palavras: 4
+graficos:
+  tarja: {estilo: caixa, posicao: inferior_esquerda, cor_fundo: superficie, cor_acento: primaria, tamanho_cargo: 0.028}
+  selo: {estilo: contorno, cor_fundo: primaria, cor_texto: primaria, inclinacao: -4}
+thumbnail:
+  cor: texto
+  cor_destaque: primaria
+  fundo: gradiente:papel
+  tratamento_foto: {saturacao: 0.0, contraste: 1.2, contorno_pessoa: primaria}
+som:
+  identidade: "Seco e grave: máquina de escrever, carimbo e um drone baixo por trás."
+  efeitos: {entrada: swoosh-reverso, enfase: click, numero: click, alerta: impacto}
+  musica: {clima: tenso, bpm: [70, 92]}
+cenas:
+  tom: "Seco e factual, como ficha de investigação: datas, nomes e valores, sem adjetivo."
+  preferir: [linha_do_tempo, nome, numero, citacao, local]
+  evitar: [palavra]
+  intervalo: 3.5
+  por_minuto: 10
+  palavras_titulo: 5
+  regras:
+    - Datas no formato curto (12/03/2019) e valores com unidade.
+    - Citação só quando a fala reproduz o que alguém disse ou escreveu.
+    - Nome de pessoa sempre com o papel dela no caso como rótulo.

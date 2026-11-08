@@ -1,0 +1,9 @@
+id: clipator-arte-camadas-do-terreno
+nome: "Camadas do terreno — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de camadas do terreno para geologia, cidade, ocupação do espaço e sistemas em camadas, ou implementa esse estilo no Clipator quando solicitado."

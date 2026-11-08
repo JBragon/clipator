@@ -1,0 +1,9 @@
+id: clipator-arte-atlas-de-percursos
+nome: "Atlas de percursos — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de atlas de percursos para lugares, deslocamentos, logística e cronologia geográfica, ou implementa esse estilo no Clipator quando solicitado."

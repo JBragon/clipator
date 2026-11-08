@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-mapa-de-ideias",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Primeiro",
+      "inicio": 0.0,
+      "fim": 0.405
+    },
+    {
+      "texto": "apresentamos",
+      "inicio": 0.45,
+      "fim": 0.855
+    },
+    {
+      "texto": "o",
+      "inicio": 0.9,
+      "fim": 1.305
+    },
+    {
+      "texto": "conceito.",
+      "inicio": 1.35,
+      "fim": 1.755
+    },
+    {
+      "texto": "Depois",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "ligamos",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "a",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "ideia",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "ao",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "exemplo.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Primeiro apresentamos o conceito.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Primeiro apresentamos o conceito",
+      "descricao": "Apresentar a primeira ilha com o conceito; Desenhar a relação e abrir a segunda ilha",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "ilhas": 3,
+        "escala_entrada": 0.92,
+        "contorno_px": 3,
+        "duracao_conector_s": 0.4
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Depois ligamos a ideia ao exemplo.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Depois ligamos a ideia",
+      "descricao": "Mostrar o exemplo na terceira ilha; Reunir as ilhas numa vista de síntese",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "ilhas": 3,
+        "escala_entrada": 0.92,
+        "contorno_px": 3,
+        "duracao_conector_s": 0.4
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

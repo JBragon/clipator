@@ -1,0 +1,52 @@
+# Costura viva: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-costura-viva/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Costura viva
+conceito:
+  frase: Um personagem de tecido costurado reage à fala sobre uma mesa de ateliê, com pesponto e pequenas dobras.
+  palavras_chave: [mascote têxtil, explicações acolhedoras, reação leve, produtos artesanais]
+  faca: ['Mascote único em primeiro plano, carretel pequeno no canto e cartão de tecido com uma palavra.', 'Quando
+      usado acima do vídeo, reduzir o cenário a um tampo e um fundo sem horizonte.', 'Tecido tramado curto, costura
+      aparente nas bordas e enchimento irregular.', Olhos bordados em linha escura e boca de linha; evitar pelos
+      individuais caros.]
+  nao_faca: [Mascote reconhecível de terceiros., Brinquedos licenciados., Movimento elástico de gelatina.]
+cor:
+  paleta: {fundo: '#EAE2D5', superficie: '#D9CCB9', texto: '#263C45', texto_suave: '#54686E', primaria: '#BA624F',
+    destaque: '#498C7F', secundaria: '#D4A899', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: sobe
+  principios: ['Preparação de 120 ms, inclinação do corpo, gesto e acomodação.', Orelha ou braço chega 70 ms depois
+      do tronco; deformação máxima de 8% preserva o volume aparente.]
+cenas:
+  tom: Para explicações acolhedoras, reação leve e produtos artesanais.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Mascote ergue a cabeça para ouvir; Braço indica o cartão que entra pela lateral;
+      Corpo se inclina e confirma a ideia com um gesto; Personagem volta à pose neutra e o cartão fica legível.',
+    Costura acompanha a borda sem flutuar., A expressão não muda o sentido de uma fala séria., O rosto do apresentador
+      continua mais importante que o mascote.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-costura-viva
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Recorte SVG com textura tramada estática, costura e três poses do mesmo personagem.
+  construcao: Construa o mascote com elipsoides e fitas curvas para as costuras. Gere a trama local uma vez. Articulações
+    recebem poses derivadas de curvas por fase, sem simulação de tecido. Use três expressões compatíveis com a fala.
+  parametros_visuais: {deformacao_maxima: 0.08, atraso_membros_s: 0.07, densidade_trama: 34, expressoes: 3}
+graficos:
+  selo: {cor_texto: neutro-1}
+x_contraste_corrigido: ['texto_suave #566A70 → #54686E (4.4:1 → 4.6:1)', 'destaque #4C8F82 → #498C7F (2.9:1 → 3.1:1)']

@@ -1,0 +1,53 @@
+# Janela em profundidade: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-janela-em-profundidade/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Janela em profundidade
+conceito:
+  frase: Uma ilustração em camadas vira uma janela de profundidade, revelada por folhas laterais que se abrem.
+  palavras_chave: [imagem em camadas, história, análise de imagem]
+  faca: ['Janela sem moldura de museu, quatro planos e uma área de detalhe destacada por uma abertura lateral.',
+    O personagem principal não é cortado pela borda., 'Imagem própria, domínio público verificado ou mídia do usuário
+      com direito de uso.', Cada plano tem máscara limpa; o fundo exige preenchimento autorizado ou limites de deslocamento
+      menores.]
+  nao_faca: [Copiar pintura protegida., Atravessar molduras de museu como sequência obrigatória., Inventar partes
+      faltantes sem informar.]
+cor:
+  paleta: {fundo: '#292C38', superficie: '#414452', texto: '#F4EDE2', texto_suave: '#B8B8C3', primaria: '#CA9A63',
+    destaque: '#84B0AD', secundaria: '#715E4B', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: sobe
+  principios: ['Folhas laterais abrem, câmera desloca até 4% na horizontal e planos respondem por profundidade.',
+    O detalhe ganha uma seta curta; retorno termina com o mesmo enquadramento inicial se laço.]
+cenas:
+  tom: Para história, análise de imagem e apresentação de um cenário.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir as folhas e apresentar a imagem; Separar levemente os planos por paralaxe;
+      Parar no detalhe mencionado; Fechar as folhas sem atravessar a imagem.', Nenhum buraco transparente aparece
+      atrás do sujeito., Rosto e mãos não se deformam., A imagem é identificada como ilustração quando não for registro
+      factual.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-janela-em-profundidade
+  backend_sugerido: hibrido
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Pan e zoom único sobre a imagem inteira, sem simular camadas inexistentes.
+  construcao: Receba camadas RGBA e profundidade normalizada; compute deslocamento=movimento_camera*(1-profundidade).
+    Verifique a área descoberta de cada máscara antes de exportar. Sem fundo preenchido, limite movimento ao excedente
+    existente.
+  parametros_visuais: {camadas: 4, paralaxe_maxima: 0.04, folga_borda: 0.08, desfoque_maximo_px: 1.2}
+graficos:
+  selo: {cor_texto: neutro-1}

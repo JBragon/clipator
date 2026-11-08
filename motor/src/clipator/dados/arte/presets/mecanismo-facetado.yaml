@@ -1,0 +1,51 @@
+# Mecanismo facetado: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-mecanismo-facetado/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Mecanismo facetado
+conceito:
+  frase: Peças de um mecanismo facetado se separam em uma vista explodida para explicar causa e resultado.
+  palavras_chave: [explicação 3d, como funciona, fluxo, componentes, dependência, comparação técnica]
+  faca: ['Até cinco componentes sobre uma base circular fosca, com um eixo comum de montagem.', Um rótulo curto
+      por componente e uma pequena faixa de entrada e saída., 'Sólidos facetados de tons minerais, arestas limpas
+      e um componente em destaque quente.', Sem textura granulada; luz principal grande evita que as faces pareçam
+      plástico brilhante.]
+  nao_faca: [Maquete urbana genérica para qualquer tema., Partículas excessivas., HUD que não corresponde às peças.]
+cor:
+  paleta: {fundo: '#23342F', superficie: '#364C43', texto: '#F0EFE1', texto_suave: '#AABDB1', primaria: '#E4A557',
+    destaque: '#80C2C4', secundaria: '#7A6741', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['Separar componentes ao longo do eixo em 0,6 s, percorrer a transformação com um pulso lento e remontar.',
+    'A câmera muda a aproximação no máximo 8%, sem orbitar durante rótulos.']
+cenas:
+  tom: Para como funciona, fluxo, componentes, dependência e comparação técnica.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Identificar o conjunto montado; Separar as peças e revelar suas funções; Percorrer
+      entrada, transformação e saída; Remontar com o componente responsável destacado.', A vista explodida não troca
+      a ordem das peças., 'O percurso explica a fala, em vez de só enfeitar o mecanismo.', Rótulos têm uma única
+      peça de destino.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-mecanismo-facetado
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Polígonos isométricos SVG com a mesma separação por eixo e o mesmo percurso.
+  construcao: Defina transformações base e deslocamentos explodidos por peça; interpole os dois estados. Conexões
+    aparecem só quando as peças estão separadas. Especifique uma entrada, uma operação e uma saída por cena.
+  parametros_visuais: {componentes: 4, explosao_relativa: 0.35, aproximacao_maxima: 0.08, duracao_separacao_s: 0.6}
+graficos:
+  selo: {cor_texto: neutro-1}

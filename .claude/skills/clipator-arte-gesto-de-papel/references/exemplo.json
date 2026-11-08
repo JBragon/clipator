@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-gesto-de-papel",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Este",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "objeto",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "representa",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "uma",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "ação.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "O",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "gesto",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "mostra",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "o",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "que",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "acontece.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Este objeto representa uma ação.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Este objeto representa uma",
+      "descricao": "Assentar o objeto e o verbo; Preparar o gesto com uma inclinação",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "fps_poses": 10,
+        "objetos_maximos": 3,
+        "poses_principais": 3,
+        "inclinacao_maxima_graus": 7
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "O gesto mostra o que acontece.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "O gesto mostra o",
+      "descricao": "Executar a ação e segurar seu resultado; Dobrar o objeto numa faixa de saída",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "fps_poses": 10,
+        "objetos_maximos": 3,
+        "poses_principais": 3,
+        "inclinacao_maxima_graus": 7
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

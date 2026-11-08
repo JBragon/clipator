@@ -1,0 +1,66 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-encaixe-vivo",
+  "nome": "Encaixe Vivo",
+  "familia": "Cortes guiados pela fala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Objetos feitos de peças plásticas com pinos se montam por função e se desmontam; a montagem explica as partes citadas na fala.",
+  "usar_em": "Blocos de montar: monta e desmonta em loop",
+  "composicao": "Plástico de superfície limpa, pinos e juntas perceptíveis, luz de estúdio clara, sombra de contato e câmera alta em três quartos. O objeto precisa ser reconhecível pela silhueta. Peças continuam sendo blocos de plástico; não converter em módulos metálicos.",
+  "material_e_luz": "Plástico de superfície limpa, pinos e juntas perceptíveis, luz de estúdio clara, sombra de contato e câmera alta em três quartos. O objeto precisa ser reconhecível pela silhueta. Peças continuam sendo blocos de plástico; não converter em módulos metálicos.",
+  "movimento": "Peças de um subconjunto partem de posições de espera, fazem trajetória curva e assentam com pequeno amortecimento. Ao citar outra parte, a câmera e o destaque seguem essa parte. Desmontar no fim somente quando a fala falar em desmontagem ou quando a vinheta puder encerrar sem contrariar a frase.",
+  "construcao": "Definir geometrias de blocos com pinos e agrupamento funcional. Usar instâncias por material. A ordem vem de um grafo de montagem, não de posição aleatória. Posições e rotação de cada peça são função do tempo absoluto e da semente. Legendas de função são desenhadas fora do canvas e ancoradas pela projeção da peça.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos com as peças na ordem da fala.",
+  "parametros_visuais": {
+    "tamanho_bloco": 0.2,
+    "pecas_soltas": 5,
+    "amortecimento": 0.5,
+    "duracao_montagem": 1.0,
+    "aproximacao": 0.3
+  },
+  "fases": [],
+  "criterios": [
+    "Uma menção a lente destaca e aproxima a lente, sem repetir a montagem inteira.",
+    "O laço é opcional: somente a camada de arte volta ao início; nunca repetir ou inverter o áudio do corte.",
+    "Na metade superior, priorizar poucos subconjuntos legíveis e reenquadrar o modelo para aquele retângulo."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "tamanho_bloco": {
+      "tipo": "numero",
+      "minimo": 0.14,
+      "maximo": 0.34
+    },
+    "pecas_soltas": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 24
+    },
+    "amortecimento": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 1
+    },
+    "duracao_montagem": {
+      "tipo": "numero",
+      "minimo": 0.3,
+      "maximo": 2.5
+    },
+    "aproximacao": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.6
+    }
+  }
+}

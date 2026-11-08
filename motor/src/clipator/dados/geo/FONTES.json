@@ -1,0 +1,42 @@
+{
+  "fontes": [
+    {
+      "arquivo": "motor/src/clipator/dados/geo/paises.geojson.gz",
+      "fonte": "Natural Earth",
+      "licenca_dados": "dominio-publico",
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson",
+      "acesso": "2026-11-05",
+      "sha256_original": "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb",
+      "sha256_incluido": "94fcbe66baa1056c9c6c70fc4f5f02e23453b3d6a57e842f4f65873cbd846756",
+      "feicoes_incluidas": 242,
+      "geometria_modificada": false
+    },
+    {
+      "arquivo": "motor/src/clipator/dados/geo/subdivisoes.geojson.gz",
+      "fonte": "Natural Earth",
+      "licenca_dados": "dominio-publico",
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_1_states_provinces.geojson",
+      "acesso": "2026-11-05",
+      "sha256_original": "22d0e3ad85eb3e27f17cabf8ba2d50e554fbc27a87796ff891d958185da62fb5",
+      "sha256_incluido": "5aa718278a6b78c409ae865635ee43419175da8564ae74d3ab9d314ff481f985",
+      "feicoes_incluidas": 4596,
+      "geometria_modificada": false
+    },
+    {
+      "arquivo": "motor/src/clipator/dados/geo/continentes.geojson.gz",
+      "fonte": "Natural Earth",
+      "licenca_dados": "dominio-publico",
+      "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_geography_regions_polys.geojson",
+      "acesso": "2026-11-05",
+      "sha256_original": "4182af773bcc891f8ddbf4b34ac02e87f17b35456269695e07258cf0b4877ec9",
+      "sha256_incluido": "70cc5fb74dfd32ad2621490ae5803c922a6b120c44632f4c782fd53c2617face",
+      "feicoes_incluidas": 26,
+      "geometria_modificada": false
+    }
+  ],
+  "termos": "https://www.naturalearthdata.com/about/terms-of-use/",
+  "limites_administrativos": "Natural Earth usa limites de facto por padrão; documentar dataset e versão, não apresentar limites como definição oficial do usuário.",
+  "continentes": "Regiões físicas e grupos de ilhas da base; render de continente recorta o destaque pelo mapa de terras para não pintar os espaços oceânicos dos grupos.",
+  "nota": "Dados cartográficos generalizados para visualização. O nome de continente de um país não deve classificar sozinho todos os seus territórios ou porções transcontinentais.",
+  "compactacao": "Cada camada vai em gzip, sem mudar nenhum byte: sha256_incluido é o hash do conteúdo descompactado."
+}

@@ -1,0 +1,9 @@
+id: glossario-do-canal
+nome: "Glossário do canal"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [transcricao]
+ativa_por_padrao: true
+descricao: "Nomes e termos que a transcrição erra entram como dica para o Whisper e como correção automática."

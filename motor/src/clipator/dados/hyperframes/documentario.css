@@ -1,0 +1,9 @@
+/* Documentário: legenda discreta com fade e cartela como título de capítulo. */
+.frase { font-weight: 600; animation: doc-fade 0.4s ease-out both; }
+.p { -webkit-text-stroke: 0; text-shadow: 0 0.05em 0.25em rgba(0,0,0,.85); animation: none; opacity: 1; }
+.p.destaque { color: var(--destaque); }
+@keyframes doc-fade { from { opacity: 0; } to { opacity: 1; } }
+.cartela .caixa {
+  font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.12em; background: transparent; color: #fff; box-shadow: none;
+  border-top: 0.04em solid #fff; border-bottom: 0.04em solid #fff; border-radius: 0; animation: doc-fade 0.8s ease-out both;
+}

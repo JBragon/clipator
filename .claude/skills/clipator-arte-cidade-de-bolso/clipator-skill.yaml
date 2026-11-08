@@ -1,0 +1,9 @@
+id: clipator-arte-cidade-de-bolso
+nome: "Cidade de bolso — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de cidade de bolso para games, tecnologia, pequenas histórias e comparação entre lugares, ou implementa esse estilo no Clipator quando solicitado."

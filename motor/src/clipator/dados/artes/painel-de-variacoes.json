@@ -1,0 +1,71 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-painel-de-variacoes",
+  "nome": "Painel de variações",
+  "familia": "Grade fotográfica",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma foto própria vira uma matriz de estudos visuais; uma faixa diagonal percorre as células e revela diferenças controladas.",
+  "usar_em": "comparar tratamentos, explicar alternativas e mostrar uma transformação visual",
+  "composicao": "Grade 3x3 com enquadramento idêntico em todas as células e uma legenda externa curta por linha. A célula principal ocupa duas posições quando for necessário ler detalhes.",
+  "material_e_luz": "Quatro tratamentos próprios: monocromia suave, duotone quente, contorno e retícula. Nunca combinar todos ao mesmo tempo na mesma célula.",
+  "movimento": "Uma varredura diagonal troca apenas uma célula por vez com máscara de 180 ms. Segurar o painel completo por pelo menos 1,5 s para comparação; reduzir movimento remove a varredura.",
+  "construcao": "Cachear os quatro tratamentos da imagem local por hash de conteúdo. Calcular ordem por linha+coluna e desempatar por índice estável. Todas as células compartilham crop e âncora facial fornecida localmente.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "canvas",
+  "complexidade": "media",
+  "alternativa_leve": "Painel estático com quatro tratamentos e sem trocas.",
+  "parametros_visuais": {
+    "linhas": 3,
+    "colunas": 3,
+    "tratamentos": 4,
+    "transicao_s": 0.18,
+    "leitura_final_s": 1.5
+  },
+  "fases": [
+    "Mostrar a imagem única de partida",
+    "Dividir a área em nove células sem mudar o crop",
+    "Aplicar os tratamentos na diagonal",
+    "Manter o painel e marcar a alternativa escolhida"
+  ],
+  "criterios": [
+    "As células mostram a mesma região da foto.",
+    "O tratamento não altera o significado documental sem indicação.",
+    "Uma troca não dispara flash em toda a tela."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "linhas": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 3
+    },
+    "colunas": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 3
+    },
+    "tratamentos": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 4
+    },
+    "transicao_s": {
+      "tipo": "numero",
+      "minimo": 0.15,
+      "maximo": 0.4
+    },
+    "leitura_final_s": {
+      "tipo": "numero",
+      "minimo": 1.5,
+      "maximo": 3
+    }
+  }
+}

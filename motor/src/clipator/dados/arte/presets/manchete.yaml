@@ -1,0 +1,78 @@
+# Notícia e plantão: papel claro, vermelho de urgência e azul-marinho de telejornal.
+herda: base
+nome: Manchete
+conceito:
+  frase: "Papel branco de jornal, vermelho de plantão e azul-marinho: a tela informa antes de emocionar."
+  palavras_chave: [notícia, urgente, claro, institucional, rápido]
+  faca:
+    - Selo vermelho chapado para URGENTE e AO VIVO.
+    - Manchete em caixa alta, alinhada à esquerda, nunca centralizada.
+    - Crédito da fonte em toda tela com dado.
+    - Linhas finas separando blocos, como numa página de jornal.
+  nao_faca:
+    - Fundo escuro nas telas de informação.
+    - Fonte manuscrita ou de quadrinho.
+    - Selo de urgência em notícia que não é urgente.
+    - Mais de três linhas de texto por tela.
+cor:
+  paleta:
+    fundo: "#F6F5F1"
+    superficie: "#FFFFFF"
+    texto: "#121418"
+    texto_suave: "#4D5562"
+    primaria: "#C8102E"
+    secundaria: "#0B2545"
+    destaque: "#1F5FD1"
+    positivo: "#1E7F4F"
+    negativo: "#B3261E"
+    alerta: "#A85A00"
+  serie: [secundaria, primaria, destaque, texto_suave, "#7A8A99", "#C77C00"]
+  gradientes:
+    papel: {tipo: linear, angulo: 180, paradas: [[superficie, 0], [fundo, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Anton, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.0, entrelinha: 1.0}
+    subtitulo: {familia: Anton, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08}
+layout: {raio: 0.004, traco: 0.004, sombra: null, densidade: densa}
+movimento:
+  curvas:
+    entrada: [0.25, 1, 0.5, 1]
+  duracoes: {micro: 0.08, curta: 0.2, media: 0.36, longa: 0.7}
+  entrada: desliza
+  saida: fade
+  transicao_padrao: empurra
+  transicoes: [corte, empurra, fade]
+legenda:
+  estilo: bloco
+  tamanho: 0.05
+  cor: texto
+  cor_destaque: primaria
+  contorno: null
+  sombra: null
+  caixa: {cor: superficie, alfa: 0.95, raio: 0.08, respiro: [0.4, 0.2]}
+  max_linhas: 2
+  max_palavras: 7
+  animacao: fade
+graficos:
+  tarja: {estilo: etiqueta, posicao: inferior_esquerda, cor_fundo: superficie, cor_acento: primaria, cor_nome: texto, cor_cargo: texto_suave}
+  selo: {estilo: chapado, cor_fundo: primaria, cor_texto: superficie}
+thumbnail:
+  cor: texto
+  cor_destaque: primaria
+  contorno: null
+  fundo: superficie
+  borda: primaria
+som:
+  identidade: "Vinheta de telejornal: um bipe curto na entrada e impacto só no selo de urgência."
+  efeitos: {entrada: whoosh, enfase: click, numero: click, alerta: ding}
+  musica: {clima: tensão, bpm: [100, 124]}
+cenas:
+  tom: "Jornalístico: informa antes de emocionar, com números exatos e fonte quando a fala cita."
+  preferir: [numero, comparacao, local, nome, titulo]
+  evitar: [palavra]
+  intervalo: 3.0
+  por_minuto: 12
+  palavras_titulo: 6
+  regras:
+    - Título no formato de manchete, com verbo no presente.
+    - Número sempre com o que ele mede no rótulo.

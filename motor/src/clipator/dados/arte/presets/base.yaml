@@ -1,0 +1,115 @@
+# Predefinido base do Clipator: tudo o que uma DA precisa, num visual escuro e neutro.
+# Os outros predefinidos herdam deste e trocam só o que os diferencia.
+versao: 1
+nome: Base
+conceito:
+  frase: "Fundo grafite, texto claro e um azul de sinal: a DA neutra de onde as outras partem."
+  palavras_chave: [neutro, legível, direto, limpo]
+  faca:
+    - Uma ideia por tela; se a frase tem duas ideias, são duas telas.
+    - A cor primária marca só o que o espectador precisa lembrar.
+    - O bloco aparece primeiro e o texto entra logo depois.
+    - Texto curto e grande, lido de relance no celular.
+  nao_faca:
+    - Duas cores vivas disputando a mesma tela.
+    - Texto encostado na borda ou embaixo dos botões do app.
+    - Animação contínua em loop atrás do texto.
+    - Mais de duas famílias de fonte no mesmo vídeo.
+cor:
+  paleta:
+    fundo: "#111317"
+    superficie: "#1D2027"
+    texto: "#F4F5F7"
+    texto_suave: "#A9AFBB"
+    primaria: "#3DA9FC"
+    secundaria: "#2C3E5C"
+    destaque: "#FFC857"
+    positivo: "#3ECF8E"
+    negativo: "#FF5D6C"
+    alerta: "#FFA94D"
+  neutros: ["#000000", "#FFFFFF"]
+  serie: [primaria, destaque, texto, positivo, negativo, texto_suave]
+  gradientes:
+    sinal: {tipo: linear, angulo: 135, paradas: [[primaria, 0], [secundaria, 1]]}
+    noite: {tipo: radial, angulo: 0, paradas: [[superficie, 0], [fundo, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Anton, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.01, entrelinha: 1.02}
+    subtitulo: {familia: Anton, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.07, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+  escala: {display: 0.13, h1: 0.088, h2: 0.06, h3: 0.044, corpo: 0.032, nota: 0.024}
+layout:
+  colunas: 12
+  margem: 0.065
+  calha: 0.014
+  raio: 0.012
+  traco: 0.005
+  sombra: {dx: 0, dy: 0.008, desfoque: 0.03, cor: neutro-1, alfa: 0.4}
+  densidade: media
+movimento:
+  curvas:
+    entrada: [0.22, 0.8, 0.3, 1]
+    saida: [0.55, 0, 0.9, 0.4]
+    enfase: [0.3, 0, 0.1, 1]
+    suave: [0.4, 0, 0.2, 1]
+    linear: [0, 0, 1, 1]
+  duracoes: {micro: 0.1, curta: 0.24, media: 0.42, longa: 0.8}
+  escalonamento: 0.06
+  entrada: sobe
+  saida: fade
+  transicao_padrao: corte
+  transicoes: [corte, fade, empurra]
+  principios:
+    - A forma entra antes do texto e sai depois dele.
+    - Nada passa do ponto final e volta; o movimento para seco.
+    - Uma entrada por tela; o resto fica parado o tempo de ler.
+tratamento:
+  aplicar_nos_clips: false
+  contraste: 1.04
+  saturacao: 0.96
+legenda:
+  estilo: karaoke
+  papel: legenda
+  tamanho: 0.058
+  cor: neutro-2
+  cor_destaque: destaque
+  contorno: {cor: neutro-1, espessura: 0.1}
+  sombra: {dx: 0, dy: 0.05, desfoque: 0.08, cor: neutro-1, alfa: 0.55}
+  y_vertical: 0.62
+  y_horizontal: 0.85
+  largura_max: 0.8
+  max_linhas: 2
+  max_palavras: 4
+  animacao: pop
+graficos:
+  tarja: {estilo: barra, posicao: inferior_esquerda, tamanho_nome: 0.044, tamanho_cargo: 0.027}
+  selo: {estilo: chapado, cor_fundo: primaria, cor_texto: fundo}
+  credito: {tamanho: 0.024, posicao: inferior_direita}
+thumbnail:
+  max_palavras: 4
+  papel: titulo
+  tamanho: 0.18
+  cor: neutro-2
+  cor_destaque: destaque
+  contorno: {cor: neutro-1, espessura: 0.06}
+  fundo: gradiente:noite
+  canto_reservado: inferior_direito
+  reserva: [0.24, 0.2]
+som:
+  identidade: "Seco e discreto: um whoosh curto por tela e um clique nos números."
+  loudness: {alvo_lufs: -14, pico_dbtp: -1}
+  efeitos: {entrada: whoosh, enfase: pop, numero: click, alerta: impacto}
+  volume_efeitos: 0.45
+  musica: {clima: neutro, bpm: [85, 110]}
+marca:
+  posicao_logo: superior_direita
+  marca_dagua: false
+cenas:
+  tom: "Direto e neutro: a tela diz o essencial com as palavras da fala."
+  preferir: [titulo, numero, lista, palavra]
+  intervalo: 3.0
+  por_minuto: 12
+  regras:
+    - Uma ideia por tela; se a fala junta duas, escolha a mais forte.

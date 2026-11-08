@@ -1,0 +1,9 @@
+id: checagem-de-fatos
+nome: "Checagem de fatos"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [revisao]
+ativa_por_padrao: true
+descricao: "Avisa de número, citação e acusação que precisam de fonte antes de publicar."

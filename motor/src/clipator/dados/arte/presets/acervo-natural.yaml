@@ -1,0 +1,54 @@
+# Acervo natural: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-acervo-natural/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Acervo natural
+conceito:
+  frase: Uma prancheta de acervo apresenta exemplares em pares e destaca uma característica de cada um.
+  palavras_chave: [coleção fotográfica, comparação de espécies, objetos, materiais]
+  faca: ['Duas áreas de amostra de tamanhos iguais, etiqueta com nome e um campo de observação.', 'Escala só aparece
+      quando houver medida conhecida; sem ela, declarar “imagens sem escala”.', Fundo verde muito claro sem textura
+      pesada; fotos ou ilustrações locais recortadas têm sombra sutil e bordas naturais., Texto em cartões que não
+      tocam o objeto.]
+  nao_faca: [Sequência de dezenas de fotos por segundo., Nomes científicos inventados., Imagens retiradas de busca
+      sem licença.]
+cor:
+  paleta: {fundo: '#E8EBDD', superficie: '#D0D8C6', texto: '#28392E', texto_suave: '#5C6D58', primaria: '#9C5837',
+    destaque: '#5E8B8B', secundaria: '#C6A992', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: [O par anterior desliza para uma gaveta e o novo ocupa o centro., 'Uma lupa circular amplia somente
+      a característica mencionada, com duração suficiente para leitura.']
+cenas:
+  tom: Para comparação de espécies, objetos, materiais e exemplares de uma coleção.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir a prancheta com dois exemplares; Destacar a característica do primeiro;
+      Mover a lupa para o detalhe do segundo; Fechar com os dois exemplares e uma observação curta.', Não distorcer
+      a proporção dos exemplares., Identificações e escala vêm dos metadados fornecidos., A lupa não mascara o campo
+      de observação.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-acervo-natural
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Silhuetas próprias e etiquetas quando a imagem não estiver disponível; informar a falta de mídia.
+  construcao: Normalize a caixa visível do alfa para ocupar 75% da célula. Gere enquadramento por bounds do objeto,
+    não pelo tamanho do arquivo. Associe cada detalhe a uma caixa de recorte fornecida, sem identificar espécies
+    automaticamente.
+  parametros_visuais: {colunas: 2, ocupacao_celula: 0.75, zoom_detalhe: 1.6, margem_interna: 0.08}
+graficos:
+  selo: {cor_texto: neutro-2}
+x_contraste_corrigido: ['texto_suave #62745E → #5C6D58 (4.2:1 → 4.6:1)']

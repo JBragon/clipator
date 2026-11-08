@@ -1,0 +1,48 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-fluxo-facetado",
+  "nome": "Fluxo Facetado",
+  "familia": "Cortes guiados pela fala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Peças low-poly, vistas em corte e percursos visuais explicam uma operação a cada frase.",
+  "usar_em": "Low-poly Explicativo",
+  "composicao": "Objetos facetados foscos, faces em poucos tons e um componente ativo em cor de destaque. Fundo azul profundo com composição de laboratório, rótulos presos aos componentes e espaço reservado à legenda. Textura de massinha sutil, sem brilho de metal polido.",
+  "material_e_luz": "Objetos facetados foscos, faces em poucos tons e um componente ativo em cor de destaque. Fundo azul profundo com composição de laboratório, rótulos presos aos componentes e espaço reservado à legenda. Textura de massinha sutil, sem brilho de metal polido.",
+  "movimento": "Apresentar entrada, detecção, separação e saída como etapas. Partes podem abrir ou se afastar para revelar uma ação escondida. Um pulso ou um objeto em deslocamento mostra o fluxo; o destaque muda exatamente quando a função correspondente é dita.",
+  "construcao": "Modelar componentes independentes e conexões direcionais, com ids estáveis. Derivar o percurso de comprimentos de curva para velocidade constante. Cortes e vistas explodidas precisam respeitar a montagem física. Rótulos acompanham a projeção dos componentes, com desvio de colisão em relação ao vídeo e à legenda.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos com as etapas na ordem da fala.",
+  "parametros_visuais": {
+    "facetas": 6,
+    "aproximacao": 0.3
+  },
+  "fases": [],
+  "criterios": [
+    "Uma caixa que passa por um sensor fornece causa e efeito visíveis, não um ícone solto.",
+    "Dados numéricos só aparecem quando foram fornecidos pela fala ou pelo contexto verificado.",
+    "No modo dividido, mudar a câmera por etapa em vez de diminuir todos os rótulos."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "facetas": {
+      "tipo": "inteiro",
+      "minimo": 4,
+      "maximo": 12
+    },
+    "aproximacao": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.6
+    }
+  }
+}

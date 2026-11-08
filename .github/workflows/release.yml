@@ -1,0 +1,42 @@
+name: release
+
+# Gera os instaladores do app (Windows .exe, macOS .dmg, Linux .AppImage) e publica
+# numa release do GitHub quando uma tag v* é enviada, por exemplo: git tag v0.1.0 && git push --tags
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  app:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            alvo: --win --x64
+          - os: macos-latest
+            alvo: --mac --arm64 --x64
+          - os: ubuntu-latest
+            alvo: --linux --x64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - name: electron-builder
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"   # sem certificado de assinatura por enquanto
+        run: npx electron-builder ${{ matrix.alvo }} --publish ${{ startsWith(github.ref, 'refs/tags/v') && 'always' || 'never' }}

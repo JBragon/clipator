@@ -1,0 +1,51 @@
+# Arquivo em camadas: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-arquivo-em-camadas/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Arquivo em camadas
+conceito:
+  frase: Fichas documentais se organizam em trilhos de uma mesa de arquivo, separando observação, fonte e interpretação.
+  palavras_chave: [documental editorial, contexto histórico, análise de documentos]
+  faca: ['Três trilhos horizontais: assunto, evidência e observação.', 'Uma ficha principal clara, duas abas menores
+      e um índice lateral; recortes só de material local autorizado.', Papel envelhecido discreto com borda reta
+      e relevo seco; textura não passa sobre o texto., Fotografia monocromática com sombras preservadas e contraste
+      moderado.]
+  nao_faca: [Acusações inventadas., Selos de órgão público., Mural de fios como decoração., Cópia de documento falso.]
+cor:
+  paleta: {fundo: '#EEE9DE', superficie: '#DAD2C3', texto: '#242722', texto_suave: '#666B62', primaria: '#AB4B36',
+    destaque: '#476F69', secundaria: '#D0A292', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['Ficha desliza 24 px na entrada, abas abrem em sequência e uma linha une a informação à sua fonte.',
+    O foco fica parado durante a leitura; a saída é por recolhimento lateral.]
+cenas:
+  tom: Para contexto histórico, análise de documentos e investigação com material fornecido.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir a ficha do assunto; Revelar o documento ou a indicação de fonte ausente;
+      Separar o fato citado da observação do narrador; Recolher abas mantendo a frase de fechamento.', 'Fonte ausente
+      aparece como “fonte não informada”, sem selo de verificado.', Datas e citações correspondem ao texto de entrada.,
+    Nenhuma tarja esconde informação necessária para entender a fala.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-arquivo-em-camadas
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Mesmas fichas sem textura e sem sombra, com linhas de separação explícitas.
+  construcao: Componha cartões SVG com texto escapado e geometria medida. Ruído procedural fixo em uma imagem pequena
+    repetida. Cada ligação usa dois ids existentes; não inferir vínculo causal por proximidade.
+  parametros_visuais: {trilhos: 3, entrada_px: 24, rotacao_maxima_graus: 2, grao_opacidade: 0.035}
+graficos:
+  selo: {cor_texto: neutro-2}

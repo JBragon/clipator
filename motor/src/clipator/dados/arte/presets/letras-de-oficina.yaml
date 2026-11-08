@@ -1,0 +1,52 @@
+# Letras de oficina: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-letras-de-oficina/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Letras de oficina
+conceito:
+  frase: Letras em suportes diferentes se encaixam em uma régua de composição, formando uma frase curta.
+  palavras_chave: [tipografia material, palavra central, definição, abertura]
+  faca: ['Uma linha de base constante, cartões de letras com três materiais e uma palavra final em tinta escura.',
+    'A frase ocupa até 72% da largura útil, com altura de reserva para acentos.', 'Papel de embalagem, placa pintada
+      e etiqueta adesiva gerados proceduralmente.', 'Variações entre letras afetam a borda e a fonte, preservando
+      o corpo óptico.']
+  nao_faca: [Cópias de manchetes de jornais., Colagem com texto alheio., Efeito estroboscópico de palavra a 10 Hz.]
+cor:
+  paleta: {fundo: '#F0E5CE', superficie: '#DCCBA8', texto: '#2C3537', texto_suave: '#606963', primaria: '#B95036',
+    destaque: '#4E7F81', secundaria: '#D7A28A', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: sobe
+  principios: ['Uma letra por vez chega de uma borda diferente, encosta na régua e é corrigida em 2 px.', 'Quando
+      a palavra fecha, só um cartão troca de material; nada de alternância rápida de todas as letras.']
+cenas:
+  tom: Para palavra central, definição, abertura e fechamento de uma ideia.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Mostrar a régua e o espaço da palavra; Encaixar as letras do termo central;
+      Adicionar uma segunda linha curta com o complemento; Firmar todos os cartões sem trepidação.', 'Acentos, cedilha
+      e pontuação ficam ligados ao grafema.', O texto cabe sem reduzir a fonte abaixo do mínimo do layout., Nenhum
+      cartão cobre o seguinte ao assentar.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-letras-de-oficina
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Cartões de palavras inteiras em vez de letras; manter a régua, os materiais e a leitura.
+  construcao: Segmente por grafemas, não por bytes; meça o avanço real da fonte e faça quebra por palavras antes
+    de montar cartões. Semente fixa escolhe material e inclinação máxima de 3 graus.
+  parametros_visuais: {materiais: 3, rotacao_maxima_graus: 3, atraso_letras_s: 0.08, correcao_final_px: 2}
+graficos:
+  selo: {cor_texto: neutro-2}
+x_contraste_corrigido: ['texto_suave #68716B → #606963 (4.0:1 → 4.5:1)']

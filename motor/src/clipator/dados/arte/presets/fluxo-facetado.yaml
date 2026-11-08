@@ -1,0 +1,38 @@
+# Fluxo Facetado: direção visual da coleção Cinco estilos para cortes.
+herda: base
+nome: Fluxo Facetado
+conceito:
+  frase: "Peças low-poly, vistas em corte e percursos visuais explicam uma operação a cada frase."
+  palavras_chave: [fala, explicação, fluxo]
+  faca: ["Uma caixa que passa por um sensor fornece causa e efeito visíveis, não um ícone solto.", "Dados numéricos só aparecem quando foram fornecidos pela fala ou pelo contexto verificado.", "No modo dividido, mudar a câmera por etapa em vez de diminuir todos os rótulos."]
+  nao_faca: ["Repetir o exemplo do estilo em outro assunto.", "Mostrar objeto, número ou fato que a fala não citou."]
+cor:
+  paleta: {fundo: '#142137', superficie: '#263D56', texto: '#F2F4EF', texto_suave: '#C6CBC9', primaria: '#5FBEBC', destaque: '#E3B04F', secundaria: '#9FB7E8', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ["Apresentar entrada, detecção, separação e saída como etapas. Partes podem abrir ou se afastar para revelar uma ação escondida. Um pulso ou um objeto em deslocamento mostra o fluxo; o destaque muda exatamente quando a função correspondente é dita."]
+cenas:
+  tom: Acompanha o que está sendo dito, frase a frase.
+  intervalo: 1.5
+  por_minuto: 30.0
+  duracao: [1.0, 12.0]
+  regras: ["Uma ação por frase, presa ao trecho dito."]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.3
+x_direcao:
+  id: clipator-arte-fluxo-facetado
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Polígonos isométricos com as etapas na ordem da fala.
+graficos:
+  selo: {cor_texto: neutro-1}

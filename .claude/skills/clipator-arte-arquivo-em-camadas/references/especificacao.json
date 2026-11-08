@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-arquivo-em-camadas",
+  "nome": "Arquivo em camadas",
+  "familia": "Documental editorial",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Fichas documentais se organizam em trilhos de uma mesa de arquivo, separando observação, fonte e interpretação.",
+  "usar_em": "contexto histórico, análise de documentos e investigação com material fornecido",
+  "composicao": "Três trilhos horizontais: assunto, evidência e observação. Uma ficha principal clara, duas abas menores e um índice lateral; recortes só de material local autorizado.",
+  "material_e_luz": "Papel envelhecido discreto com borda reta e relevo seco; textura não passa sobre o texto. Fotografia monocromática com sombras preservadas e contraste moderado.",
+  "movimento": "Ficha desliza 24 px na entrada, abas abrem em sequência e uma linha une a informação à sua fonte. O foco fica parado durante a leitura; a saída é por recolhimento lateral.",
+  "construcao": "Componha cartões SVG com texto escapado e geometria medida. Ruído procedural fixo em uma imagem pequena repetida. Cada ligação usa dois ids existentes; não inferir vínculo causal por proximidade.",
+  "cores": {
+    "fundo": "#EEE9DE",
+    "superficie": "#DAD2C3",
+    "texto": "#242722",
+    "texto_suave": "#666B62",
+    "primaria": "#AB4B36",
+    "destaque": "#476F69"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Mesmas fichas sem textura e sem sombra, com linhas de separação explícitas.",
+  "parametros_visuais": {
+    "trilhos": 3,
+    "entrada_px": 24,
+    "rotacao_maxima_graus": 2,
+    "grao_opacidade": 0.035
+  },
+  "fases": [
+    "Abrir a ficha do assunto",
+    "Revelar o documento ou a indicação de fonte ausente",
+    "Separar o fato citado da observação do narrador",
+    "Recolher abas mantendo a frase de fechamento"
+  ],
+  "criterios": [
+    "Fonte ausente aparece como “fonte não informada”, sem selo de verificado.",
+    "Datas e citações correspondem ao texto de entrada.",
+    "Nenhuma tarja esconde informação necessária para entender a fala."
+  ],
+  "evitar": "Acusações inventadas, selos de órgão público, mural de fios como decoração e cópia de documento falso.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "trilhos": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 4
+    },
+    "entrada_px": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 40
+    },
+    "rotacao_maxima_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 3
+    },
+    "grao_opacidade": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.06
+    }
+  }
+}

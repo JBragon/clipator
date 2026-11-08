@@ -1,0 +1,2726 @@
+{
+ "versao": 1,
+ "pacotes": {
+  "fluent-animado": {
+   "nome": "Fluent Emoji animado",
+   "autor": "Microsoft",
+   "licenca": "MIT",
+   "repositorio": "https://github.com/microsoft/fluentui-emoji-animated",
+   "commit": "daa0365c09795789ed2bc6e8b228c97736cb6669",
+   "credito_obrigatorio": false
+  },
+  "fluent-3d": {
+   "nome": "Fluent Emoji 3D",
+   "autor": "Microsoft",
+   "licenca": "MIT",
+   "repositorio": "https://github.com/microsoft/fluentui-emoji",
+   "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+   "credito_obrigatorio": false
+  }
+ },
+ "stickers": [
+  {
+   "id": "fluent-animado/face-with-tears-of-joy",
+   "nome": "Face with tears of joy",
+   "arquivo": "face-with-tears-of-joy.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "risada",
+    "rindo",
+    "kkk",
+    "engraçado",
+    "chorando",
+    "de",
+    "rir"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20tears%20of%20joy/animated/face_with_tears_of_joy_animated.png",
+   "sha256": "17d73757100a1ede76adbbc9d524a6b2073ad6db54238fec3cfb75e853d62481",
+   "bytes": 1819201,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/rolling-on-the-floor-laughing",
+   "nome": "Rolling on the floor laughing",
+   "arquivo": "rolling-on-the-floor-laughing.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "rolando",
+    "de",
+    "rir",
+    "gargalhada",
+    "kkkk"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Rolling%20on%20the%20floor%20laughing/animated/rolling_on_the_floor_laughing_animated.png",
+   "sha256": "648beb24b995be04a75e342ba2a5b3cb9c08633dd13ac5a4422ba02ea752185e",
+   "bytes": 2850859,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/grinning-squinting-face",
+   "nome": "Grinning squinting face",
+   "arquivo": "grinning-squinting-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "rindo",
+    "muito",
+    "alegria"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Grinning%20squinting%20face/animated/grinning_squinting_face_animated.png",
+   "sha256": "88c21d00bd466fc6d5d3f6d2ecfd7309a03fbc8d2f8645445da16aec9ae39a75",
+   "bytes": 2730974,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/beaming-face-with-smiling-eyes",
+   "nome": "Beaming face with smiling eyes",
+   "arquivo": "beaming-face-with-smiling-eyes.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "feliz",
+    "sorriso",
+    "alegre"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Beaming%20face%20with%20smiling%20eyes/animated/beaming_face_with_smiling_eyes_animated.png",
+   "sha256": "3bc3e1c3842391ad8722677bf21359f4e41df69408c446eadeca7f4174263dde",
+   "bytes": 2533827,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/smiling-face-with-sunglasses",
+   "nome": "Smiling face with sunglasses",
+   "arquivo": "smiling-face-with-sunglasses.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "estiloso",
+    "óculos",
+    "de",
+    "sol",
+    "suave"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Smiling%20face%20with%20sunglasses/animated/smiling_face_with_sunglasses_animated.png",
+   "sha256": "4665bd19b78ac4af95bd951856e7b884b8765215a653d9f6fd4f1e29e5b3da9e",
+   "bytes": 3146680,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/smiling-face-with-heart-eyes",
+   "nome": "Smiling face with heart-eyes",
+   "arquivo": "smiling-face-with-heart-eyes.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "apaixonado",
+    "amei",
+    "olhos",
+    "de",
+    "coração"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Smiling%20face%20with%20heart-eyes/animated/smiling_face_with_heart-eyes_animated.png",
+   "sha256": "536a9beab1dd5c832661ddee3d97a705a407ddc05cb580394adc5f0d358e4b80",
+   "bytes": 2888019,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/star-struck",
+   "nome": "Star-struck",
+   "arquivo": "star-struck.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "uau",
+    "incrível",
+    "maravilhado",
+    "estrela"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Star-struck/animated/star-struck_animated.png",
+   "sha256": "207dd88eef8e7edc81d342fc6e2231d0e9204a303631e5804c92b8747d61fc17",
+   "bytes": 2757612,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-screaming-in-fear",
+   "nome": "Face screaming in fear",
+   "arquivo": "face-screaming-in-fear.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "choque",
+    "medo",
+    "grito",
+    "socorro",
+    "assustado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20screaming%20in%20fear/animated/face_screaming_in_fear_animated.png",
+   "sha256": "fa4a98c16888266a25304aa95590020ff430f4cdd3f9f760f7b716bafea1f4e8",
+   "bytes": 2144628,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/astonished-face",
+   "nome": "Astonished face",
+   "arquivo": "astonished-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "surpreso",
+    "chocado",
+    "espanto"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Astonished%20face/animated/astonished_face_animated.png",
+   "sha256": "07156a8e0ecb870996f1d80bbf1ae4cad15dbfb903e56abe46f33d3124338421",
+   "bytes": 2616483,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/flushed-face",
+   "nome": "Flushed face",
+   "arquivo": "flushed-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "envergonhado",
+    "sem",
+    "graça",
+    "vergonha"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Flushed%20face/animated/flushed_face_animated.png",
+   "sha256": "9a8fdbd305d229ff97640b00153a670398fb9b5af24bd0967aabb51f4fd3d8e7",
+   "bytes": 2590172,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/exploding-head",
+   "nome": "Exploding head",
+   "arquivo": "exploding-head.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "mente",
+    "explodindo",
+    "explodiu",
+    "chocado",
+    "inacreditável"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Exploding%20head/animated/exploding_head_animated.png",
+   "sha256": "efc5d6837d6a99aa64fcc5c39eee2c69881bf8caf163dbcd4278d51e58cf909b",
+   "bytes": 2879139,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/thinking-face",
+   "nome": "Thinking face",
+   "arquivo": "thinking-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "pensando",
+    "hmm",
+    "dúvida",
+    "reflexão"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Thinking%20face/animated/thinking_face_animated.png",
+   "sha256": "28feb13b9c2749d76f1f89b01c870c9e5687077eaf4a850e179a6d0d32c2b49a",
+   "bytes": 2965802,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-monocle",
+   "nome": "Face with monocle",
+   "arquivo": "face-with-monocle.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "analisando",
+    "investigando",
+    "curioso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20monocle/animated/face_with_monocle_animated.png",
+   "sha256": "7ce7d6997d8887380cbb1e63e7e94b75d667683ce1920b2c22f56dada2e06c49",
+   "bytes": 2570386,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-raised-eyebrow",
+   "nome": "Face with raised eyebrow",
+   "arquivo": "face-with-raised-eyebrow.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "desconfiado",
+    "suspeito",
+    "duvido"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20raised%20eyebrow/animated/face_with_raised_eyebrow_animated.png",
+   "sha256": "3045123470fc58482d29f9c1118e448f7852bbe8c88e3cd5300165d60130f1e6",
+   "bytes": 2481579,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-rolling-eyes",
+   "nome": "Face with rolling eyes",
+   "arquivo": "face-with-rolling-eyes.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "revirando",
+    "os",
+    "olhos",
+    "tédio",
+    "aff"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20rolling%20eyes/animated/face_with_rolling_eyes_animated.png",
+   "sha256": "a99aa2f8525322c6630fe775799b66208af498631603cfb14db9e431172abc2a",
+   "bytes": 1788723,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/loudly-crying-face",
+   "nome": "Loudly crying face",
+   "arquivo": "loudly-crying-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "chorando",
+    "muito",
+    "triste",
+    "choro"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Loudly%20crying%20face/animated/loudly_crying_face_animated.png",
+   "sha256": "535513b3189ed8d83f3ffe92a0718280c5604bfb027184e4713a3f26a26c36de",
+   "bytes": 2673076,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/crying-face",
+   "nome": "Crying face",
+   "arquivo": "crying-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "chorando",
+    "triste",
+    "lágrima"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Crying%20face/animated/crying_face_animated.png",
+   "sha256": "6429a210c8b0fa7cb94af3564396921e89b36a4154a3e0ad3f38d629d0eb809c",
+   "bytes": 3464267,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/pleading-face",
+   "nome": "Pleading face",
+   "arquivo": "pleading-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "por",
+    "favor",
+    "carente",
+    "pidão"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Pleading%20face/animated/pleading_face_animated.png",
+   "sha256": "bd0f873c8ee81693b130dca7ec8d9dd05cf4e6dcaf4a9ef5cf1109d74305e4c1",
+   "bytes": 2836906,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-holding-back-tears",
+   "nome": "Face holding back tears",
+   "arquivo": "face-holding-back-tears.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "emocionado",
+    "segurando",
+    "choro"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20holding%20back%20tears/animated/face_holding_back_tears_animated.png",
+   "sha256": "0a1405c10d86d57e87edf21bd4e4bd88aeca2adce3a87abb2ddeaf2204bbce3e",
+   "bytes": 2967028,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/angry-face",
+   "nome": "Angry face",
+   "arquivo": "angry-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "bravo",
+    "raiva",
+    "irritado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Angry%20face/animated/angry_face_animated.png",
+   "sha256": "2f8224b84d27dfb7750e7096de0857695953ef24551c652f233fb3b50b8cc12d",
+   "bytes": 2627684,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/pouting-face",
+   "nome": "Pouting face",
+   "arquivo": "pouting-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "furioso",
+    "raiva",
+    "muito",
+    "bravo"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Pouting%20face/animated/pouting_face_animated.png",
+   "sha256": "88dd764de6b8d334330ad6f825e0362edb24fb29fb5c5aa2aa2e21c59907288e",
+   "bytes": 2718895,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-symbols-on-mouth",
+   "nome": "Face with symbols on mouth",
+   "arquivo": "face-with-symbols-on-mouth.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "xingando",
+    "palavrão",
+    "furioso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20symbols%20on%20mouth/animated/face_with_symbols_on_mouth_animated.png",
+   "sha256": "ffb45f50402c04938109dda2c0bfe3dd627575a22a8b277a3f31206e4d5d37e7",
+   "bytes": 2782974,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-steam-from-nose",
+   "nome": "Face with steam from nose",
+   "arquivo": "face-with-steam-from-nose.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "bufando",
+    "irritado",
+    "nervoso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20steam%20from%20nose/animated/face_with_steam_from_nose_animated.png",
+   "sha256": "da7d9d4279797836f6492be453149d60f5047066ed0c2176e796957e3c5a0470",
+   "bytes": 2798368,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/hot-face",
+   "nome": "Hot face",
+   "arquivo": "hot-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "calor",
+    "quente",
+    "suando"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Hot%20face/animated/hot_face_animated.png",
+   "sha256": "ebb71fee228c576e7b4b731cd97e7afb4c5f39069e3f2f49f677574332b34c7f",
+   "bytes": 2720089,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/cold-face",
+   "nome": "Cold face",
+   "arquivo": "cold-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "frio",
+    "gelado",
+    "congelando"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Cold%20face/animated/cold_face_animated.png",
+   "sha256": "d5eb2d3fcb6e1d56651c1516ec2278df97948de3cd60c27f38212e96a0e7b7bb",
+   "bytes": 2687274,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-spiral-eyes",
+   "nome": "Face with spiral eyes",
+   "arquivo": "face-with-spiral-eyes.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "tonto",
+    "zonzo",
+    "confuso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20spiral%20eyes/animated/face_with_spiral_eyes_animated.png",
+   "sha256": "08b044988283a1f8e8f22f860e051713a25ef7ecc16037994e76cee7f16dece6",
+   "bytes": 3345155,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/melting-face",
+   "nome": "Melting face",
+   "arquivo": "melting-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "derretendo",
+    "vergonha",
+    "calor"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Melting%20face/animated/melting_face_animated.png",
+   "sha256": "4ff03c6bcfa28f64faa79f30ceb959f7a03b1285812059341d214efec9a31238",
+   "bytes": 2459745,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/shaking-face",
+   "nome": "Shaking face",
+   "arquivo": "shaking-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "tremendo",
+    "chocado",
+    "abalado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Shaking%20face/animated/shaking_face_animated.png",
+   "sha256": "91036477710c484db16045235ac8eee65734f08d94b190eba552be142a612813",
+   "bytes": 1954725,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-hand-over-mouth",
+   "nome": "Face with hand over mouth",
+   "arquivo": "face-with-hand-over-mouth.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "ops",
+    "segredo",
+    "risadinha"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20hand%20over%20mouth/animated/face_with_hand_over_mouth_animated.png",
+   "sha256": "5cfc5a63334529a08b6ed2337e68059e6ffa055f330c4f3f7e330c9658aeb4a8",
+   "bytes": 2898879,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-with-open-eyes-and-hand-over-mouth",
+   "nome": "Face with open eyes and hand over mouth",
+   "arquivo": "face-with-open-eyes-and-hand-over-mouth.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "chocado",
+    "não",
+    "acredito",
+    "ops"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20with%20open%20eyes%20and%20hand%20over%20mouth/animated/face_with_open_eyes_and_hand_over_mouth_animated.png",
+   "sha256": "2ee5a521f4dd26fd2ef68c1c83200d5b12f53abb7e98c5fcc50a8e45e624b169",
+   "bytes": 2944217,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/shushing-face",
+   "nome": "Shushing face",
+   "arquivo": "shushing-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "silêncio",
+    "segredo",
+    "psiu"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Shushing%20face/animated/shushing_face_animated.png",
+   "sha256": "5b97454dd977b576ae0171c9d28e0c7305a59f0b911290c8b11762f2324429d7",
+   "bytes": 2529675,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/zipper-mouth-face",
+   "nome": "Zipper-mouth face",
+   "arquivo": "zipper-mouth-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "boca",
+    "fechada",
+    "segredo",
+    "calado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Zipper-mouth%20face/animated/zipper-mouth_face_animated.png",
+   "sha256": "c9068cfb24a51581f49592a5c55a47e9f236558ddf45fcb751ab1833faec52c5",
+   "bytes": 3601294,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/lying-face",
+   "nome": "Lying face",
+   "arquivo": "lying-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "mentira",
+    "mentiroso",
+    "nariz",
+    "grande"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Lying%20face/animated/lying_face_animated.png",
+   "sha256": "8a48973439dee832dbd9134c562304f1a08948556927c64e0ae2cf690beb29bd",
+   "bytes": 2573334,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/grimacing-face",
+   "nome": "Grimacing face",
+   "arquivo": "grimacing-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "constrangido",
+    "eita",
+    "tenso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Grimacing%20face/animated/grimacing_face_animated.png",
+   "sha256": "50dac8a006bd338656711c05a8062bea949ebb46c324242537fbd0793f9d1127",
+   "bytes": 2462955,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/nerd-face",
+   "nome": "Nerd face",
+   "arquivo": "nerd-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "nerd",
+    "inteligente",
+    "estudioso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Nerd%20face/animated/nerd_face_animated.png",
+   "sha256": "3b8bf436ed3da2e24e50fde74758faff3ba76adbdbfac0dae83a47c4789f3a97",
+   "bytes": 3043420,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/partying-face",
+   "nome": "Partying face",
+   "arquivo": "partying-face.png",
+   "animado": true,
+   "categoria": "celebracao",
+   "palavras": [
+    "festa",
+    "comemoração",
+    "aniversário"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Partying%20face/animated/partying_face_animated.png",
+   "sha256": "5c4e6367268d93243f16f72731ff46112ccf9ea4bcc239958366070683ac9213",
+   "bytes": 3362072,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/money-mouth-face",
+   "nome": "Money-mouth face",
+   "arquivo": "money-mouth-face.png",
+   "animado": true,
+   "categoria": "dinheiro",
+   "palavras": [
+    "dinheiro",
+    "rico",
+    "grana",
+    "lucro"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Money-mouth%20face/animated/money-mouth_face_animated.png",
+   "sha256": "c9e2da4c3369a11594929eb06112f9dfaa1e7e4791ca26e3931e8500bedf9705",
+   "bytes": 2876022,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/zany-face",
+   "nome": "Zany face",
+   "arquivo": "zany-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "maluco",
+    "doido",
+    "zoeira"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Zany%20face/animated/zany_face_animated.png",
+   "sha256": "4c84d24ec61f418b5597bd7bc37459679f9be2ca943b364bf86687f68d6f10b0",
+   "bytes": 2974009,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/upside-down-face",
+   "nome": "Upside-down face",
+   "arquivo": "upside-down-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "ironia",
+    "de",
+    "cabeça",
+    "para",
+    "baixo"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Upside-down%20face/animated/upside-down_face_animated.png",
+   "sha256": "ad37f7487e584aac1801b1dabdd4ad3ae62242bc0b81179cb13f764997f15f71",
+   "bytes": 2445928,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/sleeping-face",
+   "nome": "Sleeping face",
+   "arquivo": "sleeping-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "dormindo",
+    "sono",
+    "tédio"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Sleeping%20face/animated/sleeping_face_animated.png",
+   "sha256": "e6330fd5ca1dd567fb9ef0565f3ef8dd184ba71c6d0686a27d557ec03a768622",
+   "bytes": 2786411,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/yawning-face",
+   "nome": "Yawning face",
+   "arquivo": "yawning-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "bocejo",
+    "sono",
+    "tédio",
+    "cansado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Yawning%20face/animated/yawning_face_animated.png",
+   "sha256": "0b7d1abea69ba04c39a276ace7e30d5883e4ac153e5a235be7fd2ba9ba9f4d03",
+   "bytes": 2998557,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/nauseated-face",
+   "nome": "Nauseated face",
+   "arquivo": "nauseated-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "nojo",
+    "enjoado"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Nauseated%20face/animated/nauseated_face_animated.png",
+   "sha256": "0143568f7a1917e30f83c814fb409a58003459fbf87ad9abc1974f183630b4ff",
+   "bytes": 2836700,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/face-vomiting",
+   "nome": "Face vomiting",
+   "arquivo": "face-vomiting.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "vômito",
+    "nojo",
+    "eca"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Face%20vomiting/animated/face_vomiting_animated.png",
+   "sha256": "a1bcbf6aabaa9d377f6f9e66b833d4057283e38534cd80028c541017cb1dbede",
+   "bytes": 1545057,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/clown-face",
+   "nome": "Clown face",
+   "arquivo": "clown-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "palhaço",
+    "zoeira",
+    "piada"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Clown%20face/animated/clown_face_animated.png",
+   "sha256": "1dea94840b05a54003fd490add50f420e3cb8ef0fa91abe9e0877923519580f2",
+   "bytes": 3396817,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/skull",
+   "nome": "Skull",
+   "arquivo": "skull.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "morri",
+    "caveira",
+    "morto",
+    "de",
+    "rir"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Skull/animated/skull_animated.png",
+   "sha256": "27541d3cd2e681a3079e197788f02988e4e24a7ffb759221a6246af75dea3dc8",
+   "bytes": 2312472,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/ghost",
+   "nome": "Ghost",
+   "arquivo": "ghost.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "fantasma",
+    "assustador",
+    "sumiu"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Ghost/animated/ghost_animated.png",
+   "sha256": "8cdc865bd8e596d64f1e60a43e1512da77542dcff5ccf85ead22cd302b35f8d4",
+   "bytes": 2300312,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/robot",
+   "nome": "Robot",
+   "arquivo": "robot.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "robô",
+    "inteligência",
+    "artificial",
+    "ia",
+    "máquina"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Robot/animated/robot_animated.png",
+   "sha256": "f03ab22afff0b9bb3518c6a06157990f80f1ec7ed38efcfe75e13ed9ffe2ee62",
+   "bytes": 1892654,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/pile-of-poo",
+   "nome": "Pile of poo",
+   "arquivo": "pile-of-poo.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "cocô",
+    "ruim",
+    "péssimo"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Pile%20of%20poo/animated/pile_of_poo_animated.png",
+   "sha256": "c970a23acea79349ef51f960c30a231bf4958e86d129570411447c5f0319ff95",
+   "bytes": 2406826,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/smiling-face-with-horns",
+   "nome": "Smiling face with horns",
+   "arquivo": "smiling-face-with-horns.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "malvado",
+    "diabinho",
+    "maldade"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Smiling%20face%20with%20horns/animated/smiling_face_with_horns_animated.png",
+   "sha256": "2e20d938014bfee30bae18078354a2ebeb35547d0a7649f8b4c11280bf207f6f",
+   "bytes": 2979094,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/smiling-face-with-halo",
+   "nome": "Smiling face with halo",
+   "arquivo": "smiling-face-with-halo.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "anjo",
+    "inocente",
+    "santo"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Smiling%20face%20with%20halo/animated/smiling_face_with_halo_animated.png",
+   "sha256": "7a4d2ba662fb468512d12938978aa0db9ec5f8e9264a1d42ed4fc29a88424e07",
+   "bytes": 3039702,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/knocked-out-face",
+   "nome": "Knocked-out face",
+   "arquivo": "knocked-out-face.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "nocaute",
+    "desmaiado",
+    "apagou"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Knocked-out%20face/animated/knocked-out_face_animated.png",
+   "sha256": "33cef04b7fc104baeaf720b7249b4f749a21e6d6b690aa59e0028eca3f35393e",
+   "bytes": 2820248,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/see-no-evil-monkey",
+   "nome": "See-no-evil monkey",
+   "arquivo": "see-no-evil-monkey.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "não",
+    "vi",
+    "vergonha",
+    "macaco"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/See-no-evil%20monkey/animated/see-no-evil_monkey_animated.png",
+   "sha256": "f8aa093b053ed91ac279e29f5f0ec7be8c3699d088634305c7bfd5cbaa8166ad",
+   "bytes": 3051133,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/eyes",
+   "nome": "Eyes",
+   "arquivo": "eyes.png",
+   "animado": true,
+   "categoria": "reacoes",
+   "palavras": [
+    "olhos",
+    "de",
+    "olho",
+    "olhando",
+    "atenção"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Eyes/animated/eyes_animated.png",
+   "sha256": "1abb2852c7129875e124808ce3f5987b7d3e55d0212b28646e4e1e4a0b2813fd",
+   "bytes": 1567436,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/brain",
+   "nome": "Brain",
+   "arquivo": "brain.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "cérebro",
+    "inteligente",
+    "ideia",
+    "mente"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Brain/animated/brain_animated.png",
+   "sha256": "025de3f893b5c227f7059a1d477b19590b6e3f6b736721b562d24b92d379d74c",
+   "bytes": 865086,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/red-heart",
+   "nome": "Red heart",
+   "arquivo": "red-heart.png",
+   "animado": true,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "amor",
+    "vermelho"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Red%20heart/animated/red_heart_animated.png",
+   "sha256": "8a6040dba37b855ffbbaad939acac717f8e377b684b3e9796a0520f010b01cf8",
+   "bytes": 1848815,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/beating-heart",
+   "nome": "Beating heart",
+   "arquivo": "beating-heart.png",
+   "animado": true,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "batendo",
+    "amor"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Beating%20heart/animated/beating_heart_animated.png",
+   "sha256": "dff68bb716586bcadded50269fbc57b53530cb4a2cb8a5c66d32cb3f94c0b5ea",
+   "bytes": 888078,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/heart-on-fire",
+   "nome": "Heart on fire",
+   "arquivo": "heart-on-fire.png",
+   "animado": true,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "em",
+    "chamas",
+    "paixão"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Heart%20on%20fire/animated/heart_on_fire_animated.png",
+   "sha256": "87eddc3bb445aec3e395497b1825706c148874c4fe418aff93e4effe7c84d894",
+   "bytes": 2468204,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/broken-heart",
+   "nome": "Broken heart",
+   "arquivo": "broken-heart.png",
+   "animado": true,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "partido",
+    "término",
+    "triste"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Broken%20heart/animated/broken_heart_animated.png",
+   "sha256": "84fb60351e9c797227e90382b697726b7e609662f8759ec8efec73d43a5fb763",
+   "bytes": 1994352,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/fire",
+   "nome": "Fire",
+   "arquivo": "fire.png",
+   "animado": true,
+   "categoria": "sinais",
+   "palavras": [
+    "fogo",
+    "chamas",
+    "quente",
+    "polêmica",
+    "hype"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Fire/animated/fire_animated.png",
+   "sha256": "102939d4b92503199005c497e25e972ddc29d6d8fbe2d90ea50ef8d02062e3b6",
+   "bytes": 1169789,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/hundred-points",
+   "nome": "Hundred points",
+   "arquivo": "hundred-points.png",
+   "animado": true,
+   "categoria": "sinais",
+   "palavras": [
+    "cem",
+    "100",
+    "perfeito",
+    "nota",
+    "máxima"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Hundred%20points/animated/hundred_points_animated.png",
+   "sha256": "9a3ddb3b746755d439713759ce6865ca19b7c7af76b690ed065f70ab308379c1",
+   "bytes": 1579324,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/high-voltage",
+   "nome": "High voltage",
+   "arquivo": "high-voltage.png",
+   "animado": true,
+   "categoria": "sinais",
+   "palavras": [
+    "raio",
+    "energia",
+    "choque",
+    "rápido"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/High%20voltage/animated/high_voltage_animated.png",
+   "sha256": "d444c5628ae85afe920af742098ef243bae5ad9b389d5a53a88464d82c92eee6",
+   "bytes": 811202,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/glowing-star",
+   "nome": "Glowing star",
+   "arquivo": "glowing-star.png",
+   "animado": true,
+   "categoria": "sinais",
+   "palavras": [
+    "estrela",
+    "brilhante",
+    "destaque"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Glowing%20star/animated/glowing_star_animated.png",
+   "sha256": "67130ec8c9f3cd3a7b4152a4ed39350b3c966f68f2b0d44638c5d5795363ad3f",
+   "bytes": 1797652,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/rocket",
+   "nome": "Rocket",
+   "arquivo": "rocket.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "foguete",
+    "decolar",
+    "crescimento",
+    "sucesso"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Rocket/animated/rocket_animated.png",
+   "sha256": "f0743beadaabfe437e5510719a5b27b4aceee72a2e1fb3c4a4275bcae512458e",
+   "bytes": 2455424,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/bomb",
+   "nome": "Bomb",
+   "arquivo": "bomb.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "bomba",
+    "explosivo",
+    "polêmica"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Bomb/animated/bomb_animated.png",
+   "sha256": "3d3013278af657a8be00d859ac262603d81050a5b3086994b744505049e30d06",
+   "bytes": 1999072,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/party-popper",
+   "nome": "Party popper",
+   "arquivo": "party-popper.png",
+   "animado": true,
+   "categoria": "celebracao",
+   "palavras": [
+    "festa",
+    "comemoração",
+    "confete",
+    "parabéns"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Party%20popper/animated/party_popper_animated.png",
+   "sha256": "cae04ae58b7e5aeb0b22d37095f91342f10b807b661e8b5c1ef4c919f2829e12",
+   "bytes": 1635548,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/bottle-with-popping-cork",
+   "nome": "Bottle with popping cork",
+   "arquivo": "bottle-with-popping-cork.png",
+   "animado": true,
+   "categoria": "celebracao",
+   "palavras": [
+    "champanhe",
+    "comemoração",
+    "brinde"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Bottle%20with%20popping%20cork/animated/bottle_with_popping_cork_animated.png",
+   "sha256": "74f01ef4c89c81946c9f8680790b71548fc0607de5361616fd5c40a5b139169a",
+   "bytes": 1693117,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/hourglass-not-done",
+   "nome": "Hourglass not done",
+   "arquivo": "hourglass-not-done.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "ampulheta",
+    "tempo",
+    "esperando"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Hourglass%20not%20done/animated/hourglass_not_done_animated.png",
+   "sha256": "4c826c592fb15ee565dd94977c91d3612f69bf3b06742e8a41eaac8ed81990cb",
+   "bytes": 1907887,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-animado/alarm-clock",
+   "nome": "Alarm clock",
+   "arquivo": "alarm-clock.png",
+   "animado": true,
+   "categoria": "objetos",
+   "palavras": [
+    "despertador",
+    "alarme",
+    "hora"
+   ],
+   "url": "https://media.githubusercontent.com/media/microsoft/fluentui-emoji-animated/daa0365c09795789ed2bc6e8b228c97736cb6669/assets/Alarm%20clock/animated/alarm_clock_animated.png",
+   "sha256": "0929c06ab883b7e4c3cf7717dfa0d93d42733d455fcf7d2874c013866e89d769",
+   "bytes": 1357051,
+   "pacote": "fluent-animado"
+  },
+  {
+   "id": "fluent-3d/money-bag",
+   "nome": "Money bag",
+   "arquivo": "money-bag-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "saco",
+    "de",
+    "dinheiro",
+    "grana",
+    "rico"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Money%20bag/3D/money_bag_3d.png",
+   "sha256": "cec19b9cf0beac5bbd27a07dcbe1e68c54b04112b4641165705ccb920f230292",
+   "bytes": 34132,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/money-with-wings",
+   "nome": "Money with wings",
+   "arquivo": "money-with-wings-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "dinheiro",
+    "voando",
+    "gastando",
+    "prejuízo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Money%20with%20wings/3D/money_with_wings_3d.png",
+   "sha256": "fbc654b97fd38b9599e300bd2ba6c032a744a01ebc16e7f71484d4b89f6041ab",
+   "bytes": 35163,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/dollar-banknote",
+   "nome": "Dollar banknote",
+   "arquivo": "dollar-banknote-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "dólar",
+    "nota",
+    "dinheiro"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Dollar%20banknote/3D/dollar_banknote_3d.png",
+   "sha256": "972991729e1ac8acc79b719184f760d41d5decb0f47812b2fab5ff608bebb86e",
+   "bytes": 29483,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/gem-stone",
+   "nome": "Gem stone",
+   "arquivo": "gem-stone-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "diamante",
+    "joia",
+    "valioso"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Gem%20stone/3D/gem_stone_3d.png",
+   "sha256": "50dd4109b524203fc9e208e24498f6f468c54f104b4eb41e914dec203e841820",
+   "bytes": 18806,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/chart-increasing",
+   "nome": "Chart increasing",
+   "arquivo": "chart-increasing-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "gráfico",
+    "subindo",
+    "alta",
+    "crescimento"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Chart%20increasing/3D/chart_increasing_3d.png",
+   "sha256": "dd5e6b29aa4067c5a4d9e152119497832d70e094b380998e5f5b0c51abbb3a64",
+   "bytes": 42157,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/chart-decreasing",
+   "nome": "Chart decreasing",
+   "arquivo": "chart-decreasing-3d.png",
+   "animado": false,
+   "categoria": "dinheiro",
+   "palavras": [
+    "gráfico",
+    "caindo",
+    "queda",
+    "prejuízo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Chart%20decreasing/3D/chart_decreasing_3d.png",
+   "sha256": "def4556976f4ea37549cdff95a9e677994acb2fe359a1b21dcd38ebc92b82925",
+   "bytes": 45753,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/trophy",
+   "nome": "Trophy",
+   "arquivo": "trophy-3d.png",
+   "animado": false,
+   "categoria": "celebracao",
+   "palavras": [
+    "troféu",
+    "campeão",
+    "vitória",
+    "vencedor"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Trophy/3D/trophy_3d.png",
+   "sha256": "7c4a9805f354eb2aec35063a95a4043306efc726324c0d128883f24497857bbc",
+   "bytes": 31910,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/crown",
+   "nome": "Crown",
+   "arquivo": "crown-3d.png",
+   "animado": false,
+   "categoria": "celebracao",
+   "palavras": [
+    "coroa",
+    "rei",
+    "rainha",
+    "melhor"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Crown/3D/crown_3d.png",
+   "sha256": "817095bb1423468afa155317ba04ca333957d51757a8d3326856ee8707c0edd6",
+   "bytes": 32050,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/sparkles",
+   "nome": "Sparkles",
+   "arquivo": "sparkles-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "brilho",
+    "mágica",
+    "novidade"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Sparkles/3D/sparkles_3d.png",
+   "sha256": "e4490c9ff74a3fd73a8f99c760d65b6ed51b8a3e4ad28da137fec050b77e1058",
+   "bytes": 21948,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/check-mark-button",
+   "nome": "Check mark button",
+   "arquivo": "check-mark-button-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "check",
+    "certo",
+    "correto",
+    "sim",
+    "aprovado"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Check%20mark%20button/3D/check_mark_button_3d.png",
+   "sha256": "256e3dd950cf1705ab72511ab242472b4bd7db519aa402a6182c1aaf8c58def9",
+   "bytes": 34052,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cross-mark",
+   "nome": "Cross mark",
+   "arquivo": "cross-mark-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "x",
+    "errado",
+    "não",
+    "incorreto"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cross%20mark/3D/cross_mark_3d.png",
+   "sha256": "2753b89dcd790c7f25fa3c5fd5641821860257364163abd87a2f57bb268466b9",
+   "bytes": 23713,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/warning",
+   "nome": "Warning",
+   "arquivo": "warning-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "alerta",
+    "atenção",
+    "perigo",
+    "cuidado"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Warning/3D/warning_3d.png",
+   "sha256": "318f534c5d93100443f6e48defc47d76140473d797087af5821587f0feb8003c",
+   "bytes": 22076,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/stop-sign",
+   "nome": "Stop sign",
+   "arquivo": "stop-sign-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "pare",
+    "stop"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Stop%20sign/3D/stop_sign_3d.png",
+   "sha256": "0f4ee16d06621100accaf48b082137fffb481cb5ba435178cfe200fdc6f11f79",
+   "bytes": 40369,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/prohibited",
+   "nome": "Prohibited",
+   "arquivo": "prohibited-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "proibido",
+    "não",
+    "pode"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Prohibited/3D/prohibited_3d.png",
+   "sha256": "20d8e0eba08431ab2df0cf16b20780cf0edbfe54043890b0e4c5d5412af3af2e",
+   "bytes": 40839,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/red-question-mark",
+   "nome": "Red question mark",
+   "arquivo": "red-question-mark-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "pergunta",
+    "interrogação",
+    "dúvida"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Red%20question%20mark/3D/red_question_mark_3d.png",
+   "sha256": "fb2af4458d9bf975a4a3a841e8368c9d7315dc881a3080b3fcbcf522934d4cca",
+   "bytes": 20217,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/red-exclamation-mark",
+   "nome": "Red exclamation mark",
+   "arquivo": "red-exclamation-mark-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "exclamação",
+    "importante",
+    "atenção"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Red%20exclamation%20mark/3D/red_exclamation_mark_3d.png",
+   "sha256": "a058bdb1b245cb6134bcc99975722c6093873a5c59e59cd3e2aee8bf0a362f58",
+   "bytes": 9853,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/double-exclamation-mark",
+   "nome": "Double exclamation mark",
+   "arquivo": "double-exclamation-mark-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "exclamação",
+    "dupla",
+    "urgente"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Double%20exclamation%20mark/3D/double_exclamation_mark_3d.png",
+   "sha256": "144260091a4041a939bc579db61ca8d44f87c56ec03f28622071e8e8f323c91d",
+   "bytes": 18099,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/exclamation-question-mark",
+   "nome": "Exclamation question mark",
+   "arquivo": "exclamation-question-mark-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "o",
+    "quê",
+    "surpresa",
+    "dúvida"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Exclamation%20question%20mark/3D/exclamation_question_mark_3d.png",
+   "sha256": "0b48b08570e8cc01c2ddadf848ba07f0a822b4cba33383673d95c772263ffde1",
+   "bytes": 27889,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/up-arrow",
+   "nome": "Up arrow",
+   "arquivo": "up-arrow-3d.png",
+   "animado": false,
+   "categoria": "setas",
+   "palavras": [
+    "seta",
+    "para",
+    "cima",
+    "subir"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Up%20arrow/3D/up_arrow_3d.png",
+   "sha256": "4f01db9cddb09aaf01741dd39695aa71dff1d3871f2537e9ccfa68f8bc3047c8",
+   "bytes": 28101,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/down-arrow",
+   "nome": "Down arrow",
+   "arquivo": "down-arrow-3d.png",
+   "animado": false,
+   "categoria": "setas",
+   "palavras": [
+    "seta",
+    "para",
+    "baixo",
+    "descer"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Down%20arrow/3D/down_arrow_3d.png",
+   "sha256": "cb1059241bdc6409798f70be74381e4683042a33181f887de1e6b551f39a2513",
+   "bytes": 27766,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/left-arrow",
+   "nome": "Left arrow",
+   "arquivo": "left-arrow-3d.png",
+   "animado": false,
+   "categoria": "setas",
+   "palavras": [
+    "seta",
+    "esquerda"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Left%20arrow/3D/left_arrow_3d.png",
+   "sha256": "67a377760bb0dbc7b4a25fe5298125c59a11c43167d21052cb3d64c6701badd4",
+   "bytes": 28407,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/right-arrow",
+   "nome": "Right arrow",
+   "arquivo": "right-arrow-3d.png",
+   "animado": false,
+   "categoria": "setas",
+   "palavras": [
+    "seta",
+    "direita",
+    "próximo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Right%20arrow/3D/right_arrow_3d.png",
+   "sha256": "499ad6a8d1327d60c756134fff21fc879cebd43e478a1b1d99fc07e83adca2d6",
+   "bytes": 28331,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/light-bulb",
+   "nome": "Light bulb",
+   "arquivo": "light-bulb-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "lâmpada",
+    "ideia",
+    "dica"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Light%20bulb/3D/light_bulb_3d.png",
+   "sha256": "df7b09aa18301507e6fb8c279df66d9afa465b6fed3e63d2efa84dacebdbbf79",
+   "bytes": 22450,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/megaphone",
+   "nome": "Megaphone",
+   "arquivo": "megaphone-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "megafone",
+    "anúncio",
+    "aviso"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Megaphone/3D/megaphone_3d.png",
+   "sha256": "78fd3bd1d93600888d4b06e157672c2dfb8058aaeb0f924fc461ca6af6e44c29",
+   "bytes": 35931,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/loudspeaker",
+   "nome": "Loudspeaker",
+   "arquivo": "loudspeaker-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "alto-falante",
+    "som",
+    "anúncio"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Loudspeaker/3D/loudspeaker_3d.png",
+   "sha256": "e09f1d2d3327377cff3da41d6e324e17c7a0baf35caacfc99d76de90acd87db1",
+   "bytes": 26298,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/bell",
+   "nome": "Bell",
+   "arquivo": "bell-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "sino",
+    "notificação",
+    "inscreva-se"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Bell/3D/bell_3d.png",
+   "sha256": "e1c9efed838326cb746462b824456ef382742237017871f4d0fe54c407a9d5bf",
+   "bytes": 25849,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/pushpin",
+   "nome": "Pushpin",
+   "arquivo": "pushpin-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "alfinete",
+    "fixado",
+    "importante"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Pushpin/3D/pushpin_3d.png",
+   "sha256": "116ad83b2a124f7b86a663f34610e3cd48539a1fa1db213e047230a6486507b3",
+   "bytes": 26476,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/movie-camera",
+   "nome": "Movie camera",
+   "arquivo": "movie-camera-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "câmera",
+    "filmagem",
+    "vídeo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Movie%20camera/3D/movie_camera_3d.png",
+   "sha256": "1a62dfdbca5a6a9e90aeacd9a0b3781ff588f4cb96025155fb55829f4020dd0c",
+   "bytes": 34661,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/clapper-board",
+   "nome": "Clapper board",
+   "arquivo": "clapper-board-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "claquete",
+    "cinema",
+    "corta"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Clapper%20board/3D/clapper_board_3d.png",
+   "sha256": "1a6e2d6681865c8834b29576398f82045b170177e4e745d7bce210e80cc98561",
+   "bytes": 29193,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/microphone",
+   "nome": "Microphone",
+   "arquivo": "microphone-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "microfone",
+    "podcast",
+    "entrevista"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Microphone/3D/microphone_3d.png",
+   "sha256": "99ccf1ae9f0df5a0449441da687cd5337581c029f452db8ed135f14c6a6e0121",
+   "bytes": 25256,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/video-game",
+   "nome": "Video game",
+   "arquivo": "video-game-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "videogame",
+    "jogo",
+    "controle"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Video%20game/3D/video_game_3d.png",
+   "sha256": "4b01e22089defe553717d49624e673cb5492ecdd9c6a8eddb7e6ba12d400c0da",
+   "bytes": 31507,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/clapping-hands",
+   "nome": "Clapping hands",
+   "arquivo": "clapping-hands-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "palmas",
+    "aplausos",
+    "parabéns"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Clapping%20hands/Default/3D/clapping_hands_3d_default.png",
+   "sha256": "54075bd39fd3e1860ba39898d73e61096c0e0e633ac5e9840beefddaf1d75113",
+   "bytes": 34774,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/thumbs-up",
+   "nome": "Thumbs up",
+   "arquivo": "thumbs-up-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "joinha",
+    "positivo",
+    "legal",
+    "curtir"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Thumbs%20up/Default/3D/thumbs_up_3d_default.png",
+   "sha256": "a48dbe89a1a16969593db76f5bec45e9e537e0f090e7609caa8d9a3ff598d1d2",
+   "bytes": 29710,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/thumbs-down",
+   "nome": "Thumbs down",
+   "arquivo": "thumbs-down-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "negativo",
+    "deslike",
+    "ruim"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Thumbs%20down/Default/3D/thumbs_down_3d_default.png",
+   "sha256": "12020dc8a616138d0ab3daa94008b97d0ed35dbdb1f0d80d5f17657e8aee492f",
+   "bytes": 28132,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/backhand-index-pointing-down",
+   "nome": "Backhand index pointing down",
+   "arquivo": "backhand-index-pointing-down-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "apontando",
+    "para",
+    "baixo",
+    "link",
+    "descrição"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Backhand%20index%20pointing%20down/Default/3D/backhand_index_pointing_down_3d_default.png",
+   "sha256": "ace09c0778f6653b1254fe3040eacbfea1795195f19f598fb788f2ace3e00e1f",
+   "bytes": 24723,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/backhand-index-pointing-right",
+   "nome": "Backhand index pointing right",
+   "arquivo": "backhand-index-pointing-right-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "apontando",
+    "direita"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Backhand%20index%20pointing%20right/Default/3D/backhand_index_pointing_right_3d_default.png",
+   "sha256": "af6942496976b7e1ccb76da13b307576b83fcfa1c3153462dc190db7c96cee9d",
+   "bytes": 24304,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/index-pointing-at-the-viewer",
+   "nome": "Index pointing at the viewer",
+   "arquivo": "index-pointing-at-the-viewer-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "você",
+    "apontando",
+    "para",
+    "você"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Index%20pointing%20at%20the%20viewer/Default/3D/index_pointing_at_the_viewer_3d_default.png",
+   "sha256": "c741fe2275779e04a68b61af0d5b8a639b1849e985f638c0a8a0985af0004f10",
+   "bytes": 36000,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/flexed-biceps",
+   "nome": "Flexed biceps",
+   "arquivo": "flexed-biceps-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "força",
+    "músculo",
+    "forte"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Flexed%20biceps/Default/3D/flexed_biceps_3d_default.png",
+   "sha256": "c765683c47844d18dd1daa38556f27347d059d7cf54b315a41403326f5af8a38",
+   "bytes": 30206,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/folded-hands",
+   "nome": "Folded hands",
+   "arquivo": "folded-hands-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "por",
+    "favor",
+    "oração",
+    "obrigado"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Folded%20hands/Default/3D/folded_hands_3d_default.png",
+   "sha256": "69090ea19b7741e691f878fe3f1649a8d18f42fc59e1912ea799bf4e35045039",
+   "bytes": 23407,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/raising-hands",
+   "nome": "Raising hands",
+   "arquivo": "raising-hands-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "comemorando",
+    "aleluia",
+    "viva"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Raising%20hands/Default/3D/raising_hands_3d_default.png",
+   "sha256": "e645fbc6c7e174cb74ce168e4ad7d360d3aecc56bbadabbcb51a6d80c9375992",
+   "bytes": 32215,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/waving-hand",
+   "nome": "Waving hand",
+   "arquivo": "waving-hand-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "tchau",
+    "oi",
+    "olá"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Waving%20hand/Default/3D/waving_hand_3d_default.png",
+   "sha256": "fd8d684a2dd4bca71b53eea530ffa226fdd9a17a50b9bebec2788447477f0d39",
+   "bytes": 34079,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/ok-hand",
+   "nome": "Ok hand",
+   "arquivo": "ok-hand-3d.png",
+   "animado": false,
+   "categoria": "maos",
+   "palavras": [
+    "ok",
+    "perfeito",
+    "beleza"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Ok%20hand/Default/3D/ok_hand_3d_default.png",
+   "sha256": "cb506278a6b54b1d60b7a9e513f1513aa1d1cd245f9cf7c14e930b3ee8cc8fa1",
+   "bytes": 28089,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/person-facepalming",
+   "nome": "Person facepalming",
+   "arquivo": "person-facepalming-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "facepalm",
+    "vergonha",
+    "alheia",
+    "que",
+    "vergonha"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Person%20facepalming/Default/3D/person_facepalming_3d_default.png",
+   "sha256": "a84d868f4eb23f962cd7658c51cb4cdbcbf545e769985e6df524910ca8c7e8f3",
+   "bytes": 33937,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/person-shrugging",
+   "nome": "Person shrugging",
+   "arquivo": "person-shrugging-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "sei",
+    "lá",
+    "tanto",
+    "faz",
+    "não",
+    "sei"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Person%20shrugging/Default/3D/person_shrugging_3d_default.png",
+   "sha256": "16e40c146bba4e107309e331b28b8da97b480c022e8a02cf4fd154fb6527f3a2",
+   "bytes": 37888,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/grinning-face-with-sweat",
+   "nome": "Grinning face with sweat",
+   "arquivo": "grinning-face-with-sweat-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "ufa",
+    "alívio",
+    "nervoso",
+    "rindo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Grinning%20face%20with%20sweat/3D/grinning_face_with_sweat_3d.png",
+   "sha256": "dcac6dc921b77aabc16d524ed5d5067f66b6104d545c5f6396f7bbdba6d4cf2c",
+   "bytes": 42538,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/unamused-face",
+   "nome": "Unamused face",
+   "arquivo": "unamused-face-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "sem",
+    "graça",
+    "entediado",
+    "aff"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Unamused%20face/3D/unamused_face_3d.png",
+   "sha256": "039b56c0f5713dd1f80d1bbb3b0c18632992f301334f423719973148d5cc8c2d",
+   "bytes": 38768,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/woozy-face",
+   "nome": "Woozy face",
+   "arquivo": "woozy-face-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "bêbado",
+    "tonto",
+    "grogue"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Woozy%20face/3D/woozy_face_3d.png",
+   "sha256": "8a5a340485347248c924baf1b6615eaae281d17be0b1abe92a6101c47295287b",
+   "bytes": 42490,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/winking-face-with-tongue",
+   "nome": "Winking face with tongue",
+   "arquivo": "winking-face-with-tongue-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "brincadeira",
+    "zoeira",
+    "língua"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Winking%20face%20with%20tongue/3D/winking_face_with_tongue_3d.png",
+   "sha256": "d89d3542df5bf0c60300a6ebe88dd050278f9eec1c5cefd447ba7766e7f346fa",
+   "bytes": 45013,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/skull-and-crossbones",
+   "nome": "Skull and crossbones",
+   "arquivo": "skull-and-crossbones-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "perigo",
+    "veneno",
+    "morte"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Skull%20and%20crossbones/3D/skull_and_crossbones_3d.png",
+   "sha256": "5d51febed5ac6967a3b69ad9d773e0975b51222486c224e603f95b3ce0777f87",
+   "bytes": 35507,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/alien",
+   "nome": "Alien",
+   "arquivo": "alien-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "alien",
+    "extraterrestre",
+    "estranho"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Alien/3D/alien_3d.png",
+   "sha256": "7b2318a60f36814c289e92643cbfa8d72caac26d98e955d8cae196d3db9abddf",
+   "bytes": 38905,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cowboy-hat-face",
+   "nome": "Cowboy hat face",
+   "arquivo": "cowboy-hat-face-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "cowboy",
+    "caubói",
+    "sertanejo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cowboy%20hat%20face/3D/cowboy_hat_face_3d.png",
+   "sha256": "9ef48091f71a81a04fe648cac438be0b0ae3f832879a9dd3451e0aaeb2b4732b",
+   "bytes": 46721,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/disguised-face",
+   "nome": "Disguised face",
+   "arquivo": "disguised-face-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "disfarce",
+    "disfarçado",
+    "espião"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Disguised%20face/3D/disguised_face_3d.png",
+   "sha256": "0a0848bf71468635f752d46be66d8c292b400ec6502f5b8f9e1898d55c41ae90",
+   "bytes": 49564,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/hugging-face",
+   "nome": "Hugging face",
+   "arquivo": "hugging-face-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "abraço",
+    "carinho"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Hugging%20face/3D/hugging_face_3d.png",
+   "sha256": "2f70a465496f45c146253fc933202a38f4f8e1af8b2a0e2555832456c03f1b2e",
+   "bytes": 51316,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/face-with-head-bandage",
+   "nome": "Face with head-bandage",
+   "arquivo": "face-with-head-bandage-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "machucado",
+    "ferido",
+    "acidente"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Face%20with%20head-bandage/3D/face_with_head-bandage_3d.png",
+   "sha256": "96e9f68e689712a5617dad35cafe69b4b2ac5459f771be3469202855e9f502ee",
+   "bytes": 42570,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/face-with-medical-mask",
+   "nome": "Face with medical mask",
+   "arquivo": "face-with-medical-mask-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "doente",
+    "máscara",
+    "saúde"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Face%20with%20medical%20mask/3D/face_with_medical_mask_3d.png",
+   "sha256": "eb7eb9e877dbaf7f530bce6c9eeb0a03c028127cbba0cf98b7b3944e1f97d5b2",
+   "bytes": 44010,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/head-shaking-horizontally",
+   "nome": "Head shaking horizontally",
+   "arquivo": "head-shaking-horizontally-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "não",
+    "negando",
+    "discordo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Head%20shaking%20horizontally/3D/head_shaking_horizontally_3d.png",
+   "sha256": "0cf710f566ada72aaba2f5ec318ee4a46827fa200fb2bfc43cf34b47603a3a1e",
+   "bytes": 49954,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/head-shaking-vertically",
+   "nome": "Head shaking vertically",
+   "arquivo": "head-shaking-vertically-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "sim",
+    "concordo",
+    "aprovado"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Head%20shaking%20vertically/3D/head_shaking_vertically_3d.png",
+   "sha256": "bdfda4ed257c518648a9d035f7bea51004c5c6b03757688e1e4584f1e668ec89",
+   "bytes": 48180,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/hear-no-evil-monkey",
+   "nome": "Hear-no-evil monkey",
+   "arquivo": "hear-no-evil-monkey-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "não",
+    "ouvi",
+    "macaco"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Hear-no-evil%20monkey/3D/hear-no-evil_monkey_3d.png",
+   "sha256": "b9a40dd888340a6197b5e3b6de2442fc7a51e5d85ba0aac43f87e0bf0ec484ed",
+   "bytes": 45031,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/speak-no-evil-monkey",
+   "nome": "Speak-no-evil monkey",
+   "arquivo": "speak-no-evil-monkey-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "não",
+    "falo",
+    "segredo",
+    "macaco"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Speak-no-evil%20monkey/3D/speak-no-evil_monkey_3d.png",
+   "sha256": "688ec8aef82991381312cba01db7c2fb27bc8f19b9b4712bba2dedf1f63c76de",
+   "bytes": 46830,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/eye",
+   "nome": "Eye",
+   "arquivo": "eye-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "olho",
+    "observando"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Eye/3D/eye_3d.png",
+   "sha256": "72637d9098e4918172b9e2b3d0001ad9fe501cbb48bf770c3469ef4bfd93f52f",
+   "bytes": 38754,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/mouth",
+   "nome": "Mouth",
+   "arquivo": "mouth-3d.png",
+   "animado": false,
+   "categoria": "reacoes",
+   "palavras": [
+    "boca",
+    "falando"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Mouth/3D/mouth_3d.png",
+   "sha256": "96fcfe41b70fd1f536cf5ff3f9eeb376c9c1448d06d9bf6d7b3979a92f000237",
+   "bytes": 31382,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/speaking-head",
+   "nome": "Speaking head",
+   "arquivo": "speaking-head-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "falando",
+    "discurso",
+    "voz"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Speaking%20head/3D/speaking_head_3d.png",
+   "sha256": "b7ce2c76cf77f1a5130a9843ab77959571ce830727a39cbb6fa4d1fd6364636c",
+   "bytes": 32071,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/sparkling-heart",
+   "nome": "Sparkling heart",
+   "arquivo": "sparkling-heart-3d.png",
+   "animado": false,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "brilhando"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Sparkling%20heart/3D/sparkling_heart_3d.png",
+   "sha256": "c458860ef79e7baedd7346104fb1f6cd27f2be165200c94fb3d7781c75269ae7",
+   "bytes": 36392,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/two-hearts",
+   "nome": "Two hearts",
+   "arquivo": "two-hearts-3d.png",
+   "animado": false,
+   "categoria": "coracao",
+   "palavras": [
+    "corações",
+    "amor",
+    "casal"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Two%20hearts/3D/two_hearts_3d.png",
+   "sha256": "b882b5354fd3da839dfb0d2dc0481dfbedddd0d4e91eef43a4894580199dbad9",
+   "bytes": 30346,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/revolving-hearts",
+   "nome": "Revolving hearts",
+   "arquivo": "revolving-hearts-3d.png",
+   "animado": false,
+   "categoria": "coracao",
+   "palavras": [
+    "corações",
+    "girando",
+    "amor"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Revolving%20hearts/3D/revolving_hearts_3d.png",
+   "sha256": "7be6df2c12935deb542e52dc12b5b009c44a3b0b58f825d8d757ed4f5b2c1196",
+   "bytes": 38636,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/black-heart",
+   "nome": "Black heart",
+   "arquivo": "black-heart-3d.png",
+   "animado": false,
+   "categoria": "coracao",
+   "palavras": [
+    "coração",
+    "preto",
+    "luto"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Black%20heart/3D/black_heart_3d.png",
+   "sha256": "6d6fb494995ef95b146fd3d4a4ba6c85b4b08f658c606e7dd3760e5d51f9976e",
+   "bytes": 29210,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/star",
+   "nome": "Star",
+   "arquivo": "star-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "estrela",
+    "favorito"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Star/3D/star_3d.png",
+   "sha256": "b935cdf502b69054bc2b08e7ba4e4eaba6499564a2041dd77d6291e21bf8cfe8",
+   "bytes": 24449,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/shooting-star",
+   "nome": "Shooting star",
+   "arquivo": "shooting-star-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "estrela",
+    "cadente",
+    "desejo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Shooting%20star/3D/shooting_star_3d.png",
+   "sha256": "780df133da58745c45b7da2f61e5fadba3c7eeb39ac8372d6703fd01190b47eb",
+   "bytes": 40888,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/clinking-glasses",
+   "nome": "Clinking glasses",
+   "arquivo": "clinking-glasses-3d.png",
+   "animado": false,
+   "categoria": "celebracao",
+   "palavras": [
+    "brinde",
+    "saúde",
+    "comemoração"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Clinking%20glasses/3D/clinking_glasses_3d.png",
+   "sha256": "9688066f55c78d6dee3f7f486b24b6c378b4af5e214b68fb8f2cd5d68c4ff20a",
+   "bytes": 23475,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/birthday-cake",
+   "nome": "Birthday cake",
+   "arquivo": "birthday-cake-3d.png",
+   "animado": false,
+   "categoria": "celebracao",
+   "palavras": [
+    "aniversário",
+    "bolo",
+    "parabéns"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Birthday%20cake/3D/birthday_cake_3d.png",
+   "sha256": "5c5d6961fde0fa82d1aa2242f938ff10b0327e791674c625c912f13ff206933b",
+   "bytes": 41229,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/stopwatch",
+   "nome": "Stopwatch",
+   "arquivo": "stopwatch-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "cronômetro",
+    "tempo",
+    "rápido"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Stopwatch/3D/stopwatch_3d.png",
+   "sha256": "8dc8f855072855723fde9ef8d6ce5b25db19102222b4a838bceea1e442bd78cf",
+   "bytes": 45094,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/crystal-ball",
+   "nome": "Crystal ball",
+   "arquivo": "crystal-ball-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "bola",
+    "de",
+    "cristal",
+    "futuro",
+    "previsão"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Crystal%20ball/3D/crystal_ball_3d.png",
+   "sha256": "f42c5484bea4f33f7ba8ee2b5c7e2a51d17a9fcec36f2ba92334f62b7f95eb43",
+   "bytes": 35475,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/musical-notes",
+   "nome": "Musical notes",
+   "arquivo": "musical-notes-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "música",
+    "notas",
+    "cantar"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Musical%20notes/3D/musical_notes_3d.png",
+   "sha256": "72bd5c2870b7bcad31bb591a789107c92825b7dd844006366e6fc4e1fa31ab36",
+   "bytes": 29610,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/camera-with-flash",
+   "nome": "Camera with flash",
+   "arquivo": "camera-with-flash-3d.png",
+   "animado": false,
+   "categoria": "objetos",
+   "palavras": [
+    "foto",
+    "câmera",
+    "flash"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Camera%20with%20flash/3D/camera_with_flash_3d.png",
+   "sha256": "fabe124e007add8f59f1312760b0f634deafe039e81a640f91e9dba3582d7a80",
+   "bytes": 40783,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/love-letter",
+   "nome": "Love letter",
+   "arquivo": "love-letter-3d.png",
+   "animado": false,
+   "categoria": "coracao",
+   "palavras": [
+    "carta",
+    "de",
+    "amor",
+    "mensagem"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Love%20letter/3D/love_letter_3d.png",
+   "sha256": "9fa9a44ee9e613c8088a39a615e8e84d5e1c3f3a9213c51908e2689f6958389b",
+   "bytes": 33406,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cloud-with-lightning-and-rain",
+   "nome": "Cloud with lightning and rain",
+   "arquivo": "cloud-with-lightning-and-rain-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "tempestade",
+    "chuva",
+    "raio"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cloud%20with%20lightning%20and%20rain/3D/cloud_with_lightning_and_rain_3d.png",
+   "sha256": "ed1f207db4824e666055faba6461900d24300332926d72379a53f7d904a2cfbe",
+   "bytes": 52131,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/rainbow",
+   "nome": "Rainbow",
+   "arquivo": "rainbow-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "arco-íris",
+    "esperança"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Rainbow/3D/rainbow_3d.png",
+   "sha256": "81c60a96369047dd287b9fb54d02d29fe1e9b7fe3f00924330037e861b1fbd81",
+   "bytes": 34967,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/sun-with-face",
+   "nome": "Sun with face",
+   "arquivo": "sun-with-face-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "sol",
+    "bom",
+    "dia"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Sun%20with%20face/3D/sun_with_face_3d.png",
+   "sha256": "f8a161586bf6eb7635845ec8ad7bdf0672fa97947ab4ece4fdfdc1f3f671730a",
+   "bytes": 44448,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/snowflake",
+   "nome": "Snowflake",
+   "arquivo": "snowflake-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "floco",
+    "de",
+    "neve",
+    "frio"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Snowflake/3D/snowflake_3d.png",
+   "sha256": "82f12779eb8658ebd4bae02c8136c4588bea55cdf60536d4d88f5eb530e7cb90",
+   "bytes": 40903,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/tornado",
+   "nome": "Tornado",
+   "arquivo": "tornado-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "tornado",
+    "caos",
+    "furacão"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Tornado/3D/tornado_3d.png",
+   "sha256": "48b06fdc54ce6f8debf9dd12e6e2afb2304859f7a3e6ce5b51b1180a317c06ce",
+   "bytes": 38109,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/water-wave",
+   "nome": "Water wave",
+   "arquivo": "water-wave-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "onda",
+    "mar"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Water%20wave/3D/water_wave_3d.png",
+   "sha256": "b9e2164113966a33f547f336ba5e8b3517bdc28dca7a6646fc3ade9d99e2454c",
+   "bytes": 32088,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/droplet",
+   "nome": "Droplet",
+   "arquivo": "droplet-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "gota",
+    "suor",
+    "água"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Droplet/3D/droplet_3d.png",
+   "sha256": "e5d71667f30307af984a42f204871b8eef0d3c3af7501e637b50472822c994da",
+   "bytes": 19579,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/collision",
+   "nome": "Collision",
+   "arquivo": "collision-3d.png",
+   "animado": false,
+   "categoria": "sinais",
+   "palavras": [
+    "colisão",
+    "explosão",
+    "batida",
+    "pow"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Collision/3D/collision_3d.png",
+   "sha256": "124ac1fc19f11512b0370197e6ddbd7b035f193df52c75e569f8e9059b7ccc13",
+   "bytes": 30796,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cyclone",
+   "nome": "Cyclone",
+   "arquivo": "cyclone-3d.png",
+   "animado": false,
+   "categoria": "natureza",
+   "palavras": [
+    "ciclone",
+    "tonto",
+    "confuso"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cyclone/3D/cyclone_3d.png",
+   "sha256": "4e91e9797d07fbf2a7e6e1b7d5b1af30395abd2b25ec67fe5ddf33364bb728b2",
+   "bytes": 47195,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/dog-face",
+   "nome": "Dog face",
+   "arquivo": "dog-face-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "cachorro",
+    "cão"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Dog%20face/3D/dog_face_3d.png",
+   "sha256": "7db4c311218a47053e490ec53e7b3995bb83246b0d6992e135868a5220bb32e7",
+   "bytes": 43188,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cat-face",
+   "nome": "Cat face",
+   "arquivo": "cat-face-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "gato",
+    "gatinho"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cat%20face/3D/cat_face_3d.png",
+   "sha256": "d930f2aee8ae47cb3ca26f2594ddd15df42345d952b5903b776adf4a728860b5",
+   "bytes": 37653,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/cat-with-tears-of-joy",
+   "nome": "Cat with tears of joy",
+   "arquivo": "cat-with-tears-of-joy-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "gato",
+    "rindo"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Cat%20with%20tears%20of%20joy/3D/cat_with_tears_of_joy_3d.png",
+   "sha256": "ef898754403fe81aece4059a32a1aeba623ce6404df2868e6ba848757541f251",
+   "bytes": 41847,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/unicorn",
+   "nome": "Unicorn",
+   "arquivo": "unicorn-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "unicórnio",
+    "mágico"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Unicorn/3D/unicorn_3d.png",
+   "sha256": "7d4a8a3e1040e9ba2b5a562413e258ebacc812e5c6d87946b3de53a66d1736b4",
+   "bytes": 35413,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/dragon-face",
+   "nome": "Dragon face",
+   "arquivo": "dragon-face-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "dragão"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Dragon%20face/3D/dragon_face_3d.png",
+   "sha256": "b70a38cc438470f7e35477f0741fb0e7941bdd8543a866741009472f3d4fbd51",
+   "bytes": 43563,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/snake",
+   "nome": "Snake",
+   "arquivo": "snake-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "cobra",
+    "traíra",
+    "falso"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Snake/3D/snake_3d.png",
+   "sha256": "3d9ad552f970ebcf8d9adf27d0d08b4f783646a25378d6283e956e2f73c0466c",
+   "bytes": 38393,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/rat",
+   "nome": "Rat",
+   "arquivo": "rat-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "rato"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Rat/3D/rat_3d.png",
+   "sha256": "1275c4c937385c836ec756e5c2c3ca7d017978e978057c9ac09814e5498a18f8",
+   "bytes": 37035,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/monkey-face",
+   "nome": "Monkey face",
+   "arquivo": "monkey-face-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "macaco"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Monkey%20face/3D/monkey_face_3d.png",
+   "sha256": "28457ce308d7563afe96f1e1fc703c7ca760045a56596f89329159c55233e7bd",
+   "bytes": 37820,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/pig-face",
+   "nome": "Pig face",
+   "arquivo": "pig-face-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "porco"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Pig%20face/3D/pig_face_3d.png",
+   "sha256": "8446bb06dc2c1049b28e5413ac6aa3c2cecc18036d1d6f49b135c0ac6c1123fa",
+   "bytes": 32418,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/chicken",
+   "nome": "Chicken",
+   "arquivo": "chicken-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "galinha",
+    "frango"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Chicken/3D/chicken_3d.png",
+   "sha256": "78a069bc06c3e266ad600804840c44ba2cf291d24d090b3f627c1d5a09cb5a29",
+   "bytes": 31613,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/penguin",
+   "nome": "Penguin",
+   "arquivo": "penguin-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "pinguim"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Penguin/3D/penguin_3d.png",
+   "sha256": "c513a326631f3758e3ef9729ed2aa3bba46432340657ae63f32fd0332f648341",
+   "bytes": 32955,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/shark",
+   "nome": "Shark",
+   "arquivo": "shark-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "tubarão"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Shark/3D/shark_3d.png",
+   "sha256": "a60ab98d8fe5ee118fab6a3cdad32efbb6613aae35aa758604f901e9e5d1cac2",
+   "bytes": 32406,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/t-rex",
+   "nome": "T-rex",
+   "arquivo": "t-rex-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "dinossauro",
+    "tiranossauro"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/T-rex/3D/t-rex_3d.png",
+   "sha256": "1de0ccae0a8079e61ed36e76fe6fce4b7be760da28841265b1eee56ef02a42b7",
+   "bytes": 33371,
+   "pacote": "fluent-3d"
+  },
+  {
+   "id": "fluent-3d/butterfly",
+   "nome": "Butterfly",
+   "arquivo": "butterfly-3d.png",
+   "animado": false,
+   "categoria": "animais",
+   "palavras": [
+    "borboleta"
+   ],
+   "url": "https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/assets/Butterfly/3D/butterfly_3d.png",
+   "sha256": "2ee52f94c6383dafdd29f471d04c17141563d7fff790d33e16781a751f72b397",
+   "bytes": 60804,
+   "pacote": "fluent-3d"
+  }
+ ]
+}

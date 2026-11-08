@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-letras-de-oficina",
+  "nome": "Letras de oficina",
+  "familia": "Tipografia material",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Letras em suportes diferentes se encaixam em uma régua de composição, formando uma frase curta.",
+  "usar_em": "palavra central, definição, abertura e fechamento de uma ideia",
+  "composicao": "Uma linha de base constante, cartões de letras com três materiais e uma palavra final em tinta escura. A frase ocupa até 72% da largura útil, com altura de reserva para acentos.",
+  "material_e_luz": "Papel de embalagem, placa pintada e etiqueta adesiva gerados proceduralmente. Variações entre letras afetam a borda e a fonte, preservando o corpo óptico.",
+  "movimento": "Uma letra por vez chega de uma borda diferente, encosta na régua e é corrigida em 2 px. Quando a palavra fecha, só um cartão troca de material; nada de alternância rápida de todas as letras.",
+  "construcao": "Segmente por grafemas, não por bytes; meça o avanço real da fonte e faça quebra por palavras antes de montar cartões. Semente fixa escolhe material e inclinação máxima de 3 graus.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Cartões de palavras inteiras em vez de letras; manter a régua, os materiais e a leitura.",
+  "parametros_visuais": {
+    "materiais": 3,
+    "rotacao_maxima_graus": 3,
+    "atraso_letras_s": 0.08,
+    "correcao_final_px": 2
+  },
+  "fases": [
+    "Mostrar a régua e o espaço da palavra",
+    "Encaixar as letras do termo central",
+    "Adicionar uma segunda linha curta com o complemento",
+    "Firmar todos os cartões sem trepidação"
+  ],
+  "criterios": [
+    "Acentos, cedilha e pontuação ficam ligados ao grafema.",
+    "O texto cabe sem reduzir a fonte abaixo do mínimo do layout.",
+    "Nenhum cartão cobre o seguinte ao assentar."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "materiais": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 4
+    },
+    "rotacao_maxima_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 3
+    },
+    "atraso_letras_s": {
+      "tipo": "numero",
+      "minimo": 0.04,
+      "maximo": 0.2
+    },
+    "correcao_final_px": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 4
+    }
+  }
+}

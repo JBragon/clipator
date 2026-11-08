@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-acervo-natural",
+  "nome": "Acervo natural",
+  "familia": "Coleção fotográfica",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma prancheta de acervo apresenta exemplares em pares e destaca uma característica de cada um.",
+  "usar_em": "comparação de espécies, objetos, materiais e exemplares de uma coleção",
+  "composicao": "Duas áreas de amostra de tamanhos iguais, etiqueta com nome e um campo de observação. Escala só aparece quando houver medida conhecida; sem ela, declarar “imagens sem escala”.",
+  "material_e_luz": "Fundo verde muito claro sem textura pesada; fotos ou ilustrações locais recortadas têm sombra sutil e bordas naturais. Texto em cartões que não tocam o objeto.",
+  "movimento": "O par anterior desliza para uma gaveta e o novo ocupa o centro. Uma lupa circular amplia somente a característica mencionada, com duração suficiente para leitura.",
+  "construcao": "Normalize a caixa visível do alfa para ocupar 75% da célula. Gere enquadramento por bounds do objeto, não pelo tamanho do arquivo. Associe cada detalhe a uma caixa de recorte fornecida, sem identificar espécies automaticamente.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Silhuetas próprias e etiquetas quando a imagem não estiver disponível; informar a falta de mídia.",
+  "parametros_visuais": {
+    "colunas": 2,
+    "ocupacao_celula": 0.75,
+    "zoom_detalhe": 1.6,
+    "margem_interna": 0.08
+  },
+  "fases": [
+    "Abrir a prancheta com dois exemplares",
+    "Destacar a característica do primeiro",
+    "Mover a lupa para o detalhe do segundo",
+    "Fechar com os dois exemplares e uma observação curta"
+  ],
+  "criterios": [
+    "Não distorcer a proporção dos exemplares.",
+    "Identificações e escala vêm dos metadados fornecidos.",
+    "A lupa não mascara o campo de observação."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "colunas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 2
+    },
+    "ocupacao_celula": {
+      "tipo": "numero",
+      "minimo": 0.5,
+      "maximo": 0.85
+    },
+    "zoom_detalhe": {
+      "tipo": "numero",
+      "minimo": 1,
+      "maximo": 2
+    },
+    "margem_interna": {
+      "tipo": "numero",
+      "minimo": 0.05,
+      "maximo": 0.15
+    }
+  }
+}

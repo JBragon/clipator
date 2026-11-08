@@ -1,0 +1,14 @@
+/* Plantão urgente: tarja URGENTE piscando e faixa de notícia com o título do clip. */
+.tarja {
+  position: absolute; top: 7%; left: 5%; font-family: 'Anton', sans-serif; font-size: calc(var(--tamanho) * 0.8);
+  color: #fff; background: #d00000; padding: 0.06em 0.4em; letter-spacing: 0.06em; animation: pisca 1s steps(2) infinite;
+}
+@keyframes pisca { 50% { background: #8a0000; } }
+.faixa {
+  position: absolute; left: 0; right: 0; bottom: 6%; display: flex; align-items: stretch; font-family: 'Anton', sans-serif;
+  font-size: calc(var(--tamanho) * 0.62); animation: faixa-entra 0.4s ease-out both;
+}
+.faixa .rotulo { background: #d00000; color: #fff; padding: 0.25em 0.5em; }
+.faixa .texto { flex: 1; background: rgba(255,255,255,.95); color: #111; padding: 0.25em 0.5em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@keyframes faixa-entra { from { transform: translateX(-100%); } to { transform: none; } }
+.frase { top: min(var(--y), 70%); }

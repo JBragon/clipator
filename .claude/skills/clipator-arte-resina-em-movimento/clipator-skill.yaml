@@ -1,0 +1,9 @@
+id: clipator-arte-resina-em-movimento
+nome: "Resina em movimento — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de resina em movimento para propriedades de material, transformação, memória e conceitos abstratos simples, ou implementa esse estilo no Clipator quando solicitado."

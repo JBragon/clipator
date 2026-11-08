@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-revista-de-bancada",
+  "nome": "Revista de bancada",
+  "familia": "Editorial fotográfico",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma página editorial combina retrato recortado, coluna de contexto e pequenas notas presas à grade.",
+  "usar_em": "perfil de pessoa, contextualização de assunto e explicação com fotografia",
+  "composicao": "Retrato em um lado, coluna de informação no outro, filete vertical e um único bloco de destaque. Rodapé pode ter fonte da imagem quando fornecida.",
+  "material_e_luz": "Fotos com tons naturais levemente reduzidos, filete verde e cartão cobre. Recorte sem contorno colorido espesso; sombra curta separa foto do papel.",
+  "movimento": "A página abre pela coluna, o retrato sobe 18 px e uma nota lateral desliza até o filete. O título fica fixo enquanto a pessoa fala.",
+  "construcao": "Layout por duas colunas com larguras 58/42 e colisão de caixas. Detecte se a foto tem alfa; sem recorte, use moldura retangular e mantenha a imagem inteira. O nome vem dos dados, não de reconhecimento facial.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Foto retangular e duas colunas sem sombra ou recorte automático.",
+  "parametros_visuais": {
+    "coluna_foto": 0.58,
+    "deslocamento_entrada_px": 18,
+    "rotacao_nota_graus": 1,
+    "max_notas": 2
+  },
+  "fases": [
+    "Abrir o filete e o título curto",
+    "Revelar retrato e nome fornecido",
+    "Apresentar a nota que contextualiza a fala",
+    "Manter retrato e resumo numa página limpa"
+  ],
+  "criterios": [
+    "A foto não corta o rosto ao mudar de formato.",
+    "Nome e atribuição têm origem explícita.",
+    "A nota não vira uma segunda legenda corrida."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "coluna_foto": {
+      "tipo": "numero",
+      "minimo": 0.5,
+      "maximo": 0.65
+    },
+    "deslocamento_entrada_px": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 25
+    },
+    "rotacao_nota_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 2
+    },
+    "max_notas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 2
+    }
+  }
+}

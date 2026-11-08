@@ -1,0 +1,9 @@
+id: clipator-arte-anotacao-em-foco
+nome: "Anotação em foco — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de anotação em foco para definições, argumento central, citações verificadas e conclusão, ou implementa esse estilo no Clipator quando solicitado."

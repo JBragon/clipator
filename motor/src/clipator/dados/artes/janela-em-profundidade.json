@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-janela-em-profundidade",
+  "nome": "Janela em profundidade",
+  "familia": "Imagem em camadas",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma ilustração em camadas vira uma janela de profundidade, revelada por folhas laterais que se abrem.",
+  "usar_em": "história, análise de imagem e apresentação de um cenário",
+  "composicao": "Janela sem moldura de museu, quatro planos e uma área de detalhe destacada por uma abertura lateral. O personagem principal não é cortado pela borda.",
+  "material_e_luz": "Imagem própria, domínio público verificado ou mídia do usuário com direito de uso. Cada plano tem máscara limpa; o fundo exige preenchimento autorizado ou limites de deslocamento menores.",
+  "movimento": "Folhas laterais abrem, câmera desloca até 4% na horizontal e planos respondem por profundidade. O detalhe ganha uma seta curta; retorno termina com o mesmo enquadramento inicial se laço.",
+  "construcao": "Receba camadas RGBA e profundidade normalizada; compute deslocamento=movimento_camera*(1-profundidade). Verifique a área descoberta de cada máscara antes de exportar. Sem fundo preenchido, limite movimento ao excedente existente.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "hibrido",
+  "complexidade": "alta",
+  "alternativa_leve": "Pan e zoom único sobre a imagem inteira, sem simular camadas inexistentes.",
+  "parametros_visuais": {
+    "camadas": 4,
+    "paralaxe_maxima": 0.04,
+    "folga_borda": 0.08,
+    "desfoque_maximo_px": 1.2
+  },
+  "fases": [
+    "Abrir as folhas e apresentar a imagem",
+    "Separar levemente os planos por paralaxe",
+    "Parar no detalhe mencionado",
+    "Fechar as folhas sem atravessar a imagem"
+  ],
+  "criterios": [
+    "Nenhum buraco transparente aparece atrás do sujeito.",
+    "Rosto e mãos não se deformam.",
+    "A imagem é identificada como ilustração quando não for registro factual."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "camadas": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 6
+    },
+    "paralaxe_maxima": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.05
+    },
+    "folga_borda": {
+      "tipo": "numero",
+      "minimo": 0.04,
+      "maximo": 0.15
+    },
+    "desfoque_maximo_px": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 2
+    }
+  }
+}

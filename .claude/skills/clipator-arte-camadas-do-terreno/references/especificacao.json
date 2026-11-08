@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-camadas-do-terreno",
+  "nome": "Camadas do terreno",
+  "familia": "Isometria explicativa",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um bloco isométrico mostra solo, infraestrutura e superfície em camadas que podem deslizar para revelar o que existe entre elas.",
+  "usar_em": "geologia, cidade, ocupação do espaço e sistemas em camadas",
+  "composicao": "Bloco retangular com três níveis e um canto removível; legenda lateral associa cada cor a um nível. As faces têm diferença de luminosidade, não contorno preto de quadrinhos.",
+  "material_e_luz": "Superfície mineral fosca, camadas internas em argila suave e tubulações de contraste moderado. Árvores e casas simples são opcionais e têm escala consistente.",
+  "movimento": "A camada superior desliza para a esquerda, a intermediária para a direita e a base fica fixa. Um marcador desce atravessando os níveis e volta ao ponto inicial.",
+  "construcao": "Modele cada nível como grupo com offset próprio. Corte visual deve corresponder à geometria, não à textura. Limite a quantidade de elementos por nível e sincronize rótulos com a projeção de seus centros.",
+  "cores": {
+    "fundo": "#DDE6DC",
+    "superficie": "#C1D2C5",
+    "texto": "#29433D",
+    "texto_suave": "#648173",
+    "primaria": "#B77547",
+    "destaque": "#5B9AA4"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Faces isométricas SVG com três faixas e offsets idênticos.",
+  "parametros_visuais": {
+    "niveis": 3,
+    "separacao_relativa": 0.22,
+    "canto_removivel": 0.18,
+    "angulo_camera_graus": 35
+  },
+  "fases": [
+    "Mostrar o bloco inteiro e a legenda",
+    "Separar dois níveis sem girar a câmera",
+    "Mover o marcador pela seção exposta",
+    "Recompor os níveis e destacar a superfície"
+  ],
+  "criterios": [
+    "A ordem das camadas continua visível durante o deslocamento.",
+    "O marcador segue a seção exposta.",
+    "A escala não muda entre antes e depois."
+  ],
+  "evitar": "Transformação contínua de morro em mar sem relação com a fala e relevo tratado como dado científico sem fonte.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "niveis": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 4
+    },
+    "separacao_relativa": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.3
+    },
+    "canto_removivel": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.25
+    },
+    "angulo_camera_graus": {
+      "tipo": "inteiro",
+      "minimo": 25,
+      "maximo": 45
+    }
+  }
+}

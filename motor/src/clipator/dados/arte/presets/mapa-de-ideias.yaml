@@ -1,0 +1,50 @@
+# Mapa de ideias: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-mapa-de-ideias/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Mapa de ideias
+conceito:
+  frase: Formas planas e personagens geométricos organizam uma explicação em três ilhas conectadas.
+  palavras_chave: [ilustração plana, conceitos, relações, exemplos, tutoriais curtos]
+  faca: ['Uma ilha por etapa, com símbolo grande, rótulo de até quatro palavras e conector.', 'Personagens sem identidade
+      específica ocupam a borda, nunca o centro do dado.', 'Cores chapadas em áreas grandes, contorno escuro fino
+      só em peças funcionais e sombras planas deslocadas.', Evitar textura para preservar contraste em telas pequenas.]
+  nao_faca: [Nuvens moleculares decorativas., Pessoas em toda cena., Paleta rosa-ciano como fórmula fixa.]
+cor:
+  paleta: {fundo: '#E6EEE8', superficie: '#C9DED4', texto: '#223D39', texto_suave: '#57706A', primaria: '#C9664D',
+    destaque: '#6289B4', secundaria: '#D9B1A2', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: mascara
+  principios: ['Cada ilha cresce de 92% a 100%; o conector é desenhado depois da ilha de origem, antes da ilha de
+      destino.', Personagem aponta uma vez e fica quieto.]
+cenas:
+  tom: Para conceitos, relações, exemplos e tutoriais curtos.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Apresentar a primeira ilha com o conceito; Desenhar a relação e abrir a segunda
+      ilha; Mostrar o exemplo na terceira ilha; Reunir as ilhas numa vista de síntese.', Setas só indicam relações
+      realmente ditas., Cada ícone é reconhecível sem depender da cor., Texto não invade o conector.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-mapa-de-ideias
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Mesmas ilhas sem personagem e com conectores estáticos.
+  construcao: Use primitivas SVG e paths próprios em uma biblioteca de componentes. Layout por grafo de até três
+    nós com boxes medidos; caso não caiba, pagine em cenas, sem reduzir todos os elementos.
+  parametros_visuais: {ilhas: 3, escala_entrada: 0.92, contorno_px: 3, duracao_conector_s: 0.4}
+graficos:
+  selo: {cor_texto: neutro-1}
+x_contraste_corrigido: ['texto_suave #5D7970 → #57706A (4.0:1 → 4.5:1)', 'destaque #7198C3 → #6289B4 (2.5:1 → 3.1:1)']

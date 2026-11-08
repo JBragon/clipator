@@ -1,0 +1,176 @@
+{
+ "paises": {
+  "USA": [
+   "EUA",
+   "Estados Unidos da América",
+   "United States"
+  ],
+  "VNM": [
+   "Vietnã"
+  ],
+  "IRN": [
+   "Irã"
+  ],
+  "YEM": [
+   "Iêmen"
+  ],
+  "KEN": [
+   "Quênia"
+  ],
+  "POL": [
+   "Polônia"
+  ],
+  "ROU": [
+   "Romênia"
+  ],
+  "SVN": [
+   "Eslovênia"
+  ],
+  "EST": [
+   "Estônia"
+  ],
+  "LVA": [
+   "Letônia"
+  ],
+  "ARM": [
+   "Armênia"
+  ],
+  "MKD": [
+   "Macedônia do Norte",
+   "Macedônia"
+  ],
+  "MCO": [
+   "Mônaco"
+  ],
+  "NLD": [
+   "Holanda"
+  ],
+  "CZE": [
+   "Tchéquia",
+   "República Tcheca"
+  ],
+  "IRL": [
+   "Irlanda"
+  ],
+  "BLR": [
+   "Belarus"
+  ],
+  "MMR": [
+   "Mianmar"
+  ],
+  "MWI": [
+   "Malaui"
+  ],
+  "SWZ": [
+   "Suazilândia"
+  ],
+  "MUS": [
+   "Maurício"
+  ],
+  "GBR": [
+   "Grã-Bretanha"
+  ],
+  "ARE": [
+   "Emirados Árabes"
+  ],
+  "CAF": [
+   "República Centro Africana"
+  ],
+  "PNG": [
+   "Papua Nova Guiné"
+  ],
+  "SAH": [
+   "Saara Ocidental"
+  ]
+ },
+ "subdivisoes": {
+  "USA-3559": [
+   "Nova York",
+   "New York"
+  ]
+ },
+ "continentes": {
+  "antarctica": [
+   "Antártica"
+  ]
+ },
+ "cidades_homonimas": [
+  "São Paulo",
+  "Rio de Janeiro",
+  "Nova York",
+  "New York",
+  "Buenos Aires",
+  "Cidade do México",
+  "Tóquio",
+  "Tokyo",
+  "Moscou",
+  "Moscow",
+  "Berlim",
+  "Berlin",
+  "Hamburgo",
+  "Bremen",
+  "Viena",
+  "Pequim",
+  "Beijing",
+  "Xangai",
+  "Shanghai",
+  "Bogotá",
+  "Lima",
+  "Washington",
+  "Goiás"
+ ],
+ "nao_lugar": [
+  "como",
+  "para",
+  "norte",
+  "sul",
+  "leste",
+  "oeste",
+  "centro",
+  "central",
+  "nordeste",
+  "sudeste",
+  "noroeste",
+  "sudoeste",
+  "guarda",
+  "salta",
+  "ela",
+  "ele",
+  "aqui",
+  "ali",
+  "agora",
+  "depois",
+  "uma",
+  "um",
+  "todo",
+  "toda",
+  "este",
+  "esta",
+  "essa",
+  "esse",
+  "isso",
+  "isto",
+  "vale",
+  "vida",
+  "tempo",
+  "mundo",
+  "sim",
+  "não",
+  "nada",
+  "tudo",
+  "dentro",
+  "fora",
+  "mas",
+  "porque",
+  "então",
+  "faro",
+  "formosa",
+  "saga",
+  "braga",
+  "bar",
+  "bay",
+  "down",
+  "deli",
+  "fria"
+ ]
+}

@@ -1,0 +1,9 @@
+id: retencao-abertura
+nome: "Abertura que segura"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: true
+descricao: "Os primeiros segundos do clip: gancho na frente, movimento e nada de introdução."

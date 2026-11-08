@@ -1,0 +1,39 @@
+# Encaixe Vivo: direção visual da coleção Cinco estilos para cortes.
+herda: base
+nome: Encaixe Vivo
+conceito:
+  frase: "Objetos feitos de peças plásticas com pinos se montam por função e se desmontam; a montagem explica as partes citadas na fala."
+  palavras_chave: [fala, explicação, encaixe]
+  faca: ["Uma menção a lente destaca e aproxima a lente, sem repetir a montagem inteira.", "O laço é opcional: somente a camada de arte volta ao início; nunca repetir ou inverter o áudio do corte.", "Na metade superior, priorizar poucos subconjuntos legíveis e reenquadrar o modelo para aquele retângulo."]
+  nao_faca: ["Repetir o exemplo do estilo em outro assunto.", "Mostrar objeto, número ou fato que a fala não citou."]
+cor:
+  paleta: {fundo: '#E6EDF0', superficie: '#F7FAF9', texto: '#152D3B', texto_suave: '#3F5866', primaria: '#257A97', destaque: '#E19D3A', secundaria: '#6B4FA0', positivo: '#008D56', negativo: '#E13F58', alerta: '#BA6403'}
+  serie: [primaria, '#BD7916', texto, positivo, negativo, texto_suave]
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ["Peças de um subconjunto partem de posições de espera, fazem trajetória curva e assentam com pequeno amortecimento. Ao citar outra parte, a câmera e o destaque seguem essa parte. Desmontar no fim somente quando a fala falar em desmontagem ou quando a vinheta puder encerrar sem contrariar a frase."]
+cenas:
+  tom: Acompanha o que está sendo dito, frase a frase.
+  intervalo: 1.5
+  por_minuto: 30.0
+  duracao: [1.0, 12.0]
+  regras: ["Uma ação por frase, presa ao trecho dito."]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.3
+x_direcao:
+  id: clipator-arte-encaixe-vivo
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Polígonos isométricos com as peças na ordem da fala.
+graficos:
+  selo: {cor_texto: '#FFFFFF'}

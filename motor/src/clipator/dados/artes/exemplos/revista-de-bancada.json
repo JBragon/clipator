@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-revista-de-bancada",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Esta",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "imagem",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "apresenta",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "o",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "assunto.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "nota",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "ao",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "lado",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "traz",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "contexto.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Esta imagem apresenta o assunto.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Esta imagem apresenta o",
+      "descricao": "Abrir o filete e o título curto; Revelar retrato e nome fornecido",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "coluna_foto": 0.58,
+        "deslocamento_entrada_px": 18,
+        "rotacao_nota_graus": 1,
+        "max_notas": 2
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A nota ao lado traz contexto.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A nota ao lado",
+      "descricao": "Apresentar a nota que contextualiza a fala; Manter retrato e resumo numa página limpa",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "coluna_foto": 0.58,
+        "deslocamento_entrada_px": 18,
+        "rotacao_nota_graus": 1,
+        "max_notas": 2
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

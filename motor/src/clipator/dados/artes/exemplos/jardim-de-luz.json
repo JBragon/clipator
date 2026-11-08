@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-jardim-de-luz",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "caminho",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "atravessa",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "o",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "jardim.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "luz",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "para",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "nesta",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "clareira.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "O caminho atravessa o jardim.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "O caminho atravessa o",
+      "descricao": "Revelar a clareira e o primeiro ponto de luz; Conduzir a luz pela primeira curva",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "camadas": 3,
+        "balanco_graus": 2,
+        "aproximacao_relativa": 0.03,
+        "luzes": 5
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A luz para nesta clareira.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A luz para nesta",
+      "descricao": "Parar na clareira e mostrar a ideia central; Atenuar a luz até o nível ambiente",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "camadas": 3,
+        "balanco_graus": 2,
+        "aproximacao_relativa": 0.03,
+        "luzes": 5
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

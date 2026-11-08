@@ -1,0 +1,50 @@
+# Revista de bancada: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-revista-de-bancada/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Revista de bancada
+conceito:
+  frase: Uma página editorial combina retrato recortado, coluna de contexto e pequenas notas presas à grade.
+  palavras_chave: [editorial fotográfico, perfil de pessoa, contextualização de assunto, explicação com fotografia]
+  faca: ['Retrato em um lado, coluna de informação no outro, filete vertical e um único bloco de destaque.', Rodapé
+      pode ter fonte da imagem quando fornecida., 'Fotos com tons naturais levemente reduzidos, filete verde e cartão
+      cobre.', Recorte sem contorno colorido espesso; sombra curta separa foto do papel.]
+  nao_faca: [Borda azul recortada como assinatura obrigatória., Título sobre rosto., Atribuição inventada de pessoa.]
+cor:
+  paleta: {fundo: '#F0E7D7', superficie: '#DED1BA', texto: '#293D42', texto_suave: '#596C6D', primaria: '#B55A3F',
+    destaque: '#598D8D', secundaria: '#D5A893', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['A página abre pela coluna, o retrato sobe 18 px e uma nota lateral desliza até o filete.', O título
+      fica fixo enquanto a pessoa fala.]
+cenas:
+  tom: Para perfil de pessoa, contextualização de assunto e explicação com fotografia.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir o filete e o título curto; Revelar retrato e nome fornecido; Apresentar
+      a nota que contextualiza a fala; Manter retrato e resumo numa página limpa.', A foto não corta o rosto ao
+      mudar de formato., Nome e atribuição têm origem explícita., A nota não vira uma segunda legenda corrida.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-revista-de-bancada
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Foto retangular e duas colunas sem sombra ou recorte automático.
+  construcao: Layout por duas colunas com larguras 58/42 e colisão de caixas. Detecte se a foto tem alfa; sem recorte,
+    use moldura retangular e mantenha a imagem inteira. O nome vem dos dados, não de reconhecimento facial.
+  parametros_visuais: {coluna_foto: 0.58, deslocamento_entrada_px: 18, rotacao_nota_graus: 1, max_notas: 2}
+graficos:
+  selo: {cor_texto: neutro-2}
+x_contraste_corrigido: ['texto_suave #657B7D → #596C6D (3.7:1 → 4.5:1)']

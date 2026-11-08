@@ -1,0 +1,379 @@
+"""Legendas animadas em ASS (libass via FFmpeg) e cartela de título.
+
+A técnica de karaokê (um evento por palavra, a palavra falada com cor ou
+animação própria e {\\r} para voltar ao estilo base), o escurecimento por cor e
+não por alfa e o estilo "Active" com caixa foram adaptados de
+openshorts/subtitles.py (generate_ass), MIT License, Copyright (c) 2024
+OpenShorts. Ver THIRD_PARTY_NOTICES.md.
+"""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+from .models import Cartela, Legenda
+from .plataformas import Zona
+from .timeline import Timeline
+
+_HEX = re.compile(r"^#?[0-9a-fA-F]{6}$")
+
+POSICOES_Y = {"topo": 0.16, "centro": 0.5, "centro-baixo": 0.68, "terco-inferior": 0.78, "baixo": 0.88}
+
+
+def _hex(c: str | None, fallback: str = "FFFFFF") -> str:
+    c = (c or "").strip()
+    return c.lstrip("#").upper() if _HEX.match(c) else fallback
+
+
+def ass_color(hex_color: str | None, opacidade: float = 1.0, fallback: str = "FFFFFF") -> str:
+    """#RRGGBB -> &HAABBGGRR (estilo). Alfa no ASS é invertido: 00 = opaco."""
+    h = _hex(hex_color, fallback)
+    alpha = int(round((1 - max(0.0, min(1.0, opacidade))) * 255))
+    return f"&H{alpha:02X}{h[4:6]}{h[2:4]}{h[0:2]}"
+
+
+def ass_inline(hex_color: str | None, fallback: str = "FFFFFF") -> str:
+    h = _hex(hex_color, fallback)
+    return f"&H{h[4:6]}{h[2:4]}{h[0:2]}&"
+
+
+def _escurecer(hex_color: str, opacidade: float) -> str:
+    h = _hex(hex_color)
+    f = 0.5 + 0.5 * max(0.05, min(1.0, opacidade))
+    return "#" + "".join(f"{min(255, round(int(h[i:i + 2], 16) * f)):02X}" for i in (0, 2, 4))
+
+
+def _luminancia(hex_color: str) -> float:
+    h = _hex(hex_color)
+    r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def ass_time(t: float) -> str:
+    t = max(0.0, t)
+    cs = int(round(t * 100))
+    h, cs = divmod(cs, 360000)
+    m, cs = divmod(cs, 6000)
+    s, cs = divmod(cs, 100)
+    return f"{h}:{m:02d}:{s:02d}.{cs:02d}"
+
+
+def escape_ass(texto: str) -> str:
+    return str(texto).replace("\\", "/").replace("{", "(").replace("}", ")").replace("\n", " ")
+
+
+def blocos_de_palavras(palavras: list[dict], max_palavras: int, max_duracao: float = 2.6,
+                       pausa_quebra: float = 0.6) -> list[list[dict]]:
+    """Agrupa palavras (já em tempo do clip) em blocos que cabem na tela."""
+    blocos: list[list[dict]] = []
+    atual: list[dict] = []
+    for w in palavras:
+        if atual:
+            gap = w["inicio"] - atual[-1]["fim"]
+            longo = w["fim"] - atual[0]["inicio"] > max_duracao
+            fim_frase = bool(re.search(r"[.!?…,;:]$", atual[-1]["texto"]))
+            if len(atual) >= max_palavras or gap >= pausa_quebra or longo or (fim_frase and len(atual) >= 2):
+                blocos.append(atual)
+                atual = []
+        atual.append(w)
+    if atual:
+        blocos.append(atual)
+    return blocos
+
+
+def palavras_do_clip(palavras: list[dict], tl: Timeline) -> list[dict]:
+    """Converte palavras do original para o tempo do clip, descartando as cortadas."""
+    out = []
+    for w in palavras:
+        if w["fim"] <= tl.inicio or w["inicio"] >= tl.fim:
+            continue
+        iv = tl.mapear_intervalo(w["inicio"], w["fim"])
+        if iv is None or iv[1] - iv[0] < 0.02:
+            continue
+        out.append({**w, "inicio": iv[0], "fim": iv[1]})
+    return out
+
+
+def palavras_chave(pals_clip: list[dict], top: int = 8) -> list[str]:
+    """Sem IA: as palavras que se repetem no corte e marcam o assunto, escritas como na fala (com acento)."""
+    from .candidates import montar_frases
+    from .textutil import normalizar, termos_relevantes
+
+    frases = [f.texto for f in montar_frases(pals_clip)]
+    termos = {t for t, _ in termos_relevantes(frases, top=top)}
+    termos_n = {normalizar(t) for t in termos}
+    vistos = {}
+    for w in pals_clip:
+        n = normalizar(w["texto"])
+        if n in termos_n and n not in vistos:
+            vistos[n] = re.escape(w["texto"].strip(".,!?;:\"'()[]…-–—"))
+    return list(vistos.values())
+
+
+def regex_destaque(legenda: Legenda, destaques_extra: list[str] | None = None) -> re.Pattern | None:
+    """Palavras sempre destacadas: lista/regex do estilo + destaques da IA + números."""
+    padroes = [p for p in (legenda.palavras_destaque + list(destaques_extra or [])) if p]
+    if not padroes and not legenda.destacar_numeros:
+        return None
+    partes = []
+    for p in padroes:
+        try:
+            re.compile(p)
+            partes.append(p)
+        except re.error:
+            partes.append(re.escape(p))
+    if legenda.destacar_numeros:
+        partes.append(r"\d+[\d.,%]*|R\$")
+    return re.compile(r"^(?:" + "|".join(partes) + r")\W*$", re.IGNORECASE)
+
+
+def _quebrar_titulo(texto: str, max_chars: int) -> list[str]:
+    linhas, atual = [], ""
+    for p in texto.split():
+        if atual and len(atual) + 1 + len(p) > max_chars:
+            linhas.append(atual)
+            atual = p
+        else:
+            atual = f"{atual} {p}".strip()
+    if atual:
+        linhas.append(atual)
+    return linhas
+
+
+def gerar_ass(
+    palavras: list[dict],
+    tl: Timeline,
+    legenda: Legenda,
+    largura: int,
+    altura: int,
+    saida: str | Path,
+    titulo: str | None = None,
+    cartela: Cartela | None = None,
+    usar_cartela: bool = False,
+    destaques_extra: list[str] | None = None,
+    zona: Zona | None = None,
+) -> Path:
+    """Escreve o .ass do clip: legenda palavra a palavra e, se pedido, a cartela de título.
+
+    `zona`: a parte da tela que o app da plataforma cobre; a legenda e a cartela ficam fora dela.
+    """
+    escala = min(largura, altura) / 1080
+    fs = max(10, int(legenda.tamanho * escala))
+    contorno = legenda.espessura_contorno * escala
+    sombra = legenda.sombra * escala
+    base_cor = _escurecer(legenda.cor, legenda.opacidade_base) if legenda.opacidade_base < 1 else legenda.cor
+    if legenda.fundo and legenda.opacidade_fundo > 0:
+        border_style, outline_c, outline_w = 3, ass_color(legenda.fundo, legenda.opacidade_fundo, "000000"), max(4, fs * 0.15)
+    else:
+        border_style, outline_c, outline_w = 1, ass_color(legenda.contorno, 1.0, "000000"), contorno
+    back_c = ass_color("#000000", 0.55 if sombra else 0.0)
+    italic = -1 if legenda.italico else 0
+    x = largura // 2
+    y_rel = legenda.altura_relativa if legenda.altura_relativa is not None else POSICOES_Y.get(legenda.posicao, 0.68)
+    if zona is not None:
+        from .plataformas import y_seguro
+
+        # centro da área livre na horizontal (os botões ficam à direita) e altura fora das faixas cobertas
+        x = int(largura * (zona.esquerda + (1 - zona.esquerda - zona.direita) / 2))
+        y_rel = y_seguro(y_rel, legenda.linhas * fs * 1.25 / altura, zona)
+    y = int(altura * y_rel)
+    pos = f"\\an5\\pos({x},{y})"
+    hl = ass_inline(legenda.destaque, "FFE600")
+
+    estilos = [
+        f"Style: Default,{legenda.fonte},{fs},{ass_color(base_cor)},{ass_color(base_cor)},{outline_c},{back_c},"
+        f"1,{italic},0,0,100,100,0,0,{border_style},{outline_w:.1f},{sombra:.1f},5,40,40,40,1"
+    ]
+    anim = legenda.animacao
+    esc_d = legenda.escala_destaque
+    ativo_grande = None  # palavra destacada e ativa: o pop tem tag própria; nas outras animações a escala vai na frente
+    if anim == "marca-texto":
+        on_box = "#000000" if _luminancia(legenda.destaque) > 0.6 else legenda.cor
+        pad = max(3, round(fs * 0.12))
+        estilos.append(
+            f"Style: Active,{legenda.fonte},{fs},{ass_color(on_box)},{ass_color(on_box)},{ass_color(legenda.destaque)},"
+            f"{ass_color(legenda.destaque)},1,{italic},0,0,100,100,0,0,3,{pad},0,5,40,40,40,1"
+        )
+        ativo = "{\\rActive}"
+    elif anim == "pop":
+        ativo = f"{{\\c{hl}\\fscx88\\fscy88\\t(0,110,\\fscx110\\fscy110)}}"
+        ativo_grande = (f"{{\\c{hl}\\fscx{88 * esc_d:.0f}\\fscy{88 * esc_d:.0f}"
+                        f"\\t(0,110,\\fscx{110 * esc_d:.0f}\\fscy{110 * esc_d:.0f})}}")
+    elif anim == "caixa":
+        ativo = f"{{\\c&HFFFFFF&\\3c{hl}\\bord{max(4, outline_w + 3):.0f}}}"
+    elif anim == "brilho":
+        ativo = f"{{\\c&HFFFFFF&\\3c{hl}\\bord{max(3, outline_w + 2):.0f}\\blur4}}"
+    else:  # nenhuma / revelar
+        ativo = f"{{\\c{hl}}}"
+
+    destaque_re = regex_destaque(legenda, destaques_extra)
+
+    def fmt(texto: str) -> str:
+        t = escape_ass(texto)
+        return t.upper() if legenda.caixa_alta else t
+
+    eventos: list[str] = []
+    pals = palavras_do_clip(palavras, tl)
+    if legenda.modo != "nenhuma" and pals:
+        max_pal = 1 if legenda.modo == "uma-palavra" else legenda.max_palavras_por_linha * legenda.linhas
+        for bloco in blocos_de_palavras(pals, max_pal):
+            textos = [fmt(w["texto"]) for w in bloco]
+            fixos = [bool(destaque_re and destaque_re.match(w["texto"])) for w in bloco]
+            # quebra em linhas
+            def montar(i_ativo: int | None) -> str:
+                partes = []
+                for j, t in enumerate(textos):
+                    grande = fixos[j] and esc_d > 1.0
+                    esc = f"\\fscx{100 * esc_d:.0f}\\fscy{100 * esc_d:.0f}" if grande else ""
+                    if i_ativo is not None and j == i_ativo:
+                        tag = (ativo_grande or f"{{{esc}}}{ativo}") if grande else ativo
+                        partes.append(f"{tag}{t}{{\\r}}")
+                    elif anim == "revelar" and i_ativo is not None and j > i_ativo:
+                        partes.append(f"{{\\alpha&HFF&}}{t}{{\\r}}")
+                    elif fixos[j]:
+                        partes.append(f"{{\\c{hl}{esc}}}{t}{{\\r}}")
+                    else:
+                        partes.append(t)
+                    if legenda.linhas > 1 and (j + 1) % legenda.max_palavras_por_linha == 0 and j + 1 < len(textos):
+                        partes.append("\\N")
+                return " ".join(partes).replace(" \\N ", "\\N")
+
+            if legenda.modo == "frase":
+                eventos.append(f"Dialogue: 0,{ass_time(bloco[0]['inicio'])},{ass_time(bloco[-1]['fim'])},Default,,0,0,0,,{{{pos}}}{montar(None)}")
+                continue
+            for i, w in enumerate(bloco):
+                ini = bloco[0]["inicio"] if i == 0 else w["inicio"]
+                fim = bloco[i + 1]["inicio"] if i + 1 < len(bloco) else bloco[-1]["fim"]
+                if fim - ini < 0.01:
+                    continue
+                eventos.append(f"Dialogue: 0,{ass_time(ini)},{ass_time(fim)},Default,,0,0,0,,{{{pos}}}{montar(i)}")
+
+    if usar_cartela and titulo and cartela is not None:
+        cfs = max(10, int(cartela.tamanho * escala))
+        estilos.append(
+            f"Style: Cartela,{cartela.fonte},{cfs},{ass_color(cartela.cor, 1, '000000')},{ass_color(cartela.cor, 1, '000000')},"
+            f"{ass_color(cartela.fundo, 1, 'FFFFFF')},{ass_color(cartela.fundo, 1, 'FFFFFF')},1,0,0,0,100,100,0,0,3,"
+            f"{max(6, round(cfs * 0.25))},0,5,40,40,40,1"
+        )
+        texto_t = titulo.upper() if cartela.caixa_alta else titulo
+        max_chars = max(10, int(largura / (cfs * 0.62)))
+        linhas = _quebrar_titulo(escape_ass(texto_t), max_chars)
+        hl_c = ass_inline(cartela.destaque, "FFE600")
+        caps_originais = {p for p in titulo.split() if len(p) > 1 and p.isupper()}
+        linhas_fmt = []
+        for ln in linhas:
+            ps = []
+            for p in ln.split():
+                if not cartela.caixa_alta and p in caps_originais:
+                    ps.append(f"{{\\c{hl_c}}}{p}{{\\c{ass_inline(cartela.cor, '000000')}}}")
+                else:
+                    ps.append(p)
+            linhas_fmt.append(" ".join(ps))
+        cy = {"topo": 0.2, "centro": 0.45, "baixo": 0.8}[cartela.posicao]
+        if zona is not None:
+            from .plataformas import y_seguro
+
+            cy = y_seguro(cy, 2 * cfs * 1.3 / altura, zona)
+        dur = min(cartela.duracao, tl.duracao)
+        eventos.append(
+            f"Dialogue: 1,{ass_time(0)},{ass_time(dur)},Cartela,,0,0,0,,"
+            f"{{\\an5\\pos({x},{int(altura * cy)})\\fad(120,250)}}" + "\\N".join(linhas_fmt)
+        )
+
+    header = (
+        "[Script Info]\n"
+        "; Gerado pelo Clipator\n"
+        "ScriptType: v4.00+\n"
+        f"PlayResX: {largura}\n"
+        f"PlayResY: {altura}\n"
+        "WrapStyle: 2\n"
+        "ScaledBorderAndShadow: yes\n"
+        "YCbCr Matrix: TV.709\n\n"
+        "[V4+ Styles]\n"
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, "
+        "Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, "
+        "MarginR, MarginV, Encoding\n"
+        + "\n".join(estilos)
+        + "\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+    )
+    saida = Path(saida)
+    saida.parent.mkdir(parents=True, exist_ok=True)
+    saida.write_text(header + "\n".join(eventos) + "\n", encoding="utf-8")
+    return saida
+
+
+# ---- legenda oculta (.srt e .vtt) ----------------------------------------------------
+MAX_CARACTERES_LINHA = 42
+MAX_LINHAS = 2
+MAX_DURACAO_CUE = 6.0
+MIN_DURACAO_CUE = 0.8
+
+
+def cues_de_frases(palavras: list[dict], max_chars: int = MAX_CARACTERES_LINHA, max_linhas: int = MAX_LINHAS,
+                   max_dur: float = MAX_DURACAO_CUE, pausa: float = 0.6) -> list[tuple[float, float, list[str]]]:
+    """Agrupa as palavras (já no tempo do clip) em legendas de frase inteira: até 2 linhas de 42
+    caracteres e 6 s, quebrando em fim de frase e em pausa."""
+    cues: list[tuple[float, float, list[str]]] = []
+    atual: list[dict] = []
+
+    def linhas_de(ws: list[dict]) -> list[str]:
+        linhas, linha = [], ""
+        for w in ws:
+            t = w["texto"]
+            if linha and len(linha) + 1 + len(t) > max_chars:
+                linhas.append(linha)
+                linha = t
+            else:
+                linha = f"{linha} {t}".strip()
+        if linha:
+            linhas.append(linha)
+        return linhas
+
+    def fechar() -> None:
+        if atual:
+            cues.append((atual[0]["inicio"], atual[-1]["fim"], linhas_de(atual)))
+            atual.clear()
+
+    for w in palavras:
+        if atual:
+            gap = w["inicio"] - atual[-1]["fim"]
+            longo = w["fim"] - atual[0]["inicio"] > max_dur
+            cheio = len(linhas_de(atual + [w])) > max_linhas
+            fim_frase = bool(re.search(r"[.!?…]$", atual[-1]["texto"]))
+            if gap >= pausa or longo or cheio or fim_frase:
+                fechar()
+        atual.append(w)
+    fechar()
+    # cada legenda fica pelo menos MIN_DURACAO_CUE na tela, sem invadir a próxima
+    out = []
+    for k, (a, b, ls) in enumerate(cues):
+        prox = cues[k + 1][0] if k + 1 < len(cues) else None
+        b = max(b, a + MIN_DURACAO_CUE)
+        if prox is not None:
+            b = min(b, prox - 0.01)
+        out.append((round(a, 3), round(max(b, a + 0.05), 3), ls))
+    return out
+
+
+def _tempo(t: float, sep: str) -> str:
+    ms = int(round(max(0.0, t) * 1000))
+    h, ms = divmod(ms, 3_600_000)
+    m, ms = divmod(ms, 60_000)
+    s, ms = divmod(ms, 1000)
+    return f"{h:02d}:{m:02d}:{s:02d}{sep}{ms:03d}"
+
+
+def gerar_srt_vtt(palavras: list[dict], tl: Timeline, pasta: str | Path, nome: str = "legenda") -> tuple[Path, Path] | None:
+    """Escreve legenda.srt e legenda.vtt do clip, no tempo do clip (cortes internos já descontados)."""
+    cues = cues_de_frases(palavras_do_clip(palavras, tl))
+    if not cues:
+        return None
+    pasta = Path(pasta)
+    srt = pasta / f"{nome}.srt"
+    vtt = pasta / f"{nome}.vtt"
+    srt.write_text("\n".join(f"{i}\n{_tempo(a, ',')} --> {_tempo(b, ',')}\n" + "\n".join(ls) + "\n"
+                             for i, (a, b, ls) in enumerate(cues, 1)), encoding="utf-8")
+    vtt.write_text("WEBVTT\n\n" + "\n".join(f"{_tempo(a, '.')} --> {_tempo(b, '.')}\n" + "\n".join(ls) + "\n"
+                                              for a, b, ls in cues), encoding="utf-8")
+    return srt, vtt

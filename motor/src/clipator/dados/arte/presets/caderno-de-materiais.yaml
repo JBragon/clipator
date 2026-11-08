@@ -1,0 +1,53 @@
+# Caderno de materiais: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-caderno-de-materiais/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Caderno de materiais
+conceito:
+  frase: Uma página de caderno reúne fotografia, tecido e desenho de linha para explicar o mesmo objeto por três
+    aspectos.
+  palavras_chave: [mídia e textura, processo criativo, produto, comparação de material, bastidores]
+  faca: ['Foto ocupa a área principal, amostra de tecido em uma aba e desenho técnico em outra.', Uma costura gráfica
+      une as três sem sugerir causalidade., 'Texturas próprias de papel, trama e madeira geradas a partir de ruído
+      determinístico.', Fotos fornecidas pelo usuário mantêm proporção e tratamento discreto.]
+  nao_faca: [Texturas e vídeos do pacote original., Transições de caleidoscópio., Sete cenas fixas para qualquer
+      duração.]
+cor:
+  paleta: {fundo: '#E8E0D1', superficie: '#D1C2AE', texto: '#293730', texto_suave: '#5B655D', primaria: '#AF6044',
+    destaque: '#5A8792', secundaria: '#CEA692', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: mascara
+  principios: ['A página vira por máscara lateral, a aba abre e o desenho de linha aparece.', Em cada etapa apenas
+      uma textura recebe movimento; o restante fica parado.]
+cenas:
+  tom: Para processo criativo, produto, comparação de material e bastidores.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir a página com a foto principal; Desdobrar a amostra de material; Traçar
+      o detalhe técnico ao lado; Unir os três aspectos com uma legenda curta.', Texturas não competem com o assunto.,
+    A foto pode ser substituída sem quebrar a composição., A dobra não expõe uma área vazia atrás da página.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-caderno-de-materiais
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Foto e abas de cores chapadas com filetes de trama, sem textura de imagem.
+  construcao: Crie texturas pequenas em cache e reutilize com scale controlado. Use máscara de retângulo e curva
+    de dobra simples; o desenho de linha usa comprimento de path. Nunca carregar textura remota durante o render.
+  parametros_visuais: {materiais: 3, textura_opacidade: 0.08, duracao_aba_s: 0.5, largura_aba_relativa: 0.28}
+graficos:
+  selo: {cor_texto: neutro-2}
+x_contraste_corrigido: ['texto_suave #718073 → #5B655D (3.2:1 → 4.6:1)', 'destaque #5D8A95 → #5A8792 (2.9:1 → 3.0:1)',
+  'texto #33413A → #293730 (7:1 também sobre a superfície)']

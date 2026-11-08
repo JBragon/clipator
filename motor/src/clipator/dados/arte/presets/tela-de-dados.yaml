@@ -1,0 +1,68 @@
+# Finanças e números: painel verde-escuro, ouro para o valor e verde/vermelho que sobem e descem.
+herda: base
+nome: Tela de dados
+conceito:
+  frase: "Painel verde-escuro de corretora, ouro para o valor que importa e setas que sobem e descem."
+  palavras_chave: [finanças, números, preciso, confiável, painel]
+  faca:
+    - Todo número dito vira contador animado com a unidade ao lado.
+    - Verde só para o que sobe e vermelho só para o que desce.
+    - Gráfico com eixo discreto e crédito da fonte.
+    - Valores alinhados à direita, como numa planilha.
+  nao_faca:
+    - Número sem unidade ou sem fonte.
+    - Verde e vermelho usados como decoração.
+    - Gráfico em 3D ou com sombra.
+    - Arredondar valor de um jeito que muda o sentido.
+cor:
+  paleta:
+    fundo: "#0A1511"
+    superficie: "#13241C"
+    texto: "#EAF4EE"
+    texto_suave: "#94AB9D"
+    primaria: "#F3C454"
+    secundaria: "#1F5A43"
+    destaque: "#59C3F2"
+    positivo: "#2FD27E"
+    negativo: "#FF5A5F"
+    alerta: "#FFA94D"
+  serie: [primaria, destaque, positivo, negativo, texto_suave, "#B48CFF"]
+  gradientes:
+    painel: {tipo: linear, angulo: 160, paradas: [[superficie, 0], [fundo, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.1}
+layout: {raio: 0.008, traco: 0.004, densidade: densa}
+movimento:
+  curvas:
+    entrada: [0.2, 0.9, 0.25, 1]
+  duracoes: {micro: 0.08, curta: 0.22, media: 0.4, longa: 0.9}
+  entrada: sobe
+  transicoes: [corte, fade, desliza]
+  principios:
+    - O contador corre de 0 até o valor na duração longa e para seco.
+    - A barra cresce da base; o rótulo entra depois da barra.
+legenda:
+  cor_destaque: primaria
+  max_palavras: 4
+graficos:
+  tarja: {estilo: barra, cor_acento: primaria}
+  selo: {estilo: chapado, cor_fundo: primaria, cor_texto: fundo}
+  credito: {tamanho: 0.025}
+thumbnail:
+  cor_destaque: primaria
+  fundo: gradiente:painel
+som:
+  identidade: "Preciso: clique de teclado nos números e um whoosh baixo nas telas."
+  efeitos: {entrada: whoosh, enfase: click, numero: click, alerta: ding}
+  musica: {clima: tensão, bpm: [90, 110]}
+cenas:
+  tom: "Analítico: cada número na tela tem unidade, período e comparação quando a fala dá."
+  preferir: [numero, comparacao, linha_do_tempo, lista]
+  evitar: [palavra, citacao]
+  intervalo: 3.0
+  por_minuto: 12
+  regras:
+    - Percentual e valor em reais exatamente como foram ditos, sem arredondar.
+    - Se a fala compara dois números, use comparação e não dois números soltos.

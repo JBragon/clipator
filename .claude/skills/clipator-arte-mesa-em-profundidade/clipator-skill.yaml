@@ -1,0 +1,9 @@
+id: clipator-arte-mesa-em-profundidade
+nome: "Mesa em profundidade — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de mesa em profundidade para linha de raciocínio, sequência de fotos e apresentação de alternativas, ou implementa esse estilo no Clipator quando solicitado."

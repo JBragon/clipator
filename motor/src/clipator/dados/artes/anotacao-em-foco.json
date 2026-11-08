@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-anotacao-em-foco",
+  "nome": "Anotação em foco",
+  "familia": "Texto editorial",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma frase aparece numa folha de estudo e um colchete lateral isola a parte mais importante.",
+  "usar_em": "definições, argumento central, citações verificadas e conclusão",
+  "composicao": "Bloco de até três linhas, alinhado à esquerda; uma margem reservada a colchete e nota. A linha ativa recebe uma faixa verde clara curta, com texto sempre escuro.",
+  "material_e_luz": "Papel claro com fibra quase imperceptível; tinta uniforme, sem letras que tremem. Fonte de corpo legível e título condensado já disponível no Clipator.",
+  "movimento": "Revelar por grupos semânticos, depois desenhar o colchete e abrir uma nota de até quatro palavras. A faixa corre sob a linha inteira e para; não seguir cada sílaba.",
+  "construcao": "Meça linhas com a fonte carregada e crie retângulos a partir dos bounds reais. A anotação é uma camada diferente da legenda. Resolver âncora pelo trecho literal; citações só com entrada identificada como citação.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "baixa",
+  "alternativa_leve": "Frase estática com colchete e faixa, sem animação de máscara.",
+  "parametros_visuais": {
+    "max_linhas": 3,
+    "max_palavras": 16,
+    "largura_margem_relativa": 0.16,
+    "opacidade_faixa": 0.55
+  },
+  "fases": [
+    "Revelar a frase em dois grupos",
+    "Desenhar o colchete ao lado do trecho central",
+    "Abrir a nota curta na margem",
+    "Manter a frase completa até o fim"
+  ],
+  "criterios": [
+    "A faixa não diminui o contraste.",
+    "A nota não repete toda a frase.",
+    "Nenhuma palavra aparece antes da âncora planejada."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "max_linhas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 3
+    },
+    "max_palavras": {
+      "tipo": "inteiro",
+      "minimo": 3,
+      "maximo": 20
+    },
+    "largura_margem_relativa": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.25
+    },
+    "opacidade_faixa": {
+      "tipo": "numero",
+      "minimo": 0.2,
+      "maximo": 0.6
+    }
+  }
+}

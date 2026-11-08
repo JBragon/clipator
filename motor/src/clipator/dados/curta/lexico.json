@@ -1,0 +1,1031 @@
+{
+ "_": "Vocabulário do curta (dados/curta/curta.js). Cada lista é de raízes sem acento: a palavra dita casa se começa pela raiz (ou é igual, quando a raiz termina em '='). Serve ao plano sem IA; com IA, as mesmas listas fecham os valores que a resposta pode usar. Raiz com '~' só sugere o lugar (a palavra não é o nome do lugar): nunca vira rótulo e perde para um lugar dito na mesma frase.",
+ "cenarios": {
+  "cidade": {
+   "desc": "rua com prédios, calçada e poste",
+   "raizes": [
+    "cidade",
+    "rua=",
+    "ruas",
+    "avenida",
+    "bairro",
+    "centro",
+    "~predio",
+    "~transito",
+    "metropole",
+    "capital",
+    "esquina",
+    "calcada",
+    "favela",
+    "comunidade"
+   ]
+  },
+  "casa": {
+   "desc": "sala de estar com sofá, janela e quadro",
+   "raizes": [
+    "casa=",
+    "casas",
+    "lar=",
+    "sala=",
+    "apartamento",
+    "~morar",
+    "~moro",
+    "~mora=",
+    "~moramos",
+    "~familia",
+    "sofa"
+   ]
+  },
+  "cozinha": {
+   "desc": "cozinha com bancada, fogão e geladeira",
+   "raizes": [
+    "cozinha",
+    "~comida",
+    "~cozinh",
+    "~jantar",
+    "~almoc",
+    "~receita",
+    "fogao",
+    "geladeira",
+    "panela",
+    "~cafe=",
+    "~bolo"
+   ]
+  },
+  "quarto": {
+   "desc": "quarto com cama, abajur e janela",
+   "raizes": [
+    "quarto",
+    "cama=",
+    "~dormir",
+    "~dormi",
+    "~acordar",
+    "~acordei",
+    "~acordou",
+    "~madrugada",
+    "~sono"
+   ]
+  },
+  "escritorio": {
+   "desc": "escritório com mesas, computadores e quadro",
+   "raizes": [
+    "escritorio",
+    "empresa",
+    "~trabalho",
+    "~chefe",
+    "~reuniao",
+    "~emprego",
+    "~patrao",
+    "firma",
+    "~computador",
+    "~planilha",
+    "~projeto",
+    "~cliente",
+    "~negocio",
+    "startup"
+   ]
+  },
+  "escola": {
+   "desc": "sala de aula com lousa e carteiras",
+   "raizes": [
+    "escola",
+    "aula=",
+    "aulas",
+    "~professor",
+    "~professora",
+    "~aluno",
+    "~aluna",
+    "faculdade",
+    "universidade",
+    "~estudar",
+    "~estudo",
+    "~prova=",
+    "~provas",
+    "curso",
+    "colegio",
+    "lousa",
+    "~vestibular",
+    "~enem="
+   ]
+  },
+  "loja": {
+   "desc": "loja com prateleiras, balcão e caixa",
+   "raizes": [
+    "loja",
+    "mercado",
+    "supermercado",
+    "~comprar",
+    "~compra",
+    "~comprei",
+    "~vender",
+    "~vendi",
+    "~venda",
+    "shopping",
+    "padaria",
+    "farmacia",
+    "feira",
+    "~produto",
+    "~preco"
+   ]
+  },
+  "restaurante": {
+   "desc": "restaurante com mesas, toalhas e balcão",
+   "raizes": [
+    "restaurante",
+    "lanchonete",
+    "bar=",
+    "pizzaria",
+    "~garcom",
+    "~cardapio",
+    "~lanche"
+   ]
+  },
+  "hospital": {
+   "desc": "hospital com maca, monitor e cruz",
+   "raizes": [
+    "hospital",
+    "~medic",
+    "~doente",
+    "~doenca",
+    "~saude",
+    "~enfermeir",
+    "clinica",
+    "~remedio",
+    "~cirurgia",
+    "ambulancia",
+    "~consulta",
+    "uti="
+   ]
+  },
+  "fabrica": {
+   "desc": "fábrica com esteira, máquinas e chaminé",
+   "raizes": [
+    "fabrica",
+    "industria",
+    "oficina",
+    "~maquina",
+    "~producao",
+    "~operario",
+    "galpao",
+    "~mecanic",
+    "esteira"
+   ]
+  },
+  "laboratorio": {
+   "desc": "laboratório com bancada, frascos e microscópio",
+   "raizes": [
+    "laboratorio",
+    "~cientista",
+    "~experimento",
+    "~ciencia",
+    "~quimic",
+    "microscopio",
+    "~pesquisador",
+    "~teste="
+   ]
+  },
+  "parque": {
+   "desc": "praça com árvores, banco e caminho",
+   "raizes": [
+    "parque",
+    "praca",
+    "jardim",
+    "~passeio",
+    "~passear"
+   ]
+  },
+  "floresta": {
+   "desc": "floresta densa com árvores altas e trilha",
+   "raizes": [
+    "floresta",
+    "mata=",
+    "selva",
+    "amazonia",
+    "~arvore",
+    "bosque",
+    "trilha",
+    "~natureza",
+    "~bicho",
+    "~animal",
+    "~animais"
+   ]
+  },
+  "campo": {
+   "desc": "fazenda com plantação, cerca e celeiro",
+   "raizes": [
+    "fazenda",
+    "campo=",
+    "roca=",
+    "sitio",
+    "plantacao",
+    "~plantar",
+    "~colheita",
+    "~vaca",
+    "~boi=",
+    "~agricult",
+    "interior",
+    "lavoura",
+    "~gado"
+   ]
+  },
+  "praia": {
+   "desc": "praia com areia, mar, sol e coqueiro",
+   "raizes": [
+    "praia",
+    "areia",
+    "litoral",
+    "~ferias",
+    "coqueiro",
+    "~verao",
+    "~surf"
+   ]
+  },
+  "mar": {
+   "desc": "mar aberto com ondas e barco",
+   "raizes": [
+    "mar=",
+    "oceano",
+    "navio",
+    "barco",
+    "~navegar",
+    "ilha",
+    "onda=",
+    "ondas",
+    "~pescar",
+    "~pesca",
+    "porto",
+    "cais"
+   ]
+  },
+  "montanha": {
+   "desc": "montanhas com picos, neve no alto e trilha",
+   "raizes": [
+    "montanha",
+    "serra=",
+    "pico=",
+    "~escalar",
+    "~subir a",
+    "cume",
+    "vale=",
+    "everest",
+    "alpes",
+    "andes"
+   ]
+  },
+  "deserto": {
+   "desc": "deserto com dunas, cactos e sol forte",
+   "raizes": [
+    "deserto",
+    "duna",
+    "sertao",
+    "~seca=",
+    "cacto",
+    "saara",
+    "~camelo"
+   ]
+  },
+  "espaco": {
+   "desc": "espaço com planeta, estrelas e foguete",
+   "raizes": [
+    "espaco",
+    "planeta",
+    "lua=",
+    "~estrelas",
+    "~foguete",
+    "~astronaut",
+    "nasa=",
+    "galaxia",
+    "universo",
+    "marte",
+    "~orbita",
+    "satelite",
+    "cosmos"
+   ]
+  },
+  "estrada": {
+   "desc": "estrada com faixa, placas e carro",
+   "raizes": [
+    "estrada",
+    "rodovia",
+    "~carro",
+    "~dirigir",
+    "~viagem",
+    "~viajar",
+    "~viajei",
+    "~caminhao",
+    "~onibus",
+    "~moto=",
+    "~motorista",
+    "~uber=",
+    "~trajeto"
+   ]
+  },
+  "palco": {
+   "desc": "palco com refletores, cortina e plateia",
+   "raizes": [
+    "palco",
+    "show=",
+    "shows",
+    "~musica",
+    "banda",
+    "~cantor",
+    "~cantar",
+    "plateia",
+    "teatro",
+    "~apresentacao",
+    "~evento",
+    "~palestra",
+    "~microfone",
+    "~live="
+   ]
+  },
+  "estadio": {
+   "desc": "estádio com campo, traves e arquibancada",
+   "raizes": [
+    "estadio",
+    "~futebol",
+    "~jogo=",
+    "~jogos",
+    "~time=",
+    "~gol=",
+    "~gols",
+    "~campeonato",
+    "~partida",
+    "quadra",
+    "~torcida",
+    "copa=",
+    "~jogador",
+    "~treino",
+    "academia"
+   ]
+  },
+  "aeroporto": {
+   "desc": "pista com avião, torre de controle e céu",
+   "raizes": [
+    "aeroporto",
+    "aviao",
+    "~voo=",
+    "~voar",
+    "~voei",
+    "~piloto",
+    "~embarque",
+    "~passagem",
+    "~exterior",
+    "~intercambio"
+   ]
+  },
+  "palco_vazio": {
+   "desc": "palco neutro do estilo, sem lugar definido",
+   "raizes": []
+  }
+ },
+ "acoes": {
+  "parado": {
+   "desc": "de pé, respirando",
+   "raizes": []
+  },
+  "andar": {
+   "desc": "caminhando pela cena",
+   "raizes": [
+    "andar",
+    "anda=",
+    "andei",
+    "andou",
+    "caminh",
+    "ir=",
+    "vou=",
+    "vai=",
+    "fui=",
+    "foi para",
+    "chegar",
+    "cheg",
+    "voltar",
+    "volt",
+    "sair",
+    "sai=",
+    "saiu",
+    "entrar",
+    "entrar",
+    "entrei",
+    "entrou",
+    "passear",
+    "seguir"
+   ]
+  },
+  "correr": {
+   "desc": "correndo",
+   "raizes": [
+    "correr",
+    "corr",
+    "fugir",
+    "fugi",
+    "pressa",
+    "rapido",
+    "corrida",
+    "atras de"
+   ]
+  },
+  "falar": {
+   "desc": "falando, com a mão no ar",
+   "raizes": [
+    "falar",
+    "falar",
+    "falei",
+    "falou",
+    "fala=",
+    "falando",
+    "falamos",
+    "dizer",
+    "disse",
+    "diz=",
+    "contar",
+    "contei",
+    "contou",
+    "perguntar",
+    "pergunt",
+    "explicar",
+    "explic",
+    "conversar",
+    "convers",
+    "responder",
+    "respond",
+    "gritar",
+    "grit",
+    "avisar",
+    "avis",
+    "ligar",
+    "ligou",
+    "liguei",
+    "telefon"
+   ]
+  },
+  "pensar": {
+   "desc": "mão no queixo, pensando",
+   "raizes": [
+    "pensar",
+    "pens",
+    "achar",
+    "acho",
+    "imaginar",
+    "imagin",
+    "lembrar",
+    "lembr",
+    "entender",
+    "entend",
+    "decidir",
+    "decid",
+    "sonhar",
+    "sonh",
+    "planejar",
+    "duvida",
+    "sera="
+   ]
+  },
+  "comemorar": {
+   "desc": "braços para cima, pulando",
+   "raizes": [
+    "comemor",
+    "ganhar",
+    "ganh",
+    "vencer",
+    "venc",
+    "conseguir",
+    "consegu",
+    "conquist",
+    "passei",
+    "aprovad",
+    "sucesso",
+    "feliz",
+    "alegr",
+    "parabens",
+    "vitoria"
+   ]
+  },
+  "cair": {
+   "desc": "tropeça e cai",
+   "raizes": [
+    "cair",
+    "cai=",
+    "caiu",
+    "caimos",
+    "tropec",
+    "quebr",
+    "perder",
+    "perdi",
+    "perdeu",
+    "errar",
+    "erre",
+    "errou",
+    "fracass",
+    "falir",
+    "faliu",
+    "desastre"
+   ]
+  },
+  "trabalhar": {
+   "desc": "trabalhando com as mãos",
+   "raizes": [
+    "trabalh",
+    "fazer",
+    "faz=",
+    "fiz=",
+    "fez=",
+    "construir",
+    "constru",
+    "montar",
+    "montar",
+    "montei",
+    "montou",
+    "montag",
+    "criar",
+    "criar",
+    "criei",
+    "criou",
+    "criamos",
+    "consert",
+    "produz",
+    "escrev",
+    "program",
+    "cozinhar",
+    "cozinhei",
+    "cozinhou",
+    "cozinhando",
+    "estud"
+   ]
+  },
+  "apontar": {
+   "desc": "aponta para algo",
+   "raizes": [
+    "apont",
+    "mostrar",
+    "mostr",
+    "olhar",
+    "olh",
+    "ver=",
+    "vi=",
+    "viu",
+    "veja",
+    "repar",
+    "descobr",
+    "encontr",
+    "achei",
+    "abrir",
+    "abri=",
+    "abriu",
+    "abre=",
+    "abrimos",
+    "pegar",
+    "peguei",
+    "pegou"
+   ]
+  },
+  "sentar": {
+   "desc": "sentado, esperando",
+   "raizes": [
+    "sentar",
+    "sentar",
+    "sentei",
+    "sentou",
+    "sentad",
+    "esperar",
+    "esper",
+    "aguard",
+    "descans",
+    "assistir",
+    "assist"
+   ]
+  },
+  "dormir": {
+   "desc": "deitado, dormindo",
+   "raizes": [
+    "dormir",
+    "dorm",
+    "cochil",
+    "sono"
+   ]
+  },
+  "triste": {
+   "desc": "cabisbaixo",
+   "raizes": [
+    "chor",
+    "trist",
+    "sozinh",
+    "deprim",
+    "medo",
+    "assust",
+    "preocup",
+    "ansios",
+    "cansad"
+   ]
+  },
+  "pular": {
+   "desc": "pulando ou dançando",
+   "raizes": [
+    "pular",
+    "pular",
+    "pulei",
+    "pulou",
+    "pulando",
+    "danc",
+    "brinc",
+    "festa"
+   ]
+  }
+ },
+ "situacoes": {
+  "nenhuma": {
+   "desc": "sem efeito extra",
+   "raizes": []
+  },
+  "festa": {
+   "desc": "confete e bandeirinhas",
+   "raizes": [
+    "festa",
+    "aniversario",
+    "comemor",
+    "carnaval",
+    "balada",
+    "parabens",
+    "casamento"
+   ]
+  },
+  "ideia": {
+   "desc": "lâmpada acesa sobre a cabeça",
+   "raizes": [
+    "ideia",
+    "inspira",
+    "solucao",
+    "descobri",
+    "sacada",
+    "insight",
+    "inventei",
+    "inventar"
+   ]
+  },
+  "duvida": {
+   "desc": "pontos de interrogação",
+   "raizes": [
+    "duvida",
+    "pergunt",
+    "sera=",
+    "por que",
+    "porque=",
+    "confus",
+    "nao sei",
+    "misterio",
+    "como assim"
+   ]
+  },
+  "dinheiro": {
+   "desc": "moedas e notas caindo",
+   "raizes": [
+    "dinheiro",
+    "reais",
+    "real=",
+    "dolar",
+    "salario",
+    "lucro",
+    "grana",
+    "rico",
+    "investi",
+    "pagar",
+    "pagou",
+    "paguei",
+    "pago=",
+    "caro=",
+    "barato",
+    "milhao",
+    "milhoes",
+    "mil=",
+    "faturar",
+    "fatur"
+   ]
+  },
+  "tempo": {
+   "desc": "relógio girando",
+   "raizes": [
+    "tempo",
+    "hora=",
+    "horas",
+    "minuto",
+    "segundo",
+    "atrasad",
+    "prazo",
+    "relogio",
+    "anos=",
+    "dias=",
+    "semana",
+    "mes=",
+    "meses",
+    "rapidinho",
+    "demor"
+   ]
+  },
+  "perigo": {
+   "desc": "alerta vermelho piscando",
+   "raizes": [
+    "perigo",
+    "cuidado",
+    "risco",
+    "alerta",
+    "emergencia",
+    "acidente",
+    "fogo",
+    "incendio",
+    "policia",
+    "assalto",
+    "crime",
+    "golpe",
+    "problema",
+    "ameaca"
+   ]
+  },
+  "amor": {
+   "desc": "corações subindo",
+   "raizes": [
+    "amor",
+    "amo=",
+    "amei",
+    "apaixon",
+    "namor",
+    "beijo",
+    "coracao",
+    "casal",
+    "carinho",
+    "gosto muito"
+   ]
+  },
+  "conversa": {
+   "desc": "balões de fala entre as pessoas",
+   "raizes": [
+    "conversa",
+    "conversar",
+    "papo",
+    "discut",
+    "debate",
+    "entrevista",
+    "reuniao",
+    "falou pra",
+    "disse pra",
+    "perguntou",
+    "respondeu"
+   ]
+  },
+  "sucesso": {
+   "desc": "troféu e estrelas",
+   "raizes": [
+    "sucesso",
+    "venc",
+    "ganh",
+    "conquist",
+    "premio",
+    "trofeu",
+    "campeao",
+    "record",
+    "melhor",
+    "aprovado",
+    "passei",
+    "deu certo",
+    "viral",
+    "gol=",
+    "golaco",
+    "ganhamos",
+    "vencemos"
+   ]
+  },
+  "tristeza": {
+   "desc": "nuvem chovendo sobre a pessoa",
+   "raizes": [
+    "trist",
+    "chor",
+    "deprim",
+    "sozinh",
+    "saudade",
+    "luto",
+    "decepcion",
+    "frustr"
+   ]
+  },
+  "raiva": {
+   "desc": "fumaça e tremor",
+   "raizes": [
+    "raiva",
+    "irritad",
+    "bravo",
+    "brava",
+    "odio",
+    "odeio",
+    "furios",
+    "puto",
+    "estress",
+    "briga",
+    "brig"
+   ]
+  },
+  "sono": {
+   "desc": "letras Z subindo",
+   "raizes": [
+    "sono",
+    "dormir",
+    "dorm",
+    "cansad",
+    "cochil",
+    "tedio"
+   ]
+  },
+  "crescimento": {
+   "desc": "seta e barras subindo",
+   "raizes": [
+    "cresc",
+    "aument",
+    "subiu",
+    "subir",
+    "melhor",
+    "evolu",
+    "dobr",
+    "multiplic",
+    "escalar",
+    "bombou",
+    "explodiu"
+   ]
+  },
+  "queda": {
+   "desc": "seta e barras caindo",
+   "raizes": [
+    "cai=",
+    "caiu",
+    "diminu",
+    "perd",
+    "piorou",
+    "pior=",
+    "crise",
+    "queda",
+    "baixou",
+    "prejuizo",
+    "quebrou",
+    "falencia",
+    "faliu"
+   ]
+  },
+  "multidao": {
+   "desc": "muita gente em volta",
+   "raizes": [
+    "todo mundo",
+    "pessoas",
+    "multidao",
+    "publico",
+    "gente=",
+    "galera",
+    "povo",
+    "milhares",
+    "seguidores",
+    "inscritos",
+    "fila"
+   ]
+  }
+ },
+ "pessoas": [
+  "eu=",
+  "ele=",
+  "ela=",
+  "eles",
+  "elas",
+  "nos=",
+  "gente",
+  "pessoa",
+  "homem",
+  "mulher",
+  "cara=",
+  "amigo",
+  "amiga",
+  "mae=",
+  "pai=",
+  "filho",
+  "filha",
+  "crianca",
+  "menino",
+  "menina",
+  "cliente",
+  "chefe",
+  "professor",
+  "professora",
+  "medico",
+  "medica",
+  "aluno",
+  "aluna",
+  "irmao",
+  "irma=",
+  "namorad",
+  "marido",
+  "esposa",
+  "vizinh",
+  "senhor",
+  "senhora",
+  "moco",
+  "moca",
+  "jogador",
+  "motorista",
+  "policial",
+  "cientista",
+  "astronauta",
+  "faroleir",
+  "rapaz",
+  "garoto",
+  "garota",
+  "voce"
+ ],
+ "duas_pessoas": [
+  "conversa",
+  "convers",
+  "discut",
+  "a gente",
+  "nos=",
+  "namorad",
+  "casal",
+  "marido",
+  "esposa",
+  "com ele",
+  "com ela",
+  "disse pra",
+  "falou pra",
+  "perguntou",
+  "respondeu",
+  "entrevista"
+ ],
+ "momentos": {
+  "dia": [],
+  "manha": [
+   "manha",
+   "amanhec",
+   "cedo=",
+   "cafe da manha"
+  ],
+  "tarde": [
+   "tarde",
+   "por do sol",
+   "entardec",
+   "anoitec"
+  ],
+  "noite": [
+   "noite",
+   "madrugada",
+   "escuro",
+   "lua=",
+   "estrelas",
+   "meia-noite",
+   "meia noite"
+  ]
+ },
+ "climas": {
+  "limpo": [],
+  "chuva": [
+   "chuva",
+   "chov",
+   "tempestade",
+   "temporal",
+   "molhad",
+   "guarda-chuva"
+  ],
+  "neve": [
+   "neve",
+   "nevando",
+   "gelo",
+   "congel",
+   "frio=",
+   "inverno"
+  ]
+ },
+ "planos": {
+  "geral": "plano geral: o lugar inteiro, para situar",
+  "conjunto": "plano de conjunto: as pessoas no lugar",
+  "medio": "plano médio: a pessoa da cintura para cima",
+  "close": "close: o rosto e a reação",
+  "detalhe": "plano detalhe: o objeto citado",
+  "aereo": "plano aéreo: visto de cima"
+ },
+ "movimentos": {
+  "fixo": "câmera parada",
+  "aproximar": "a câmera se aproxima devagar",
+  "afastar": "a câmera se afasta devagar",
+  "panoramica": "a câmera gira em volta",
+  "travelling": "a câmera acompanha de lado"
+ },
+ "transicoes": {
+  "corte": "corte seco",
+  "fade": "escurece e clareia",
+  "cortina": "uma cortina na cor do estilo passa pela tela",
+  "zoom": "mergulho para dentro da próxima cena"
+ },
+ "pronomes": [
+  "eu",
+  "ele",
+  "ela",
+  "eles",
+  "elas",
+  "nos",
+  "voce",
+  "voces",
+  "gente",
+  "a"
+ ]
+}

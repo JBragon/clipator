@@ -1,0 +1,53 @@
+# Cidade de bolso: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-cidade-de-bolso/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Cidade de bolso
+conceito:
+  frase: Uma rua de pixels é apresentada como um pequeno palco com planos de profundidade e placas editoriais.
+  palavras_chave: [pixel e profundidade, games, tecnologia, pequenas histórias, comparação entre lugares]
+  faca: ['Quatro planos: céu, fachadas, chão e personagem lateral.', A placa de informação é desenhada em resolução
+      normal; o mundo usa uma grade de baixa resolução., 'Sprites próprios com no máximo 12 cores por personagem,
+      silhuetas em degraus e sombras chapadas.', Prédios são caixas simples com atlas pixelado; nenhuma textura
+      fotográfica.]
+  nao_faca: [Sprites de jogos existentes., Profundidade de campo que apaga a informação., Transições aleatórias
+      de cenário.]
+cor:
+  paleta: {fundo: '#19233F', superficie: '#2C3A58', texto: '#FFF4D6', texto_suave: '#A9B4CB', primaria: '#E9A85D',
+    destaque: '#80D4BA', secundaria: '#775F4C', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: [Travelling lateral curto que passa por três marcos; o personagem anda com quatro poses discretas
+      e pausa quando o dado aparece., 'O primeiro plano se move 1,5 vez mais rápido que o cenário distante.']
+cenas:
+  tom: Para games, tecnologia, pequenas histórias e comparação entre lugares.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Abrir a rua e o personagem parado; Atravessar dois marcos visuais ligados à
+      fala; Parar diante da placa com a conclusão; Apagar a placa e terminar com a rua em repouso.', Não há pixel
+      borrado nem mudança de tamanho do pixel no movimento., A legenda permanece nítida e fora do buffer pixelado.,
+    Placas não escondem os marcos narrativos.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-cidade-de-bolso
+  backend_sugerido: hibrido
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Camadas 2D Canvas com o mesmo buffer, sprites e paralaxe; retirar volumes 3D.
+  construcao: Desenhe o mundo em buffer 270x480 e amplie por nearest-neighbor para 1080x1920. Calcule a pose com
+    floor(tempo*8)%4 e a posição diretamente pelo tempo. Em outros formatos derive o buffer com pixels quadrados
+    e escala inteira ou letterbox.
+  parametros_visuais: {largura_buffer: 270, altura_buffer: 480, poses: 4, fps_sprite: 8, deslocamento_camera: 0.12}
+graficos:
+  selo: {cor_texto: neutro-1}

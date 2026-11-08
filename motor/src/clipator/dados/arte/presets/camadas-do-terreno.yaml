@@ -1,0 +1,54 @@
+# Camadas do terreno: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-camadas-do-terreno/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Camadas do terreno
+conceito:
+  frase: Um bloco isométrico mostra solo, infraestrutura e superfície em camadas que podem deslizar para revelar
+    o que existe entre elas.
+  palavras_chave: [isometria explicativa, geologia, cidade, ocupação do espaço, sistemas em camadas]
+  faca: [Bloco retangular com três níveis e um canto removível; legenda lateral associa cada cor a um nível., 'As
+      faces têm diferença de luminosidade, não contorno preto de quadrinhos.', 'Superfície mineral fosca, camadas
+      internas em argila suave e tubulações de contraste moderado.', Árvores e casas simples são opcionais e têm
+      escala consistente.]
+  nao_faca: [Transformação contínua de morro em mar sem relação com a fala., Relevo tratado como dado científico
+      sem fonte.]
+cor:
+  paleta: {fundo: '#DDE6DC', superficie: '#C1D2C5', texto: '#253F39', texto_suave: '#526961', primaria: '#B47245',
+    destaque: '#4C8B95', secundaria: '#CBB298', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['A camada superior desliza para a esquerda, a intermediária para a direita e a base fica fixa.',
+    Um marcador desce atravessando os níveis e volta ao ponto inicial.]
+cenas:
+  tom: Para geologia, cidade, ocupação do espaço e sistemas em camadas.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Mostrar o bloco inteiro e a legenda; Separar dois níveis sem girar a câmera;
+      Mover o marcador pela seção exposta; Recompor os níveis e destacar a superfície.', A ordem das camadas continua
+      visível durante o deslocamento., O marcador segue a seção exposta., A escala não muda entre antes e depois.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-camadas-do-terreno
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Faces isométricas SVG com três faixas e offsets idênticos.
+  construcao: Modele cada nível como grupo com offset próprio. Corte visual deve corresponder à geometria, não à
+    textura. Limite a quantidade de elementos por nível e sincronize rótulos com a projeção de seus centros.
+  parametros_visuais: {niveis: 3, separacao_relativa: 0.22, canto_removivel: 0.18, angulo_camera_graus: 35}
+graficos:
+  selo: {cor_texto: neutro-1}
+x_contraste_corrigido: ['texto_suave #648173 → #526961 (3.3:1 → 4.6:1)', 'primaria #B77547 → #B47245 (2.9:1 → 3.0:1)',
+  'destaque #5B9AA4 → #4C8B95 (2.5:1 → 3.0:1)', 'texto #29433D → #253F39 (7:1 também sobre a superfície)']

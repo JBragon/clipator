@@ -1,0 +1,145 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-pixel-em-cena",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.387
+    },
+    {
+      "texto": "astrônoma",
+      "inicio": 0.43,
+      "fim": 0.817
+    },
+    {
+      "texto": "chega",
+      "inicio": 0.86,
+      "fim": 1.247
+    },
+    {
+      "texto": "ao",
+      "inicio": 1.29,
+      "fim": 1.677
+    },
+    {
+      "texto": "observatório.",
+      "inicio": 1.72,
+      "fim": 2.107
+    },
+    {
+      "texto": "Ela",
+      "inicio": 2.5,
+      "fim": 2.7764
+    },
+    {
+      "texto": "cruza",
+      "inicio": 2.8071,
+      "fim": 3.0836
+    },
+    {
+      "texto": "a",
+      "inicio": 3.1143,
+      "fim": 3.3907
+    },
+    {
+      "texto": "plataforma",
+      "inicio": 3.4214,
+      "fim": 3.6979
+    },
+    {
+      "texto": "até",
+      "inicio": 3.7286,
+      "fim": 4.005
+    },
+    {
+      "texto": "o",
+      "inicio": 4.0357,
+      "fim": 4.3121
+    },
+    {
+      "texto": "telescópio.",
+      "inicio": 4.3429,
+      "fim": 4.6193
+    },
+    {
+      "texto": "O",
+      "inicio": 5.0,
+      "fim": 5.3225
+    },
+    {
+      "texto": "telescópio",
+      "inicio": 5.3583,
+      "fim": 5.6808
+    },
+    {
+      "texto": "aponta",
+      "inicio": 5.7167,
+      "fim": 6.0392
+    },
+    {
+      "texto": "para",
+      "inicio": 6.075,
+      "fim": 6.3975
+    },
+    {
+      "texto": "o",
+      "inicio": 6.4333,
+      "fim": 6.7558
+    },
+    {
+      "texto": "céu.",
+      "inicio": 6.7917,
+      "fim": 7.1142
+    },
+    {
+      "texto": "A",
+      "inicio": 7.5,
+      "fim": 7.7764
+    },
+    {
+      "texto": "cúpula",
+      "inicio": 7.8071,
+      "fim": 8.0836
+    },
+    {
+      "texto": "se",
+      "inicio": 8.1143,
+      "fim": 8.3907
+    },
+    {
+      "texto": "abre",
+      "inicio": 8.4214,
+      "fim": 8.6979
+    },
+    {
+      "texto": "para",
+      "inicio": 8.7286,
+      "fim": 9.005
+    },
+    {
+      "texto": "a",
+      "inicio": 9.0357,
+      "fim": 9.3121
+    },
+    {
+      "texto": "observação.",
+      "inicio": 9.3429,
+      "fim": 9.6193
+    }
+  ],
+  "exemplo": "Uma astrônoma cruza a plataforma de um observatório, aproxima-se do telescópio e abre a cúpula."
+}

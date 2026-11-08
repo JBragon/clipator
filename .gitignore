@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+uv.lock
+
+# Node / Electron
+node_modules/
+out/
+release/
+
+# Código dos concorrentes clonado para leitura (ver docs/referencias-concorrentes.md)
+referencias/
+
+# Mídia e workspaces locais de teste
+*.mp4
+# ...menos as amostras prontas dos estilos, que vêm com o Clipator
+!motor/src/clipator/dados/amostras/*.mp4
+*.wav
+*.mkv
+*.webm
+workspace-teste/
+
+# Sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Dados da coleta de canais de cortes (conteúdo de terceiros); o script coletar.py fica no repo
+pesquisa-canais/*
+!pesquisa-canais/coletar.py
+!pesquisa-canais/README.md

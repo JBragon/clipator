@@ -1,0 +1,51 @@
+# Resina em movimento: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-resina-em-movimento/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Resina em movimento
+conceito:
+  frase: Uma forma de resina translúcida responde a um toque e revela uma peça sólida no seu interior.
+  palavras_chave: [material translúcido, propriedades de material, transformação, memória, conceitos abstratos simples]
+  faca: ['Uma forma grande sobre pedestal escuro baixo, com uma placa lateral de duas linhas.', O núcleo opaco tem
+      função semântica e ocupa no máximo 20% do volume., 'Resina colorida com rugosidade moderada, contorno luminoso
+      e transmissão opcional.', O núcleo deve continuar visível sem refração física completa; não usar cenário externo
+      para reflexo.]
+  nao_faca: [Prato de porcelana., Balas de goma como personagem padrão., Simulação física instável entre quadros.]
+cor:
+  paleta: {fundo: '#20283B', superficie: '#343E57', texto: '#F3F5FC', texto_suave: '#A9B4CE', primaria: '#E99C77',
+    destaque: '#8CD5CA', secundaria: '#7A5C56', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: escala
+  principios: [Um único toque produz uma onda decrescente., 'Escala vertical e horizontal se compensam para sugerir
+      conservação de volume; a oscilação dura até 1,2 s e cessa antes da leitura.']
+cenas:
+  tom: Para propriedades de material, transformação, memória e conceitos abstratos simples.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Apresentar a forma e o núcleo imóvel; Aplicar um toque e propagar a onda; Acomodar
+      e apontar o núcleo; Manter o resultado estável sem novo toque.', A forma retorna ao volume inicial sem deriva.,
+    Transparência não elimina o contraste do núcleo., O render leve mantém o toque e a acomodação.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-resina-em-movimento
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Gradientes SVG em camadas com núcleo visível e squash controlado; mostrar a etiqueta “versão
+    leve” na seleção, sem alegar refração física.
+  construcao: 'Use deformação analítica de vértices por altura e distância ao toque: amplitude*exp(-amortecimento*t)*sin(frequencia*t-fase).
+    Calcule sempre da malha original, nunca acumule deformações. Limite a amplitude a 0,12 do raio.'
+  parametros_visuais: {amplitude_relativa: 0.1, amortecimento: 4.5, frequencia_hz: 3.0, transmissao: 0.65}
+graficos:
+  selo: {cor_texto: neutro-1}

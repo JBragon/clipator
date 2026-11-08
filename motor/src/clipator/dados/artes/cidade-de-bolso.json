@@ -1,0 +1,71 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-cidade-de-bolso",
+  "nome": "Cidade de bolso",
+  "familia": "Pixel e profundidade",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma rua de pixels é apresentada como um pequeno palco com planos de profundidade e placas editoriais.",
+  "usar_em": "games, tecnologia, pequenas histórias e comparação entre lugares",
+  "composicao": "Quatro planos: céu, fachadas, chão e personagem lateral. A placa de informação é desenhada em resolução normal; o mundo usa uma grade de baixa resolução.",
+  "material_e_luz": "Sprites próprios com no máximo 12 cores por personagem, silhuetas em degraus e sombras chapadas. Prédios são caixas simples com atlas pixelado; nenhuma textura fotográfica.",
+  "movimento": "Travelling lateral curto que passa por três marcos; o personagem anda com quatro poses discretas e pausa quando o dado aparece. O primeiro plano se move 1,5 vez mais rápido que o cenário distante.",
+  "construcao": "Desenhe o mundo em buffer 270x480 e amplie por nearest-neighbor para 1080x1920. Calcule a pose com floor(tempo*8)%4 e a posição diretamente pelo tempo. Em outros formatos derive o buffer com pixels quadrados e escala inteira ou letterbox.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "hibrido",
+  "complexidade": "alta",
+  "alternativa_leve": "Camadas 2D Canvas com o mesmo buffer, sprites e paralaxe; retirar volumes 3D.",
+  "parametros_visuais": {
+    "largura_buffer": 270,
+    "altura_buffer": 480,
+    "poses": 4,
+    "fps_sprite": 8,
+    "deslocamento_camera": 0.12
+  },
+  "fases": [
+    "Abrir a rua e o personagem parado",
+    "Atravessar dois marcos visuais ligados à fala",
+    "Parar diante da placa com a conclusão",
+    "Apagar a placa e terminar com a rua em repouso"
+  ],
+  "criterios": [
+    "Não há pixel borrado nem mudança de tamanho do pixel no movimento.",
+    "A legenda permanece nítida e fora do buffer pixelado.",
+    "Placas não escondem os marcos narrativos."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "largura_buffer": {
+      "tipo": "inteiro",
+      "minimo": 90,
+      "maximo": 540
+    },
+    "altura_buffer": {
+      "tipo": "inteiro",
+      "minimo": 160,
+      "maximo": 960
+    },
+    "poses": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 8
+    },
+    "fps_sprite": {
+      "tipo": "inteiro",
+      "minimo": 4,
+      "maximo": 12
+    },
+    "deslocamento_camera": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.2
+    }
+  }
+}

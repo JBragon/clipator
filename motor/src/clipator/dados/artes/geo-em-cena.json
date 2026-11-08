@@ -1,0 +1,75 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-geo-em-cena",
+  "nome": "Geo em Cena",
+  "familia": "Mapa geográfico real multiescala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "O mapa aproxima de continentes para países e subdivisões reais, destacando somente os lugares mencionados na fala.",
+  "usar_em": "Mapa Documental",
+  "composicao": "Oceano azul profundo, terras em tons frios, fronteiras claras finas e o alvo em destaque quente. Polígonos reais do Natural Earth, com os vizinhos como contexto.",
+  "material_e_luz": "Cartografia plana, sem relevo inventado e sem extrusão de áreas.",
+  "movimento": "A câmera aproxima do lugar no segundo em que ele é dito, de continente para país e estado quando a fala pedir. Vários lugares na mesma frase ficam todos enquadrados.",
+  "construcao": "Nomes da fala resolvidos para entidades da base local; canvas 2D com o mesmo fator de escala nos dois eixos, sem rede e sem tiles.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "canvas",
+  "complexidade": "alta",
+  "alternativa_leve": "O mesmo mapa real, com a câmera cortando em vez de voar.",
+  "parametros_visuais": {
+    "escala_fronteiras": 1.0,
+    "rotulos": true,
+    "grade": true,
+    "aproximacao_s": 1.1,
+    "vizinhos": 1.4,
+    "projecao": "equiretangular",
+    "credito": true
+  },
+  "fases": [],
+  "criterios": [
+    "O destaque é o polígono verdadeiro da base, nunca um círculo ou uma silhueta.",
+    "Ambiguidade ou lugar ausente dá aviso e nada é desenhado no lugar.",
+    "Sem camada municipal, o polígono do estado não representa a cidade de mesmo nome.",
+    "A presença do contorno não autoriza estatística, evento ou rota que a fala não citou."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "escala_fronteiras": {
+      "tipo": "numero",
+      "minimo": 0.5,
+      "maximo": 3
+    },
+    "rotulos": {
+      "tipo": "booleano"
+    },
+    "grade": {
+      "tipo": "booleano"
+    },
+    "aproximacao_s": {
+      "tipo": "numero",
+      "minimo": 0.3,
+      "maximo": 3
+    },
+    "vizinhos": {
+      "tipo": "numero",
+      "minimo": 1.2,
+      "maximo": 3.5
+    },
+    "projecao": {
+      "tipo": "texto",
+      "opcoes": [
+        "equiretangular",
+        "mercator"
+      ]
+    },
+    "credito": {
+      "tipo": "booleano"
+    }
+  }
+}

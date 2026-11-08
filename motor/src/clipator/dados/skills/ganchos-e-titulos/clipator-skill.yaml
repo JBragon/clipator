@@ -1,0 +1,9 @@
+id: ganchos-e-titulos
+nome: "Ganchos e títulos"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [titulos]
+ativa_por_padrao: true
+descricao: "Títulos curtos com gancho, presos ao que o clip entrega, calibrados pelo titulos.md do canal."

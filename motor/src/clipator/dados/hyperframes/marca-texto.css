@@ -1,0 +1,11 @@
+/* Texto grifado: o marca-texto passa sobre a palavra falada e fica nas palavras-chave.
+   Sem pseudo-elementos: o HyperFrames busca as animações de cada elemento pelo tempo dele. */
+.p {
+  -webkit-text-stroke: 0; text-shadow: 0 0.04em 0.12em rgba(0,0,0,.6); padding: 0 0.06em;
+  background: linear-gradient(var(--destaque), var(--destaque)) no-repeat 0 85% / 0% 78%;
+  animation: clip-pop 0.15s ease-out both, grifo var(--d) linear backwards;
+  animation-delay: var(--t), var(--t);
+}
+.p.destaque { color: #111; text-shadow: none; animation: clip-pop 0.15s ease-out both, grifo-fica 0.22s ease-out both; animation-delay: var(--t), var(--t); }
+@keyframes grifo { 0% { background-size: 0% 78%; color: var(--cor); } 18%, 100% { background-size: 100% 78%; color: #111; } }
+@keyframes grifo-fica { from { background-size: 0% 78%; } to { background-size: 100% 78%; } }

@@ -1,0 +1,9 @@
+id: roteiro-do-curta
+nome: "Roteiro do curta"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [cenas]
+ativa_por_padrao: true
+descricao: "Direção de roteiro dos estilos que viram curta (Encaixe Vivo, Pixel em Cena, Fluxo Facetado, Rota em Foco, Terreno Vivo): uma história fechada, com metáfora, elenco e planos que dão sentido ao que é dito."

@@ -1,0 +1,9 @@
+id: ranking-de-cortes
+nome: "Ranking de cortes"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [ranking]
+ativa_por_padrao: true
+descricao: "Régua de nota para escolher os cortes: gancho, história completa, emoção e tema do canal."

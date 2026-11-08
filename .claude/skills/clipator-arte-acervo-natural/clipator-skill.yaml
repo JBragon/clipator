@@ -1,0 +1,9 @@
+id: clipator-arte-acervo-natural
+nome: "Acervo natural — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de acervo natural para comparação de espécies, objetos, materiais e exemplares de uma coleção, ou implementa esse estilo no Clipator quando solicitado."

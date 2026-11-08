@@ -1,0 +1,50 @@
+name: motor
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths: ["motor/**", ".github/workflows/motor.yml"]
+
+jobs:
+  testes:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: motor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: FFmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg libegl1 libgl1
+      - name: FFmpeg (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg-full
+      - name: Node.js (Linux, para o HyperFrames)
+        if: runner.os == 'Linux'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: HyperFrames (Linux)
+        if: runner.os == 'Linux'
+        run: npm install --no-fund --no-audit --prefix "$HOME/.clipator/hyperframes" hyperframes@0.8.229
+      - name: FFmpeg (Windows)
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg -y --no-progress
+      # venv próprio em motor/.venv: o Python do uv é "externally managed" e
+      # não aceita --system
+      - name: Dependências
+        run: |
+          uv venv .venv --python 3.12
+          uv pip install --python .venv -e ".[dev,visao]" ruff
+      - name: Lint
+        run: uv run --no-sync ruff check src --select F,E9
+      - name: Testes
+        run: uv run --no-sync pytest -q

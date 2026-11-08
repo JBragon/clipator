@@ -1,0 +1,129 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-geo-em-cena",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Esta",
+      "inicio": 0.0,
+      "fim": 0.3225
+    },
+    {
+      "texto": "é",
+      "inicio": 0.3583,
+      "fim": 0.6808
+    },
+    {
+      "texto": "a",
+      "inicio": 0.7167,
+      "fim": 1.0392
+    },
+    {
+      "texto": "América",
+      "inicio": 1.075,
+      "fim": 1.3975
+    },
+    {
+      "texto": "do",
+      "inicio": 1.4333,
+      "fim": 1.7558
+    },
+    {
+      "texto": "Sul.",
+      "inicio": 1.7917,
+      "fim": 2.1142
+    },
+    {
+      "texto": "O",
+      "inicio": 2.5,
+      "fim": 2.887
+    },
+    {
+      "texto": "Brasil",
+      "inicio": 2.93,
+      "fim": 3.317
+    },
+    {
+      "texto": "fica",
+      "inicio": 3.36,
+      "fim": 3.747
+    },
+    {
+      "texto": "neste",
+      "inicio": 3.79,
+      "fim": 4.177
+    },
+    {
+      "texto": "continente.",
+      "inicio": 4.22,
+      "fim": 4.607
+    },
+    {
+      "texto": "Dentro",
+      "inicio": 5.0,
+      "fim": 5.3225
+    },
+    {
+      "texto": "do",
+      "inicio": 5.3583,
+      "fim": 5.6808
+    },
+    {
+      "texto": "Brasil,",
+      "inicio": 5.7167,
+      "fim": 6.0392
+    },
+    {
+      "texto": "veja",
+      "inicio": 6.075,
+      "fim": 6.3975
+    },
+    {
+      "texto": "São",
+      "inicio": 6.4333,
+      "fim": 6.7558
+    },
+    {
+      "texto": "Paulo.",
+      "inicio": 6.7917,
+      "fim": 7.1142
+    },
+    {
+      "texto": "E",
+      "inicio": 7.5,
+      "fim": 7.887
+    },
+    {
+      "texto": "aqui",
+      "inicio": 7.93,
+      "fim": 8.317
+    },
+    {
+      "texto": "está",
+      "inicio": 8.36,
+      "fim": 8.747
+    },
+    {
+      "texto": "Minas",
+      "inicio": 8.79,
+      "fim": 9.177
+    },
+    {
+      "texto": "Gerais.",
+      "inicio": 9.22,
+      "fim": 9.607
+    }
+  ]
+}

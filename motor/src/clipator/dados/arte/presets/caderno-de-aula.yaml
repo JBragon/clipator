@@ -1,0 +1,80 @@
+# Didático e tutorial: folha de caderno, azul de caneta e grifo coral.
+herda: base
+nome: Caderno de aula
+conceito:
+  frase: "Folha clara de caderno, azul de caneta e um grifo coral: parece que alguém explica no papel, ao seu lado."
+  palavras_chave: [didático, claro, calmo, organizado, tutorial]
+  faca:
+    - Listas numeradas que entram item a item, no ritmo da fala.
+    - Grifo coral só na palavra que é o conceito da tela.
+    - "Muito respiro: margens largas e no máximo três itens por tela."
+    - Setas e ícones em traço fino, nunca preenchidos.
+  nao_faca:
+    - Fundo escuro nas telas de explicação.
+    - Efeito sonoro de impacto.
+    - Texto em caixa alta em parágrafo.
+    - Mais de três itens de lista na mesma tela.
+cor:
+  paleta:
+    fundo: "#FBF8F1"
+    superficie: "#FFFFFF"
+    texto: "#1D2433"
+    texto_suave: "#596277"
+    primaria: "#2350C8"
+    secundaria: "#D3DDF5"
+    destaque: "#E2543F"
+    positivo: "#24804A"
+    negativo: "#C23A3A"
+    alerta: "#A86400"
+  serie: [primaria, destaque, positivo, alerta, texto_suave, texto]
+  gradientes:
+    folha: {tipo: linear, angulo: 180, paradas: [[superficie, 0], [fundo, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: false, espacamento: -0.01, entrelinha: 1.08}
+    subtitulo: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, espacamento: 0.1, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: false, entrelinha: 1.12}
+  escala: {display: 0.11, h1: 0.075, h2: 0.054, h3: 0.042, corpo: 0.032, nota: 0.025}
+layout: {raio: 0.016, traco: 0.004, sombra: {dx: 0, dy: 0.006, desfoque: 0.02, cor: neutro-1, alfa: 0.12}, densidade: arejada, margem: 0.08}
+movimento:
+  duracoes: {micro: 0.12, curta: 0.3, media: 0.55, longa: 0.95}
+  escalonamento: 0.1
+  entrada: sobe
+  saida: fade
+  transicao_padrao: fade
+  transicoes: [corte, fade, desliza]
+legenda:
+  estilo: karaoke
+  tamanho: 0.054
+  cor: neutro-2
+  cor_destaque: "#FFD34E"
+  contorno: {cor: neutro-1, espessura: 0.09}
+  max_linhas: 2
+  max_palavras: 5
+graficos:
+  tarja: {estilo: linha, posicao: inferior_esquerda, cor_fundo: superficie, cor_nome: texto, cor_cargo: texto_suave, cor_acento: primaria}
+  selo: {estilo: sublinhado, cor_fundo: destaque, cor_texto: texto}
+  icones: traco
+thumbnail:
+  cor: texto
+  cor_destaque: primaria
+  contorno: null
+  fundo: superficie
+  borda: primaria
+  tratamento_foto: {saturacao: 1.0, contraste: 1.04, contorno_pessoa: primaria}
+som:
+  identidade: "Calmo: um clique de caneta por item e nada de impacto."
+  efeitos: {entrada: whoosh, enfase: click, numero: click, alerta: ding}
+  volume_efeitos: 0.3
+  musica: {clima: chill, bpm: [80, 100]}
+cenas:
+  tom: "Didático e calmo: a tela organiza a explicação em passos curtos."
+  preferir: [lista, comparacao, titulo, numero]
+  evitar: [alerta, palavra]
+  intervalo: 4.0
+  por_minuto: 9
+  duracao: [2.5, 7.0]
+  itens_lista: 3
+  regras:
+    - Quando a fala enumera passos, use lista numerada na ordem dita.
+    - Conceito novo vira título com o nome dele, do jeito que foi falado.

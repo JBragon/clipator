@@ -1,0 +1,9 @@
+id: clipator-arte-tinta-em-etapas
+nome: "Tinta em etapas — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de tinta em etapas para tutorial, organização, transformação de estado e demonstração de recurso, ou implementa esse estilo no Clipator quando solicitado."

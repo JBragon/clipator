@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-fluxo-facetado",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.387
+    },
+    {
+      "texto": "caixa",
+      "inicio": 0.43,
+      "fim": 0.817
+    },
+    {
+      "texto": "entra",
+      "inicio": 0.86,
+      "fim": 1.247
+    },
+    {
+      "texto": "na",
+      "inicio": 1.29,
+      "fim": 1.677
+    },
+    {
+      "texto": "esteira.",
+      "inicio": 1.72,
+      "fim": 2.107
+    },
+    {
+      "texto": "O",
+      "inicio": 2.5,
+      "fim": 2.887
+    },
+    {
+      "texto": "sensor",
+      "inicio": 2.93,
+      "fim": 3.317
+    },
+    {
+      "texto": "lê",
+      "inicio": 3.36,
+      "fim": 3.747
+    },
+    {
+      "texto": "a",
+      "inicio": 3.79,
+      "fim": 4.177
+    },
+    {
+      "texto": "etiqueta.",
+      "inicio": 4.22,
+      "fim": 4.607
+    },
+    {
+      "texto": "O",
+      "inicio": 5.0,
+      "fim": 5.387
+    },
+    {
+      "texto": "desvio",
+      "inicio": 5.43,
+      "fim": 5.817
+    },
+    {
+      "texto": "separa",
+      "inicio": 5.86,
+      "fim": 6.247
+    },
+    {
+      "texto": "o",
+      "inicio": 6.29,
+      "fim": 6.677
+    },
+    {
+      "texto": "caminho.",
+      "inicio": 6.72,
+      "fim": 7.107
+    },
+    {
+      "texto": "A",
+      "inicio": 7.5,
+      "fim": 7.8225
+    },
+    {
+      "texto": "encomenda",
+      "inicio": 7.8583,
+      "fim": 8.1808
+    },
+    {
+      "texto": "segue",
+      "inicio": 8.2167,
+      "fim": 8.5392
+    },
+    {
+      "texto": "para",
+      "inicio": 8.575,
+      "fim": 8.8975
+    },
+    {
+      "texto": "a",
+      "inicio": 8.9333,
+      "fim": 9.2558
+    },
+    {
+      "texto": "saída.",
+      "inicio": 9.2917,
+      "fim": 9.6142
+    }
+  ],
+  "exemplo": "Uma central de triagem leva uma caixa pela esteira, lê sua etiqueta e a desvia até a saída."
+}

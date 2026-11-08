@@ -1,0 +1,9 @@
+id: clipator-arte-painel-de-variacoes
+nome: "Painel de variações — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de painel de variações para comparar tratamentos, explicar alternativas e mostrar uma transformação visual, ou implementa esse estilo no Clipator quando solicitado."

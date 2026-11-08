@@ -1,0 +1,9 @@
+id: decupagem
+nome: "Decupagem da fala"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: true
+descricao: "Limpa a fala: tira pausas mortas, retomadas e repetições e fica com a melhor tentativa."

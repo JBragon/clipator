@@ -1,0 +1,49 @@
+# Jardim de luz: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-jardim-de-luz/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Jardim de luz
+conceito:
+  frase: Um jardim noturno em planos de papel recebe pequenos pontos de luz que conduzem o olhar por um caminho.
+  palavras_chave: [paisagem noturna, respiro narrativo, histórias calmas, sustentabilidade, encerramento]
+  faca: ['Três massas de folhagem recortada em volta de uma clareira, caminho em diagonal e um ponto de luz principal.',
+    'Texto ocupa uma abertura do cenário, com fundo de contraste uniforme.', Papel de fibras largas em verdes acinzentados;
+      bordas claras e sombra suave entre camadas., Luz âmbar pontual complementa uma iluminação de lua muito fraca.]
+  nao_faca: [Riacho ciano como única assinatura., Céu cheio de partículas., Ritmo acelerado de introdução.]
+cor:
+  paleta: {fundo: '#17242D', superficie: '#263740', texto: '#F1F0D8', texto_suave: '#9AACAC', primaria: '#D6B664',
+    destaque: '#86B9A1', secundaria: '#6D6646', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: [Folhas oscilam no máximo 2 graus; uma luz percorre o caminho com duas pausas sem piscar., 'A câmera
+      se aproxima 3% ao longo da cena, mantendo o texto imóvel.']
+cenas:
+  tom: Para respiro narrativo, histórias calmas, sustentabilidade e encerramento.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Revelar a clareira e o primeiro ponto de luz; Conduzir a luz pela primeira curva;
+      Parar na clareira e mostrar a ideia central; Atenuar a luz até o nível ambiente.', A cena continua compreensível
+      em tela escura de celular., Folhas não passam sobre a legenda., Não há pulsos rápidos de luminosidade.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-jardim-de-luz
+  backend_sugerido: hibrido
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Paralaxe 2D com folhas SVG e gradiente radial; sem luz dinâmica nem sombras WebGL.
+  construcao: Gere massas de folhas com polígonos de semente fixa; cada grupo usa uma senoide de fase própria. Path
+    da luz é uma curva com comprimento tabelado. Tempo de ambientação continua absoluto ao longo das cenas.
+  parametros_visuais: {camadas: 3, balanco_graus: 2, aproximacao_relativa: 0.03, luzes: 5}
+graficos:
+  selo: {cor_texto: neutro-1}

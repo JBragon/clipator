@@ -1,0 +1,53 @@
+# Oficina modular: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-oficina-modular/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Oficina modular
+conceito:
+  frase: Um objeto é construído em uma bancada técnica por módulos grandes, com trilhos e encaixes visíveis.
+  palavras_chave: [3d modular, produto]
+  faca: [Bancada diagonal com uma bandeja lateral de módulos numerados; o objeto ocupa 62% da área útil., Uma régua
+      de progresso tem somente a quantidade de etapas realmente mostradas., 'Caixas chanfradas sem pinos, alumínio
+      pintado fosco e juntas escuras.', A luz principal vem da esquerda; sombra de contato suave distingue peça
+      apoiada de peça em trânsito.]
+  nao_faca: [Enxame de milhares de tijolos., Logotipos de brinquedos., Contagem fictícia de peças.]
+cor:
+  paleta: {fundo: '#142D33', superficie: '#25434A', texto: '#F5F1E8', texto_suave: '#A5BBC0', primaria: '#F0B44D',
+    destaque: '#76D3C1', secundaria: '#776A3F', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['Cada subconjunto percorre primeiro um trilho reto, levanta no máximo 0,3 da sua altura e encaixa
+      com recuo de 3%.', Monte de baixo para cima segundo um grafo de dependências., A câmera é ortográfica e permanece
+      do mesmo lado.]
+cenas:
+  tom: Para partes de um sistema, produto, montagem ou sequência de dependências.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Revelar bancada e primeiro módulo; Deslizar os subconjuntos em ordem e iluminar
+      a junta ativa; Segurar o objeto completo com uma etiqueta de função; Recolher a régua e devolver os módulos
+      à bandeja se o modo laço estiver ativo.', Nenhum módulo atravessa outro no caminho de entrada., O objeto continua
+      identificável em silhueta., A etapa marcada corresponde ao subconjunto que encaixa.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-oficina-modular
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Isométrico SVG com seis módulos e a mesma ordem de montagem; manter as juntas e a bandeja.
+  construcao: Modele 8 a 40 módulos com id, destino, origem e depende_de. Ordene topologicamente; distribua o atraso
+    por ordem e use smoothstep para o percurso e uma senoide amortecida só no encaixe. Reutilize geometria e material.
+    O texto fica em SVG fora do canvas.
+  parametros_visuais: {modulos: 18, elevacao_relativa: 0.25, recuo_relativo: 0.03, ordem: dependencias}
+graficos:
+  selo: {cor_texto: neutro-1}

@@ -1,0 +1,931 @@
+{
+ "versao": 1,
+ "fonte": {
+  "repositorio": "https://github.com/google/fonts",
+  "commit": "2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc"
+ },
+ "fontes": [
+  {
+   "id": "abril-fatface",
+   "nome": "Abril Fatface",
+   "categoria": "elegante",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/abrilfatface/AbrilFatface-Regular.ttf",
+    "sha256": "5971d4a3758a922a9fedc7f6fb825a96341a2e718c45a4b2c9a6b417c8c4dbe9",
+    "bytes": 67364,
+    "arquivo": "AbrilFatface-Regular.ttf"
+   }
+  },
+  {
+   "id": "alfa-slab-one",
+   "nome": "Alfa Slab One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/alfaslabone/AlfaSlabOne-Regular.ttf",
+    "sha256": "28664afa698a3393bd5a29eec750230a0645c5301d62200e5f2d3a027fb2299d",
+    "bytes": 97376,
+    "arquivo": "AlfaSlabOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "amatic-sc",
+   "nome": "Amatic SC",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/amaticsc/AmaticSC-Bold.ttf",
+    "sha256": "d367beadee66efbb657d24d3d8f30f3b60633e9d5c8ded7385541cf775cabb4d",
+    "bytes": 156180,
+    "arquivo": "AmaticSC-Bold.ttf"
+   }
+  },
+  {
+   "id": "archivo",
+   "nome": "Archivo",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/archivo/Archivo%5Bwdth,wght%5D.ttf",
+    "sha256": "0e094a7d3c7c4c25cf1310c4b30014f1dae9332220b1c2c88f4fa996f0b05053",
+    "bytes": 658596,
+    "arquivo": "Archivo-wdth-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "archivo-black",
+   "nome": "Archivo Black",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/archivoblack/ArchivoBlack-Regular.ttf",
+    "sha256": "dd9a89a019b4849f66ab75455fe7bdf931311042cbb0f0f97acc061539703180",
+    "bytes": 90988,
+    "arquivo": "ArchivoBlack-Regular.ttf"
+   }
+  },
+  {
+   "id": "audiowide",
+   "nome": "Audiowide",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/audiowide/Audiowide-Regular.ttf",
+    "sha256": "c7c0f2b0f6fad8c623e31772ce79f94a4edb9321ffce9fce978ea892d20ae730",
+    "bytes": 69916,
+    "arquivo": "Audiowide-Regular.ttf"
+   }
+  },
+  {
+   "id": "bagel-fat-one",
+   "nome": "Bagel Fat One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/bagelfatone/BagelFatOne-Regular.ttf",
+    "sha256": "9286944032c5a9b20ad70940105417beae14013e0b4f5fc292425afdc4330245",
+    "bytes": 1585984,
+    "arquivo": "BagelFatOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "baloo-2",
+   "nome": "Baloo 2",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/baloo2/Baloo2%5Bwght%5D.ttf",
+    "sha256": "d47a6852548059b1db49a1319d06d499d546c3fa2237cf9eee9c43c8abb025c2",
+    "bytes": 683200,
+    "arquivo": "Baloo2-wght.ttf"
+   },
+   "peso": [
+    800,
+    800
+   ]
+  },
+  {
+   "id": "barlow-condensed",
+   "nome": "Barlow Condensed",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/barlowcondensed/BarlowCondensed-ExtraBold.ttf",
+    "sha256": "724c9c25952d5f4a2d87185d9767aa006144c5f0d944dc05bf7d5d603551c260",
+    "bytes": 110296,
+    "arquivo": "BarlowCondensed-ExtraBold.ttf"
+   },
+   "italico": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/barlowcondensed/BarlowCondensed-ExtraBoldItalic.ttf",
+    "sha256": "331783dae9ec0c398f4d32c9fd5a56d4c602caa0c1628c2b9cbfe93f48eb68c9",
+    "bytes": 113004,
+    "arquivo": "BarlowCondensed-ExtraBoldItalic.ttf"
+   }
+  },
+  {
+   "id": "black-ops-one",
+   "nome": "Black Ops One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/blackopsone/BlackOpsOne-Regular.ttf",
+    "sha256": "282a825b5f294377387e3969f765408157dbea8da0f5d0aae68c6bc704b145b3",
+    "bytes": 166532,
+    "arquivo": "BlackOpsOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "boogaloo",
+   "nome": "Boogaloo",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/boogaloo/Boogaloo-Regular.ttf",
+    "sha256": "c38febf770bec2b8e30ea6bc1ddb39c9b0ce0e8625d94ceeafbe3af1c7096d9d",
+    "bytes": 33960,
+    "arquivo": "Boogaloo-Regular.ttf"
+   }
+  },
+  {
+   "id": "bowlby-one-sc",
+   "nome": "Bowlby One SC",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/bowlbyonesc/BowlbyOneSC-Regular.ttf",
+    "sha256": "dc9f2325fb6bab327c26619a752b274b8f0f4022756d896450911e885609f071",
+    "bytes": 55200,
+    "arquivo": "BowlbyOneSC-Regular.ttf"
+   }
+  },
+  {
+   "id": "bungee",
+   "nome": "Bungee",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/bungee/Bungee-Regular.ttf",
+    "sha256": "c4f5361ce120af3e6b9156d0bf379fa19cda2ea0cd18ac01fd99596c6bf66e3f",
+    "bytes": 118996,
+    "arquivo": "Bungee-Regular.ttf"
+   }
+  },
+  {
+   "id": "bungee-shade",
+   "nome": "Bungee Shade",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/bungeeshade/BungeeShade-Regular.ttf",
+    "sha256": "665c626082682b462f4e696308eafa7071c114da8f8ff3fb73a289c7ff7df482",
+    "bytes": 304936,
+    "arquivo": "BungeeShade-Regular.ttf"
+   }
+  },
+  {
+   "id": "carter-one",
+   "nome": "Carter One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/carterone/CarterOne.ttf",
+    "sha256": "9267b32e571924b5977a3bfb068726603a1eecf2af8dadbc4262e943b53959c8",
+    "bytes": 66532,
+    "arquivo": "CarterOne.ttf"
+   }
+  },
+  {
+   "id": "caveat",
+   "nome": "Caveat",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/caveat/Caveat%5Bwght%5D.ttf",
+    "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988",
+    "bytes": 403648,
+    "arquivo": "Caveat-wght.ttf"
+   },
+   "peso": [
+    700,
+    700
+   ]
+  },
+  {
+   "id": "chewy",
+   "nome": "Chewy",
+   "categoria": "impacto",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/chewy/Chewy-Regular.ttf",
+    "sha256": "7cf75ea288f82fd20badea8ab4da7a656a96a7277c170811e813b3d3d6294147",
+    "bytes": 41248,
+    "arquivo": "Chewy-Regular.ttf"
+   }
+  },
+  {
+   "id": "coiny",
+   "nome": "Coiny",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/coiny/Coiny-Regular.ttf",
+    "sha256": "ef02d723a54abe4819bea54ea8b2ecf72d77d258010bb336cd4862a37705eac7",
+    "bytes": 156520,
+    "arquivo": "Coiny-Regular.ttf"
+   }
+  },
+  {
+   "id": "creepster",
+   "nome": "Creepster",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/creepster/Creepster-Regular.ttf",
+    "sha256": "402aeb734586c74aecd3dbdc454589b1fb12e2e1c71f782fd019ae68066d9f44",
+    "bytes": 62724,
+    "arquivo": "Creepster-Regular.ttf"
+   }
+  },
+  {
+   "id": "dancing-script",
+   "nome": "Dancing Script",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/dancingscript/DancingScript%5Bwght%5D.ttf",
+    "sha256": "21808625578fe8d8cd10cb684be546dca077b27cd03a53a2f1ec11dc743c924c",
+    "bytes": 133636,
+    "arquivo": "DancingScript-wght.ttf"
+   },
+   "peso": [
+    700,
+    700
+   ]
+  },
+  {
+   "id": "dela-gothic-one",
+   "nome": "Dela Gothic One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/delagothicone/DelaGothicOne-Regular.ttf",
+    "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2",
+    "bytes": 2508848,
+    "arquivo": "DelaGothicOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "eater",
+   "nome": "Eater",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/eater/Eater-Regular.ttf",
+    "sha256": "df2744af0f58592c4ff13e8205e62a56f7bdf915b3e31c9def075668c42a2b3f",
+    "bytes": 83928,
+    "arquivo": "Eater-Regular.ttf"
+   }
+  },
+  {
+   "id": "faster-one",
+   "nome": "Faster One",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/fasterone/FasterOne-Regular.ttf",
+    "sha256": "382877a3a497c42bfeadfbb6e1b939d5b0f3f5cfd6c1a566c0c0d3d1f9b4bcb5",
+    "bytes": 94044,
+    "arquivo": "FasterOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "fredoka",
+   "nome": "Fredoka",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/fredoka/Fredoka%5Bwdth,wght%5D.ttf",
+    "sha256": "2ba02e68b152868aef9ba28e24b3648c7d457fe6f25c761f2c2c53fb61a73fc8",
+    "bytes": 159184,
+    "arquivo": "Fredoka-wdth-wght.ttf"
+   },
+   "peso": [
+    700,
+    700
+   ]
+  },
+  {
+   "id": "frijole",
+   "nome": "Frijole",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/frijole/Frijole-Regular.ttf",
+    "sha256": "e182bbad0e1ba7eb06d93edb1c97a71f5b7d56e27433fb375f5f7138399ab72c",
+    "bytes": 227860,
+    "arquivo": "Frijole-Regular.ttf"
+   }
+  },
+  {
+   "id": "gloria-hallelujah",
+   "nome": "Gloria Hallelujah",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/gloriahallelujah/GloriaHallelujah.ttf",
+    "sha256": "eb59f2762ce8785a292bebb2af3b3e6aa21454913d791f5f25441d1d57ead9fc",
+    "bytes": 59812,
+    "arquivo": "GloriaHallelujah.ttf"
+   }
+  },
+  {
+   "id": "great-vibes",
+   "nome": "Great Vibes",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/greatvibes/GreatVibes-Regular.ttf",
+    "sha256": "8d509802186f1b51572531ecf313e8098f9a5bfdfaca93f0c9b34467f9982d15",
+    "bytes": 457588,
+    "arquivo": "GreatVibes-Regular.ttf"
+   }
+  },
+  {
+   "id": "inter",
+   "nome": "Inter",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/inter/Inter%5Bopsz,wght%5D.ttf",
+    "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+    "bytes": 876576,
+    "arquivo": "Inter-opsz-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "kanit",
+   "nome": "Kanit",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/kanit/Kanit-Black.ttf",
+    "sha256": "5d290c2cc9926764bd782aa6abc47a8f55bd64641d0afb56e115ee522698ee7e",
+    "bytes": 176856,
+    "arquivo": "Kanit-Black.ttf"
+   },
+   "italico": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/kanit/Kanit-BlackItalic.ttf",
+    "sha256": "7fe3f1d87e33e165eae2d664e42a31faf542d24e431a2e7da36f4e4eee5f8529",
+    "bytes": 185464,
+    "arquivo": "Kanit-BlackItalic.ttf"
+   }
+  },
+  {
+   "id": "knewave",
+   "nome": "Knewave",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/knewave/Knewave-Regular.ttf",
+    "sha256": "ed3bac761d755b89ab3082c844d4a623d63c7d6eef85d22ba1fb6c680e6a4436",
+    "bytes": 32460,
+    "arquivo": "Knewave-Regular.ttf"
+   }
+  },
+  {
+   "id": "league-gothic",
+   "nome": "League Gothic",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/leaguegothic/LeagueGothic%5Bwdth%5D.ttf",
+    "sha256": "3b0e998c9a0034222394ffecdd383e6948259ad037b95555b139a217629ce1d0",
+    "bytes": 65972,
+    "arquivo": "LeagueGothic-wdth.ttf"
+   }
+  },
+  {
+   "id": "leckerli-one",
+   "nome": "Leckerli One",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/leckerlione/LeckerliOne-Regular.ttf",
+    "sha256": "3f38ed99a07ab426eaa64c7d5773850a5dc8e6719b03125efce2cfbc82b083d7",
+    "bytes": 43212,
+    "arquivo": "LeckerliOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "lilita-one",
+   "nome": "Lilita One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/lilitaone/LilitaOne-Regular.ttf",
+    "sha256": "f5b641c45c69d772ee4eda687bc9fda411d5cad6b0b45371491da4580cbc8d59",
+    "bytes": 28092,
+    "arquivo": "LilitaOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "lobster",
+   "nome": "Lobster",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/lobster/Lobster-Regular.ttf",
+    "sha256": "d6568e697fd50cedc0be04d8aae4127fe95add607e7bff954ca88604be80c205",
+    "bytes": 406076,
+    "arquivo": "Lobster-Regular.ttf"
+   }
+  },
+  {
+   "id": "luckiest-guy",
+   "nome": "Luckiest Guy",
+   "categoria": "impacto",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/luckiestguy/LuckiestGuy-Regular.ttf",
+    "sha256": "cfbdd68a039f92df51cf3721506af6242e64594c6325fe0bedbeff3fe385d980",
+    "bytes": 73320,
+    "arquivo": "LuckiestGuy-Regular.ttf"
+   }
+  },
+  {
+   "id": "monoton",
+   "nome": "Monoton",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/monoton/Monoton-Regular.ttf",
+    "sha256": "951c4cea65ffede784a7c9672feec5d329a7e1e12216c42d53ecf36c90d04dea",
+    "bytes": 51604,
+    "arquivo": "Monoton-Regular.ttf"
+   }
+  },
+  {
+   "id": "montserrat-alternates",
+   "nome": "Montserrat Alternates",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/montserratalternates/MontserratAlternates-Black.ttf",
+    "sha256": "6fa4bf87ef8927790cc11cc87b8bcadefe2d8a1326664b6d750f5b4e5e2cf943",
+    "bytes": 221652,
+    "arquivo": "MontserratAlternates-Black.ttf"
+   }
+  },
+  {
+   "id": "nosifer",
+   "nome": "Nosifer",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/nosifer/Nosifer-Regular.ttf",
+    "sha256": "09c5ac35e34dc7a397d5f698b703c5640b59cf93d4d343ebae4f16f3859d09b8",
+    "bytes": 43272,
+    "arquivo": "Nosifer-Regular.ttf"
+   }
+  },
+  {
+   "id": "nunito",
+   "nome": "Nunito",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/nunito/Nunito%5Bwght%5D.ttf",
+    "sha256": "bb55a5ca5c2042335b3991af27c4d0705d0ef41cac6164ac737fd8f2a1e85207",
+    "bytes": 276932,
+    "arquivo": "Nunito-wght.ttf"
+   },
+   "peso": [
+    800,
+    1000
+   ]
+  },
+  {
+   "id": "oleo-script",
+   "nome": "Oleo Script",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/oleoscript/OleoScript-Bold.ttf",
+    "sha256": "7e4843c9d74233f00a2815954177e33758c1c42a08d218b11c131cf7d818f1d5",
+    "bytes": 34628,
+    "arquivo": "OleoScript-Bold.ttf"
+   }
+  },
+  {
+   "id": "orbitron",
+   "nome": "Orbitron",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/orbitron/Orbitron%5Bwght%5D.ttf",
+    "sha256": "f42db2dd16e642258e35782916eceb1dcdbea06fb958d77ad71dc5963587e8fd",
+    "bytes": 38576,
+    "arquivo": "Orbitron-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "oswald",
+   "nome": "Oswald",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/oswald/Oswald%5Bwght%5D.ttf",
+    "sha256": "5b38c246e255a12f5712d640d56bcced0472466fc68983d2d0410ec0457c2817",
+    "bytes": 172088,
+    "arquivo": "Oswald-wght.ttf"
+   },
+   "peso": [
+    700,
+    700
+   ]
+  },
+  {
+   "id": "pacifico",
+   "nome": "Pacifico",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/pacifico/Pacifico-Regular.ttf",
+    "sha256": "5b6c0d5334a7bf77dea52b975c5a0c408878c0f7115ed5b6fb151f634b7bf701",
+    "bytes": 329380,
+    "arquivo": "Pacifico-Regular.ttf"
+   }
+  },
+  {
+   "id": "passion-one",
+   "nome": "Passion One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/passionone/PassionOne-Black.ttf",
+    "sha256": "c954dbac8835bf16f938f8d97fe1627d47aa122d60246169ff55cec772949e96",
+    "bytes": 24288,
+    "arquivo": "PassionOne-Black.ttf"
+   }
+  },
+  {
+   "id": "patua-one",
+   "nome": "Patua One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/patuaone/PatuaOne-Regular.ttf",
+    "sha256": "a3faa8b9efdd9d89980b56fa2b080669d66f3f977f07a2a6295498dbe7c26a7c",
+    "bytes": 35624,
+    "arquivo": "PatuaOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "permanent-marker",
+   "nome": "Permanent Marker",
+   "categoria": "manuscrita",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/permanentmarker/PermanentMarker-Regular.ttf",
+    "sha256": "28f82c8a7943cb8e9d599f8554da1d4fc75dbcf69b9885ad6c0611d20c6946c5",
+    "bytes": 74632,
+    "arquivo": "PermanentMarker-Regular.ttf"
+   }
+  },
+  {
+   "id": "playfair-display",
+   "nome": "Playfair Display",
+   "categoria": "elegante",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/playfairdisplay/PlayfairDisplay%5Bwght%5D.ttf",
+    "sha256": "c40f2293766a503bc70cce9e512ef844a4ccb7cbcde792fe2ea31d191917d8d6",
+    "bytes": 300724,
+    "arquivo": "PlayfairDisplay-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "poppins",
+   "nome": "Poppins",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/poppins/Poppins-Black.ttf",
+    "sha256": "d82aaaf98a9283f9a8edd24e51173337d8eaf09e25cd3d98831f8ec8461748a1",
+    "bytes": 153440,
+    "arquivo": "Poppins-Black.ttf"
+   },
+   "italico": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/poppins/Poppins-BlackItalic.ttf",
+    "sha256": "f4852ca89c29f69d800e14f097ed4d1f0a0cc454e9f77d73bfd6db1f71c287a0",
+    "bytes": 174116,
+    "arquivo": "Poppins-BlackItalic.ttf"
+   }
+  },
+  {
+   "id": "press-start-2p",
+   "nome": "Press Start 2P",
+   "categoria": "pixel",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/pressstart2p/PressStart2P-Regular.ttf",
+    "sha256": "034c77f1f05ec89421e4a63f0e3a4ca1ecf852cc6d2bf611f126f275728e017d",
+    "bytes": 118204,
+    "arquivo": "PressStart2P-Regular.ttf"
+   }
+  },
+  {
+   "id": "racing-sans-one",
+   "nome": "Racing Sans One",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/racingsansone/RacingSansOne-Regular.ttf",
+    "sha256": "8b5cada83e3e4692f624f1b583a069b34e457e07a4210ceddbb1133b3383673e",
+    "bytes": 145796,
+    "arquivo": "RacingSansOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "raleway",
+   "nome": "Raleway",
+   "categoria": "elegante",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/raleway/Raleway%5Bwght%5D.ttf",
+    "sha256": "8bbcc3eb8275c388f4bcd998832f8a4b943eadbaf6a595205312774b5951aefb",
+    "bytes": 312352,
+    "arquivo": "Raleway-wght.ttf"
+   },
+   "italico": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/raleway/Raleway-Italic%5Bwght%5D.ttf",
+    "sha256": "96629caf2202183fab46c70237055a7d67e6a5400b85413d45a77ed6f2a0770c",
+    "bytes": 318476,
+    "arquivo": "Raleway-Italic-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "righteous",
+   "nome": "Righteous",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/righteous/Righteous-Regular.ttf",
+    "sha256": "2ffb3fe5c27d7e6571210b800448c4e234e651b46c6b4426c1bb567e5341348a",
+    "bytes": 43104,
+    "arquivo": "Righteous-Regular.ttf"
+   }
+  },
+  {
+   "id": "rock-salt",
+   "nome": "Rock Salt",
+   "categoria": "manuscrita",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/rocksalt/RockSalt-Regular.ttf",
+    "sha256": "c5421d1ced1949488f29d11b75b7ef967abe2d870f816246bf18fdc0f3e29c96",
+    "bytes": 124372,
+    "arquivo": "RockSalt-Regular.ttf"
+   }
+  },
+  {
+   "id": "rubik",
+   "nome": "Rubik",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/rubik/Rubik%5Bwght%5D.ttf",
+    "sha256": "1b3a7437ba2af80e465e773ed60c5036d1ba6ace492d89046dbcf18fb31e4e88",
+    "bytes": 359804,
+    "arquivo": "Rubik-wght.ttf"
+   },
+   "italico": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/rubik/Rubik-Italic%5Bwght%5D.ttf",
+    "sha256": "08c6c4018a5ada8b517407b46897e46cf6ebb106853fbd3e89addb51d3b59c62",
+    "bytes": 354984,
+    "arquivo": "Rubik-Italic-wght.ttf"
+   },
+   "peso": [
+    800,
+    900
+   ]
+  },
+  {
+   "id": "rubik-glitch",
+   "nome": "Rubik Glitch",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/rubikglitch/RubikGlitch-Regular.ttf",
+    "sha256": "260245012483d56956269100ebece747aa95b4b67e5a9411a81a36e91f55e653",
+    "bytes": 407304,
+    "arquivo": "RubikGlitch-Regular.ttf"
+   }
+  },
+  {
+   "id": "rubik-mono-one",
+   "nome": "Rubik Mono One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/rubikmonoone/RubikMonoOne-Regular.ttf",
+    "sha256": "b22624b6a36e543e942106edfccd198c50b57b65b924bfe02a6f0a5699429e6b",
+    "bytes": 141088,
+    "arquivo": "RubikMonoOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "rubik-wet-paint",
+   "nome": "Rubik Wet Paint",
+   "categoria": "terror",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/rubikwetpaint/RubikWetPaint-Regular.ttf",
+    "sha256": "3f35d1c77219c5219826b23c2f0c72dd0eed46425a0d4fff21b8827cdce61693",
+    "bytes": 442628,
+    "arquivo": "RubikWetPaint-Regular.ttf"
+   }
+  },
+  {
+   "id": "russo-one",
+   "nome": "Russo One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/russoone/RussoOne-Regular.ttf",
+    "sha256": "bc0abcc660bd8b7ad3000ecb2898a27c58a29a50f7ec81652fa12e75148d09df",
+    "bytes": 39124,
+    "arquivo": "RussoOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "saira-stencil-one",
+   "nome": "Saira Stencil One",
+   "categoria": "retro",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/sairastencilone/SairaStencilOne-Regular.ttf",
+    "sha256": "781496fdaf8e04cf6741b31025f6b4ba84f66021b097a8e0d85cbea2180cf223",
+    "bytes": 109944,
+    "arquivo": "SairaStencilOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "satisfy",
+   "nome": "Satisfy",
+   "categoria": "manuscrita",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/satisfy/Satisfy-Regular.ttf",
+    "sha256": "55bb141a0a23a32278d5fa7fd2e853824faa173b94774660ebeddb106be07c80",
+    "bytes": 47928,
+    "arquivo": "Satisfy-Regular.ttf"
+   }
+  },
+  {
+   "id": "shadows-into-light",
+   "nome": "Shadows Into Light",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/shadowsintolight/ShadowsIntoLight.ttf",
+    "sha256": "1347863151acdc00fa281daaba1a3543dbce5870b55f9cf7479a15bb84007681",
+    "bytes": 54304,
+    "arquivo": "ShadowsIntoLight.ttf"
+   }
+  },
+  {
+   "id": "shrikhand",
+   "nome": "Shrikhand",
+   "categoria": "manuscrita",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/shrikhand/Shrikhand-Regular.ttf",
+    "sha256": "8ba32f6d6a96fb8dbc92fc1acfbc4d2123d5348063d89b2c3dd784e7afcb81af",
+    "bytes": 220804,
+    "arquivo": "Shrikhand-Regular.ttf"
+   }
+  },
+  {
+   "id": "sigmar-one",
+   "nome": "Sigmar One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/sigmarone/SigmarOne-Regular.ttf",
+    "sha256": "0817eb698a5c4aac2c07bb84be1ead806494c489da468db23f5ffd9bcf3f0970",
+    "bytes": 172512,
+    "arquivo": "SigmarOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "silkscreen",
+   "nome": "Silkscreen",
+   "categoria": "pixel",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/silkscreen/Silkscreen-Regular.ttf",
+    "sha256": "c845473330b94c2079ce9af01c51ac8ba2d99c24f4d14c039843bbb8e642ebd8",
+    "bytes": 32220,
+    "arquivo": "Silkscreen-Regular.ttf"
+   }
+  },
+  {
+   "id": "staatliches",
+   "nome": "Staatliches",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/staatliches/Staatliches-Regular.ttf",
+    "sha256": "8395212aa4c6c3534bd39a745d956305ff080c3f3ed73ba61e4fbaae951e55cc",
+    "bytes": 63316,
+    "arquivo": "Staatliches-Regular.ttf"
+   }
+  },
+  {
+   "id": "teko",
+   "nome": "Teko",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/teko/Teko%5Bwght%5D.ttf",
+    "sha256": "d1321889f262bbbff632e7976349853399cd097b6f382d4b19790c915c13c1ae",
+    "bytes": 292108,
+    "arquivo": "Teko-wght.ttf"
+   },
+   "peso": [
+    700,
+    700
+   ]
+  },
+  {
+   "id": "titan-one",
+   "nome": "Titan One",
+   "categoria": "impacto",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/titanone/TitanOne-Regular.ttf",
+    "sha256": "563ff6de179bbd44bcd7d2a6c448d6dc3bf935834237cf1250e506e65cd86ff1",
+    "bytes": 55712,
+    "arquivo": "TitanOne-Regular.ttf"
+   }
+  },
+  {
+   "id": "ultra",
+   "nome": "Ultra",
+   "categoria": "impacto",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/ultra/Ultra-Regular.ttf",
+    "sha256": "9ee63cffbc379e5d4eb5fed6a0b94b770da919497e5cba4a227a6393dae0939e",
+    "bytes": 52472,
+    "arquivo": "Ultra-Regular.ttf"
+   }
+  },
+  {
+   "id": "vt323",
+   "nome": "VT323",
+   "categoria": "pixel",
+   "licenca": "OFL",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/ofl/vt323/VT323-Regular.ttf",
+    "sha256": "cf4de751ada78ceac033dbe16a687742939995b77bc2a052ae17a4957958594d",
+    "bytes": 153116,
+    "arquivo": "VT323-Regular.ttf"
+   }
+  },
+  {
+   "id": "yellowtail",
+   "nome": "Yellowtail",
+   "categoria": "manuscrita",
+   "licenca": "Apache 2.0",
+   "normal": {
+    "url": "https://raw.githubusercontent.com/google/fonts/2fe1e8c6b137fb13041a7cfca6fdcd8a910ea4dc/apache/yellowtail/Yellowtail-Regular.ttf",
+    "sha256": "3e06841b13000975f3cc38aa84e326e601a4378a4c52d50b5e9fee3598c5d236",
+    "bytes": 62216,
+    "arquivo": "Yellowtail-Regular.ttf"
+   }
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+appId: org.clipator.app
+productName: Clipator
+directories:
+  output: release
+files:
+  - out/**
+  - package.json
+# o node-pty (terminal das conversas com a IA) carrega binários nativos: ficam fora do .asar
+asarUnpack:
+  - node_modules/node-pty/**
+extraResources:
+  # o three.js da maquete 3D: o motor (Python) lê o arquivo, então ele fica fora do .asar
+  - from: node_modules/three/build/three.min.js
+    to: three/three.min.js
+  - from: node_modules/three/LICENSE
+    to: three/LICENSE
+  - from: ../motor
+    to: motor
+    filter: ["pyproject.toml", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "src/**"]
+win:
+  target: nsis
+mac:
+  target: dmg
+  category: public.app-category.video
+linux:
+  target: AppImage
+  category: AudioVideo
+publish:
+  provider: github
+  owner: JBragon
+  repo: clipator
+  releaseType: release

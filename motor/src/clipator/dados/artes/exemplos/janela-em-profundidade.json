@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-janela-em-profundidade",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Esta",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "imagem",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "tem",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "vários",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "planos.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "O",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "detalhe",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "aparece",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "quando",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "nos",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "aproximamos.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Esta imagem tem vários planos.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Esta imagem tem vários",
+      "descricao": "Abrir as folhas e apresentar a imagem; Separar levemente os planos por paralaxe",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "camadas": 4,
+        "paralaxe_maxima": 0.04,
+        "folga_borda": 0.08,
+        "desfoque_maximo_px": 1.2
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "O detalhe aparece quando nos aproximamos.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "O detalhe aparece quando",
+      "descricao": "Parar no detalhe mencionado; Fechar as folhas sem atravessar a imagem",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "camadas": 4,
+        "paralaxe_maxima": 0.04,
+        "folga_borda": 0.08,
+        "desfoque_maximo_px": 1.2
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

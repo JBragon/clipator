@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-tinta-em-etapas",
+  "nome": "Tinta em etapas",
+  "familia": "Impressão e máscara",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma faixa de tinta revela partes de um objeto e transforma cada passagem em uma etapa de processo.",
+  "usar_em": "tutorial, organização, transformação de estado e demonstração de recurso",
+  "composicao": "Objeto grande em uma área de impressão, trilha de três marcas no rodapé e uma etiqueta com verbo. O objeto mantém a silhueta entre os estados.",
+  "material_e_luz": "Tinta de duas cores com retícula fina e pequenos vazios; papel claro e sombra curta. O ruído só muda dentro da máscara de impressão e permanece fixo no tempo.",
+  "movimento": "Uma lâmina de tinta atravessa o objeto em 0,6 s, revela o novo estado e sai pela borda. A marca da etapa preenche só depois que a passagem termina.",
+  "construcao": "Separe desenho de estado, máscara de varredura e textura de tinta. Calcule a retícula em uma grade fixa; derive a borda por uma função de semente. Estados devem usar a mesma caixa e centro óptico.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "canvas",
+  "complexidade": "media",
+  "alternativa_leve": "Máscara de cor sólida sem retícula, preservando a trilha de etapas.",
+  "parametros_visuais": {
+    "cores_tinta": 2,
+    "passagem_s": 0.6,
+    "reticula_passo_px": 6,
+    "etapas": 3
+  },
+  "fases": [
+    "Mostrar o objeto no estado inicial",
+    "Passar a primeira faixa e marcar a etapa",
+    "Revelar o resultado da segunda passagem",
+    "Apresentar o objeto final e a trilha completa"
+  ],
+  "criterios": [
+    "A máscara revela só o objeto, sem apagar a etiqueta.",
+    "Cada etapa altera algo identificável.",
+    "O padrão de retícula não produz moiré na resolução de saída."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "cores_tinta": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 2
+    },
+    "passagem_s": {
+      "tipo": "numero",
+      "minimo": 0.4,
+      "maximo": 1
+    },
+    "reticula_passo_px": {
+      "tipo": "inteiro",
+      "minimo": 4,
+      "maximo": 12
+    },
+    "etapas": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 4
+    }
+  }
+}

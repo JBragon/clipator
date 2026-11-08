@@ -1,0 +1,9 @@
+id: texto-sem-cara-de-ia
+nome: "Texto sem cara de IA"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [postagem, titulos]
+ativa_por_padrao: true
+descricao: "Reescreve títulos e descrições para soarem como gente: concreto, curto e sem clichê."

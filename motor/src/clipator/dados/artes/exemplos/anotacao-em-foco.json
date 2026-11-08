@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-anotacao-em-foco",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Uma",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "ideia",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "organiza",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "esta",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "frase.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "anotação",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "destaca",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "o",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "ponto",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "central.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Uma ideia organiza esta frase.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Uma ideia organiza esta",
+      "descricao": "Revelar a frase em dois grupos; Desenhar o colchete ao lado do trecho central",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "max_linhas": 3,
+        "max_palavras": 16,
+        "largura_margem_relativa": 0.16,
+        "opacidade_faixa": 0.55
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A anotação destaca o ponto central.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A anotação destaca o",
+      "descricao": "Abrir a nota curta na margem; Manter a frase completa até o fim",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "max_linhas": 3,
+        "max_palavras": 16,
+        "largura_margem_relativa": 0.16,
+        "opacidade_faixa": 0.55
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

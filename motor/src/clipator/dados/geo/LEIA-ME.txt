@@ -1,0 +1,21 @@
+BASE CARTOGRÁFICA REAL DO ESTILO GEO EM CENA (NATURAL EARTH)
+
+Os GeoJSONs vieram do repositório mantido pelo projeto Natural Earth:
+https://github.com/nvkelso/natural-earth-vector
+
+Licença dos dados: domínio público, conforme https://www.naturalearthdata.com/about/terms-of-use/
+Crédito usado na tela: Natural Earth. Fontes, hashes e data de acesso estão em FONTES.json.
+
+As coordenadas foram preservadas. Os atributos foram reduzidos a nomes, ids, parentesco e pontos
+de rótulo: as estatísticas econômicas e populacionais não vêm junto. Cada camada está em gzip, e
+o hash em FONTES.json vale para o conteúdo descompactado.
+Países: escala 1:50m. Subdivisões administrativas: 1:10m. Regiões físicas: 1:110m.
+As escalas são rótulos de generalização cartográfica, não resolução em metros.
+
+As camadas são longitude/latitude, nessa ordem (CRS84). Os limites são os de facto do Natural
+Earth, generalizados para visualização: não são definição oficial de fronteira, área ou distância.
+Países transcontinentais não definem o continente físico de todo o território: a camada física é
+separada, e o destaque de continente é a interseção dela com a terra dos países.
+
+apelidos.json é nosso: grafias do português do Brasil e nomes que também são cidades. Não tem
+coordenada nenhuma. Nova camada precisa de fonte real, metadados e licença.

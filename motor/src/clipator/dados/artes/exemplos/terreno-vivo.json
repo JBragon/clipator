@@ -1,0 +1,120 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-terreno-vivo",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.4838
+    },
+    {
+      "texto": "terreno",
+      "inicio": 0.5375,
+      "fim": 1.0212
+    },
+    {
+      "texto": "começa",
+      "inicio": 1.075,
+      "fim": 1.5587
+    },
+    {
+      "texto": "vazio.",
+      "inicio": 1.6125,
+      "fim": 2.0962
+    },
+    {
+      "texto": "A",
+      "inicio": 2.5,
+      "fim": 2.887
+    },
+    {
+      "texto": "água",
+      "inicio": 2.93,
+      "fim": 3.317
+    },
+    {
+      "texto": "passa",
+      "inicio": 3.36,
+      "fim": 3.747
+    },
+    {
+      "texto": "pelos",
+      "inicio": 3.79,
+      "fim": 4.177
+    },
+    {
+      "texto": "canais.",
+      "inicio": 4.22,
+      "fim": 4.607
+    },
+    {
+      "texto": "Os",
+      "inicio": 5.0,
+      "fim": 5.387
+    },
+    {
+      "texto": "canteiros",
+      "inicio": 5.43,
+      "fim": 5.817
+    },
+    {
+      "texto": "recebem",
+      "inicio": 5.86,
+      "fim": 6.247
+    },
+    {
+      "texto": "as",
+      "inicio": 6.29,
+      "fim": 6.677
+    },
+    {
+      "texto": "mudas.",
+      "inicio": 6.72,
+      "fim": 7.107
+    },
+    {
+      "texto": "A",
+      "inicio": 7.5,
+      "fim": 7.8225
+    },
+    {
+      "texto": "horta",
+      "inicio": 7.8583,
+      "fim": 8.1808
+    },
+    {
+      "texto": "ocupa",
+      "inicio": 8.2167,
+      "fim": 8.5392
+    },
+    {
+      "texto": "o",
+      "inicio": 8.575,
+      "fim": 8.8975
+    },
+    {
+      "texto": "mesmo",
+      "inicio": 8.9333,
+      "fim": 9.2558
+    },
+    {
+      "texto": "espaço.",
+      "inicio": 9.2917,
+      "fim": 9.6142
+    }
+  ],
+  "exemplo": "Um terreno vazio vira uma horta comunitária com canais de irrigação, canteiros e mudas."
+}

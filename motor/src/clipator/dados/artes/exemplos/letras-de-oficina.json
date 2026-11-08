@@ -1,0 +1,120 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-letras-de-oficina",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Vamos",
+      "inicio": 0.0,
+      "fim": 0.405
+    },
+    {
+      "texto": "montar",
+      "inicio": 0.45,
+      "fim": 0.855
+    },
+    {
+      "texto": "esta",
+      "inicio": 0.9,
+      "fim": 1.305
+    },
+    {
+      "texto": "palavra.",
+      "inicio": 1.35,
+      "fim": 1.755
+    },
+    {
+      "texto": "Cada",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "letra",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "encontra",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "seu",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "lugar.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Vamos montar esta palavra.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Vamos montar esta palavra",
+      "descricao": "Mostrar a régua e o espaço da palavra; Encaixar as letras do termo central",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "materiais": 3,
+        "rotacao_maxima_graus": 3,
+        "atraso_letras_s": 0.08,
+        "correcao_final_px": 2
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Cada letra encontra seu lugar.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Cada letra encontra seu",
+      "descricao": "Adicionar uma segunda linha curta com o complemento; Firmar todos os cartões sem trepidação",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "materiais": 3,
+        "rotacao_maxima_graus": 3,
+        "atraso_letras_s": 0.08,
+        "correcao_final_px": 2
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

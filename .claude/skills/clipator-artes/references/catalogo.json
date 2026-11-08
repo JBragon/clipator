@@ -1,0 +1,248 @@
+{
+  "versao": "1.0.0",
+  "quantidade": 22,
+  "estilos": [
+    {
+      "numero": 1,
+      "id": "clipator-arte-oficina-modular",
+      "nome": "Oficina modular",
+      "familia": "3D modular",
+      "uso": "partes de um sistema, produto, montagem ou sequência de dependências",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-oficina-modular/SKILL.md",
+      "especificacao": "skills/clipator-arte-oficina-modular/references/especificacao.json"
+    },
+    {
+      "numero": 2,
+      "id": "clipator-arte-cidade-de-bolso",
+      "nome": "Cidade de bolso",
+      "familia": "Pixel e profundidade",
+      "uso": "games, tecnologia, pequenas histórias e comparação entre lugares",
+      "backend_sugerido": "hibrido",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-cidade-de-bolso/SKILL.md",
+      "especificacao": "skills/clipator-arte-cidade-de-bolso/references/especificacao.json"
+    },
+    {
+      "numero": 3,
+      "id": "clipator-arte-costura-viva",
+      "nome": "Costura viva",
+      "familia": "Mascote têxtil",
+      "uso": "explicações acolhedoras, reação leve e produtos artesanais",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-costura-viva/SKILL.md",
+      "especificacao": "skills/clipator-arte-costura-viva/references/especificacao.json"
+    },
+    {
+      "numero": 4,
+      "id": "clipator-arte-terrario-tecnico",
+      "nome": "Terrário técnico",
+      "familia": "Miniatura espacial",
+      "uso": "processos urbanos, energia, logística e funcionamento de serviços",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-terrario-tecnico/SKILL.md",
+      "especificacao": "skills/clipator-arte-terrario-tecnico/references/especificacao.json"
+    },
+    {
+      "numero": 5,
+      "id": "clipator-arte-resina-em-movimento",
+      "nome": "Resina em movimento",
+      "familia": "Material translúcido",
+      "uso": "propriedades de material, transformação, memória e conceitos abstratos simples",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-resina-em-movimento/SKILL.md",
+      "especificacao": "skills/clipator-arte-resina-em-movimento/references/especificacao.json"
+    },
+    {
+      "numero": 6,
+      "id": "clipator-arte-arquivo-em-camadas",
+      "nome": "Arquivo em camadas",
+      "familia": "Documental editorial",
+      "uso": "contexto histórico, análise de documentos e investigação com material fornecido",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-arquivo-em-camadas/SKILL.md",
+      "especificacao": "skills/clipator-arte-arquivo-em-camadas/references/especificacao.json"
+    },
+    {
+      "numero": 7,
+      "id": "clipator-arte-letras-de-oficina",
+      "nome": "Letras de oficina",
+      "familia": "Tipografia material",
+      "uso": "palavra central, definição, abertura e fechamento de uma ideia",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-letras-de-oficina/SKILL.md",
+      "especificacao": "skills/clipator-arte-letras-de-oficina/references/especificacao.json"
+    },
+    {
+      "numero": 8,
+      "id": "clipator-arte-mecanismo-facetado",
+      "nome": "Mecanismo facetado",
+      "familia": "Explicação 3D",
+      "uso": "como funciona, fluxo, componentes, dependência e comparação técnica",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-mecanismo-facetado/SKILL.md",
+      "especificacao": "skills/clipator-arte-mecanismo-facetado/references/especificacao.json"
+    },
+    {
+      "numero": 9,
+      "id": "clipator-arte-acervo-natural",
+      "nome": "Acervo natural",
+      "familia": "Coleção fotográfica",
+      "uso": "comparação de espécies, objetos, materiais e exemplares de uma coleção",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-acervo-natural/SKILL.md",
+      "especificacao": "skills/clipator-arte-acervo-natural/references/especificacao.json"
+    },
+    {
+      "numero": 10,
+      "id": "clipator-arte-jardim-de-luz",
+      "nome": "Jardim de luz",
+      "familia": "Paisagem noturna",
+      "uso": "respiro narrativo, histórias calmas, sustentabilidade e encerramento",
+      "backend_sugerido": "hibrido",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-jardim-de-luz/SKILL.md",
+      "especificacao": "skills/clipator-arte-jardim-de-luz/references/especificacao.json"
+    },
+    {
+      "numero": 11,
+      "id": "clipator-arte-anotacao-em-foco",
+      "nome": "Anotação em foco",
+      "familia": "Texto editorial",
+      "uso": "definições, argumento central, citações verificadas e conclusão",
+      "backend_sugerido": "svg",
+      "complexidade": "baixa",
+      "skill": "skills/clipator-arte-anotacao-em-foco/SKILL.md",
+      "especificacao": "skills/clipator-arte-anotacao-em-foco/references/especificacao.json"
+    },
+    {
+      "numero": 12,
+      "id": "clipator-arte-janela-em-profundidade",
+      "nome": "Janela em profundidade",
+      "familia": "Imagem em camadas",
+      "uso": "história, análise de imagem e apresentação de um cenário",
+      "backend_sugerido": "hibrido",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-janela-em-profundidade/SKILL.md",
+      "especificacao": "skills/clipator-arte-janela-em-profundidade/references/especificacao.json"
+    },
+    {
+      "numero": 13,
+      "id": "clipator-arte-mapa-de-ideias",
+      "nome": "Mapa de ideias",
+      "familia": "Ilustração plana",
+      "uso": "conceitos, relações, exemplos e tutoriais curtos",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-mapa-de-ideias/SKILL.md",
+      "especificacao": "skills/clipator-arte-mapa-de-ideias/references/especificacao.json"
+    },
+    {
+      "numero": 14,
+      "id": "clipator-arte-quadro-de-recortes",
+      "nome": "Quadro de recortes",
+      "familia": "Colagem didática",
+      "uso": "explicações com imagem, lista de componentes e antes/depois",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-quadro-de-recortes/SKILL.md",
+      "especificacao": "skills/clipator-arte-quadro-de-recortes/references/especificacao.json"
+    },
+    {
+      "numero": 15,
+      "id": "clipator-arte-painel-de-variacoes",
+      "nome": "Painel de variações",
+      "familia": "Grade fotográfica",
+      "uso": "comparar tratamentos, explicar alternativas e mostrar uma transformação visual",
+      "backend_sugerido": "canvas",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-painel-de-variacoes/SKILL.md",
+      "especificacao": "skills/clipator-arte-painel-de-variacoes/references/especificacao.json"
+    },
+    {
+      "numero": 16,
+      "id": "clipator-arte-atlas-de-percursos",
+      "nome": "Atlas de percursos",
+      "familia": "Geografia editorial",
+      "uso": "lugares, deslocamentos, logística e cronologia geográfica",
+      "backend_sugerido": "svg",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-atlas-de-percursos/SKILL.md",
+      "especificacao": "skills/clipator-arte-atlas-de-percursos/references/especificacao.json"
+    },
+    {
+      "numero": 17,
+      "id": "clipator-arte-revista-de-bancada",
+      "nome": "Revista de bancada",
+      "familia": "Editorial fotográfico",
+      "uso": "perfil de pessoa, contextualização de assunto e explicação com fotografia",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-revista-de-bancada/SKILL.md",
+      "especificacao": "skills/clipator-arte-revista-de-bancada/references/especificacao.json"
+    },
+    {
+      "numero": 18,
+      "id": "clipator-arte-camadas-do-terreno",
+      "nome": "Camadas do terreno",
+      "familia": "Isometria explicativa",
+      "uso": "geologia, cidade, ocupação do espaço e sistemas em camadas",
+      "backend_sugerido": "three",
+      "complexidade": "alta",
+      "skill": "skills/clipator-arte-camadas-do-terreno/SKILL.md",
+      "especificacao": "skills/clipator-arte-camadas-do-terreno/references/especificacao.json"
+    },
+    {
+      "numero": 19,
+      "id": "clipator-arte-gesto-de-papel",
+      "nome": "Gesto de papel",
+      "familia": "Recorte gestual",
+      "uso": "verbos, metáforas simples, lembretes e humor discreto",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-gesto-de-papel/SKILL.md",
+      "especificacao": "skills/clipator-arte-gesto-de-papel/references/especificacao.json"
+    },
+    {
+      "numero": 20,
+      "id": "clipator-arte-caderno-de-materiais",
+      "nome": "Caderno de materiais",
+      "familia": "Mídia e textura",
+      "uso": "processo criativo, produto, comparação de material e bastidores",
+      "backend_sugerido": "svg",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-caderno-de-materiais/SKILL.md",
+      "especificacao": "skills/clipator-arte-caderno-de-materiais/references/especificacao.json"
+    },
+    {
+      "numero": 21,
+      "id": "clipator-arte-tinta-em-etapas",
+      "nome": "Tinta em etapas",
+      "familia": "Impressão e máscara",
+      "uso": "tutorial, organização, transformação de estado e demonstração de recurso",
+      "backend_sugerido": "canvas",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-tinta-em-etapas/SKILL.md",
+      "especificacao": "skills/clipator-arte-tinta-em-etapas/references/especificacao.json"
+    },
+    {
+      "numero": 22,
+      "id": "clipator-arte-mesa-em-profundidade",
+      "nome": "Mesa em profundidade",
+      "familia": "Colagem espacial",
+      "uso": "linha de raciocínio, sequência de fotos e apresentação de alternativas",
+      "backend_sugerido": "hibrido",
+      "complexidade": "media",
+      "skill": "skills/clipator-arte-mesa-em-profundidade/SKILL.md",
+      "especificacao": "skills/clipator-arte-mesa-em-profundidade/references/especificacao.json"
+    }
+  ]
+}

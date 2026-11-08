@@ -1,0 +1,9 @@
+id: publicacao-por-plataforma
+nome: "Publicação por plataforma"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [postagem]
+ativa_por_padrao: true
+descricao: "Descrição, hashtags e chamada certos para Shorts, Reels e TikTok, sem cara de texto de IA."

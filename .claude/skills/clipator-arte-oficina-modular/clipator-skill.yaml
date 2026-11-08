@@ -1,0 +1,9 @@
+id: clipator-arte-oficina-modular
+nome: "Oficina modular — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de oficina modular para partes de um sistema, produto, montagem ou sequência de dependências, ou implementa esse estilo no Clipator quando solicitado."

@@ -1,0 +1,43 @@
+/* Base de todos os templates do Clipator para o HyperFrames.
+   Fundo transparente: o vídeo entra por baixo no FFmpeg.
+   Variáveis em :root vêm do estilo (.md). Tempo das animações: --t e --d de cada
+   palavra, contados a partir do início da frase (class="clip"). */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: var(--largura); height: var(--altura); overflow: hidden; background: transparent; }
+#root { position: relative; width: 100%; height: 100%; font-family: var(--fonte); }
+
+/* legenda */
+.frase {
+  position: absolute; left: 6%; right: 6%; top: var(--y); transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: calc(var(--tamanho) * 0.08);
+  text-align: center; font-family: var(--fonte); font-size: var(--tamanho); line-height: 1.08;
+  color: var(--cor); font-weight: 800;
+}
+.linha { display: block; }
+.p {
+  display: inline-block; position: relative;
+  -webkit-text-stroke: var(--espessura) var(--contorno); paint-order: stroke fill;
+  text-shadow: 0 calc(var(--sombra) * 0.6) var(--sombra) rgba(0, 0, 0, 0.55);
+  animation: clip-pop 0.18s cubic-bezier(.2, 1.4, .4, 1) both, clip-ativa var(--d) step-end both;
+  animation-delay: var(--t), var(--t);
+}
+.p.destaque { color: var(--destaque); }
+@keyframes clip-pop { from { opacity: 0; transform: scale(0.6) translateY(10%); } to { opacity: 1; transform: none; } }
+@keyframes clip-ativa { from { color: var(--destaque); } to { } }
+
+/* números e palavras-chave: escondidos, cada template decide se mostra */
+.numero, .chave { display: none; }
+
+/* cartela de título */
+.cartela { position: absolute; left: 8%; right: 8%; display: flex; justify-content: center; }
+.cartela[data-posicao="topo"] { top: 14%; }
+.cartela[data-posicao="centro"] { top: 42%; }
+.cartela[data-posicao="baixo"] { bottom: 14%; }
+.cartela .caixa {
+  font-family: var(--fonte-cartela); font-size: var(--tamanho-cartela); line-height: 1.1; text-align: center;
+  color: var(--cor-cartela); background: var(--fundo-cartela); padding: 0.25em 0.45em; border-radius: 0.12em;
+  box-shadow: 0 0.12em 0.4em rgba(0, 0, 0, 0.35);
+  animation: clip-cartela-entra 0.35s cubic-bezier(.2, 1.3, .4, 1) both;
+}
+.cartela .destaque { color: var(--destaque-cartela); }
+@keyframes clip-cartela-entra { from { opacity: 0; transform: translateY(-30%) scale(0.9); } to { opacity: 1; transform: none; } }

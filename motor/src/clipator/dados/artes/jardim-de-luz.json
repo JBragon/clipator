@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-jardim-de-luz",
+  "nome": "Jardim de luz",
+  "familia": "Paisagem noturna",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um jardim noturno em planos de papel recebe pequenos pontos de luz que conduzem o olhar por um caminho.",
+  "usar_em": "respiro narrativo, histórias calmas, sustentabilidade e encerramento",
+  "composicao": "Três massas de folhagem recortada em volta de uma clareira, caminho em diagonal e um ponto de luz principal. Texto ocupa uma abertura do cenário, com fundo de contraste uniforme.",
+  "material_e_luz": "Papel de fibras largas em verdes acinzentados; bordas claras e sombra suave entre camadas. Luz âmbar pontual complementa uma iluminação de lua muito fraca.",
+  "movimento": "Folhas oscilam no máximo 2 graus; uma luz percorre o caminho com duas pausas sem piscar. A câmera se aproxima 3% ao longo da cena, mantendo o texto imóvel.",
+  "construcao": "Gere massas de folhas com polígonos de semente fixa; cada grupo usa uma senoide de fase própria. Path da luz é uma curva com comprimento tabelado. Tempo de ambientação continua absoluto ao longo das cenas.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "hibrido",
+  "complexidade": "media",
+  "alternativa_leve": "Paralaxe 2D com folhas SVG e gradiente radial; sem luz dinâmica nem sombras WebGL.",
+  "parametros_visuais": {
+    "camadas": 3,
+    "balanco_graus": 2,
+    "aproximacao_relativa": 0.03,
+    "luzes": 5
+  },
+  "fases": [
+    "Revelar a clareira e o primeiro ponto de luz",
+    "Conduzir a luz pela primeira curva",
+    "Parar na clareira e mostrar a ideia central",
+    "Atenuar a luz até o nível ambiente"
+  ],
+  "criterios": [
+    "A cena continua compreensível em tela escura de celular.",
+    "Folhas não passam sobre a legenda.",
+    "Não há pulsos rápidos de luminosidade."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "camadas": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 5
+    },
+    "balanco_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 2
+    },
+    "aproximacao_relativa": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.04
+    },
+    "luzes": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 8
+    }
+  }
+}

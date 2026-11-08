@@ -1,0 +1,9 @@
+/* Três faixas: rosto em cima, faixa colorida com o título no meio, legenda embaixo. */
+.faixa-meio {
+  position: absolute; left: 0; right: 0; top: 46%; height: 12%; display: flex; align-items: center; justify-content: center;
+  background: var(--destaque); color: #111; font-family: 'Anton', sans-serif; font-size: calc(var(--tamanho) * 0.85);
+  text-align: center; padding: 0 5%; line-height: 1.05; animation: faixa-abre 0.35s ease-out both;
+}
+@keyframes faixa-abre { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.frase { top: max(var(--y), 72%); }
+.cartela { display: none; }

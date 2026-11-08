@@ -1,0 +1,39 @@
+# Terreno Vivo: direção visual da coleção Cinco estilos para cortes.
+herda: base
+nome: Terreno Vivo
+conceito:
+  frase: "Um bloco de terreno em corte se transforma por etapas, mostrando ocupação, água e vegetação conforme a fala."
+  palavras_chave: [fala, explicação, terreno]
+  faca: ["Sem trocar de câmera, manter visível que o mesmo lote recebe as transformações.", "Distinguir o corte do solo e os canais de água por forma e contraste, não só por cor.", "No modo janela, deixar a área de transformação fora do retângulo do apresentador."]
+  nao_faca: ["Repetir o exemplo do estilo em outro assunto.", "Mostrar objeto, número ou fato que a fala não citou."]
+cor:
+  paleta: {fundo: '#D8E5E2', superficie: '#B9D1CB', texto: '#253C3A', texto_suave: '#47605D', primaria: '#4D8B74', destaque: '#D68B4D', secundaria: '#6B5A9A', positivo: '#008752', negativo: '#D83652', alerta: '#B46000'}
+  serie: [primaria, '#B86D39', texto, positivo, negativo, texto_suave]
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ["Estado inicial, canais, canteiros e mudas aparecem no mesmo bloco espacial. As peças mudam no momento da menção, mantendo referências fixas para o público entender o antes e depois. Transformações não devem sugerir passagem de tempo real que a fala não sustenta."]
+cenas:
+  tom: Acompanha o que está sendo dito, frase a frase.
+  intervalo: 1.5
+  por_minuto: 30.0
+  duracao: [1.0, 12.0]
+  regras: ["Uma ação por frase, presa ao trecho dito."]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.3
+x_direcao:
+  id: clipator-arte-terreno-vivo
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Polígonos isométricos com as transformações do lote.
+graficos:
+  selo: {cor_texto: neutro-1}

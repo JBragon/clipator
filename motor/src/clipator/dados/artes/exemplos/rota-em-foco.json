@@ -1,0 +1,140 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-rota-em-foco",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Neste",
+      "inicio": 0.0,
+      "fim": 0.2419
+    },
+    {
+      "texto": "mapa",
+      "inicio": 0.2687,
+      "fim": 0.5106
+    },
+    {
+      "texto": "fictício,",
+      "inicio": 0.5375,
+      "fim": 0.7794
+    },
+    {
+      "texto": "a",
+      "inicio": 0.8062,
+      "fim": 1.0481
+    },
+    {
+      "texto": "equipe",
+      "inicio": 1.075,
+      "fim": 1.3169
+    },
+    {
+      "texto": "sai",
+      "inicio": 1.3438,
+      "fim": 1.5856
+    },
+    {
+      "texto": "da",
+      "inicio": 1.6125,
+      "fim": 1.8544
+    },
+    {
+      "texto": "costa.",
+      "inicio": 1.8812,
+      "fim": 2.1231
+    },
+    {
+      "texto": "A",
+      "inicio": 2.5,
+      "fim": 2.887
+    },
+    {
+      "texto": "rota",
+      "inicio": 2.93,
+      "fim": 3.317
+    },
+    {
+      "texto": "acompanha",
+      "inicio": 3.36,
+      "fim": 3.747
+    },
+    {
+      "texto": "o",
+      "inicio": 3.79,
+      "fim": 4.177
+    },
+    {
+      "texto": "vale.",
+      "inicio": 4.22,
+      "fim": 4.607
+    },
+    {
+      "texto": "O",
+      "inicio": 5.0,
+      "fim": 5.3225
+    },
+    {
+      "texto": "percurso",
+      "inicio": 5.3583,
+      "fim": 5.6808
+    },
+    {
+      "texto": "sobe",
+      "inicio": 5.7167,
+      "fim": 6.0392
+    },
+    {
+      "texto": "para",
+      "inicio": 6.075,
+      "fim": 6.3975
+    },
+    {
+      "texto": "o",
+      "inicio": 6.4333,
+      "fim": 6.7558
+    },
+    {
+      "texto": "interior.",
+      "inicio": 6.7917,
+      "fim": 7.1142
+    },
+    {
+      "texto": "A",
+      "inicio": 7.5,
+      "fim": 7.887
+    },
+    {
+      "texto": "expedição",
+      "inicio": 7.93,
+      "fim": 8.317
+    },
+    {
+      "texto": "chega",
+      "inicio": 8.36,
+      "fim": 8.747
+    },
+    {
+      "texto": "ao",
+      "inicio": 8.79,
+      "fim": 9.177
+    },
+    {
+      "texto": "abrigo.",
+      "inicio": 9.22,
+      "fim": 9.607
+    }
+  ],
+  "exemplo": "Uma expedição fictícia sai de uma base na costa, cruza um vale e chega a um abrigo no interior de uma ilha imaginária."
+}

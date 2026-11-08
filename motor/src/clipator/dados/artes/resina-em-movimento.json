@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-resina-em-movimento",
+  "nome": "Resina em movimento",
+  "familia": "Material translúcido",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma forma de resina translúcida responde a um toque e revela uma peça sólida no seu interior.",
+  "usar_em": "propriedades de material, transformação, memória e conceitos abstratos simples",
+  "composicao": "Uma forma grande sobre pedestal escuro baixo, com uma placa lateral de duas linhas. O núcleo opaco tem função semântica e ocupa no máximo 20% do volume.",
+  "material_e_luz": "Resina colorida com rugosidade moderada, contorno luminoso e transmissão opcional. O núcleo deve continuar visível sem refração física completa; não usar cenário externo para reflexo.",
+  "movimento": "Um único toque produz uma onda decrescente. Escala vertical e horizontal se compensam para sugerir conservação de volume; a oscilação dura até 1,2 s e cessa antes da leitura.",
+  "construcao": "Use deformação analítica de vértices por altura e distância ao toque: amplitude*exp(-amortecimento*t)*sin(frequencia*t-fase). Calcule sempre da malha original, nunca acumule deformações. Limite a amplitude a 0,12 do raio.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Gradientes SVG em camadas com núcleo visível e squash controlado; mostrar a etiqueta “versão leve” na seleção, sem alegar refração física.",
+  "parametros_visuais": {
+    "amplitude_relativa": 0.1,
+    "amortecimento": 4.5,
+    "frequencia_hz": 3.0,
+    "transmissao": 0.65
+  },
+  "fases": [
+    "Apresentar a forma e o núcleo imóvel",
+    "Aplicar um toque e propagar a onda",
+    "Acomodar e apontar o núcleo",
+    "Manter o resultado estável sem novo toque"
+  ],
+  "criterios": [
+    "A forma retorna ao volume inicial sem deriva.",
+    "Transparência não elimina o contraste do núcleo.",
+    "O render leve mantém o toque e a acomodação."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "amplitude_relativa": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.12
+    },
+    "amortecimento": {
+      "tipo": "numero",
+      "minimo": 3,
+      "maximo": 8
+    },
+    "frequencia_hz": {
+      "tipo": "numero",
+      "minimo": 1,
+      "maximo": 4
+    },
+    "transmissao": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.8
+    }
+  }
+}

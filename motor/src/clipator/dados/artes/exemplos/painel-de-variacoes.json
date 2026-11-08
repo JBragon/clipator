@@ -1,0 +1,127 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-painel-de-variacoes",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "imagem",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "continua",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "a",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "mesma.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "O",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "tratamento",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "muda",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "nossa",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "leitura.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "A imagem continua a mesma.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "A imagem continua a",
+      "descricao": "Mostrar a imagem única de partida; Dividir a área em nove células sem mudar o crop",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "linhas": 3,
+        "colunas": 3,
+        "tratamentos": 4,
+        "transicao_s": 0.18,
+        "leitura_final_s": 1.5
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "O tratamento muda nossa leitura.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "O tratamento muda nossa",
+      "descricao": "Aplicar os tratamentos na diagonal; Manter o painel e marcar a alternativa escolhida",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "linhas": 3,
+        "colunas": 3,
+        "tratamentos": 4,
+        "transicao_s": 0.18,
+        "leitura_final_s": 1.5
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

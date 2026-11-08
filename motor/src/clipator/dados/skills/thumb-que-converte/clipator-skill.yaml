@@ -1,0 +1,9 @@
+id: thumb-que-converte
+nome: "Thumbnail que converte"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [thumbnail]
+ativa_por_padrao: true
+descricao: "Frase curta e composição de thumbnail no padrão do canal (thumb.md)."

@@ -1,0 +1,95 @@
+# Games e humor: roxo de fliperama, ciano elétrico e amarelo de ficha, tudo grande e rápido.
+herda: base
+nome: Fliperama
+conceito:
+  frase: "Roxo de fliperama, ciano elétrico e amarelo de ficha: tudo grande, rápido e com um pouco de exagero."
+  palavras_chave: [games, energia, humor, elétrico, exagerado]
+  faca:
+    - Uma palavra por vez na legenda, gigante, com contorno grosso.
+    - Pico de áudio ganha punch-in e um selo amarelo.
+    - Entrada com leve passo além do ponto e volta (só aqui isso é bem-vindo).
+    - Transições com empurrão ou zoom.
+  nao_faca:
+    - Texto fino ou pequeno.
+    - Telas paradas por mais de 3 s sem nada mudar.
+    - Fundo claro.
+    - Três cores neon ao mesmo tempo na mesma palavra.
+cor:
+  paleta:
+    fundo: "#130A21"
+    superficie: "#22133D"
+    texto: "#FFFFFF"
+    texto_suave: "#BBA9E2"
+    primaria: "#00E5FF"
+    secundaria: "#7B2CFF"
+    destaque: "#FFE14D"
+    positivo: "#3DFF8B"
+    negativo: "#FF3D71"
+    alerta: "#FF9F1C"
+  serie: [primaria, destaque, negativo, positivo, "#C38BFF", texto]
+  gradientes:
+    eletrico: {tipo: linear, angulo: 135, paradas: [[secundaria, 0], [primaria, 1]]}
+    ficha: {tipo: linear, angulo: 90, paradas: [[destaque, 0], [alerta, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Bangers, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bangers, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.04}
+    legenda: {familia: Bangers, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.03, entrelinha: 1.0}
+  escala: {display: 0.15, h1: 0.1, h2: 0.068, h3: 0.048, corpo: 0.034, nota: 0.026}
+layout: {raio: 0.018, traco: 0.007, densidade: densa}
+movimento:
+  curvas:
+    entrada: [0.3, 1.45, 0.6, 1]
+    saida: [0.5, 0, 0.75, 0]
+    enfase: [0.6, -0.4, 0.35, 1.5]
+  duracoes: {micro: 0.06, curta: 0.16, media: 0.3, longa: 0.55}
+  escalonamento: 0.04
+  entrada: escala
+  saida: corte
+  transicao_padrao: empurra
+  transicoes: [corte, empurra, zoom]
+  principios:
+    - A entrada passa um pouco do tamanho final e assenta (o “pulo” é a assinatura).
+    - Picos de áudio pedem punch-in de 8 a 12% e selo.
+    - Nenhuma tela fica parada mais de 3 s.
+tratamento:
+  contraste: 1.1
+  saturacao: 1.2
+  nitidez: 0.3
+  vinheta: 0.3
+legenda:
+  estilo: palavra
+  tamanho: 0.088
+  cor: neutro-2
+  cor_destaque: destaque
+  contorno: {cor: neutro-1, espessura: 0.15}
+  sombra: {dx: 0, dy: 0.06, desfoque: 0.0, cor: secundaria, alfa: 1.0}
+  max_linhas: 1
+  max_palavras: 2
+  y_vertical: 0.58
+graficos:
+  tarja: {estilo: etiqueta, posicao: superior_esquerda, cor_fundo: secundaria, cor_acento: primaria, cor_cargo: texto}
+  selo: {estilo: chapado, cor_fundo: destaque, cor_texto: fundo, inclinacao: -6}
+thumbnail:
+  max_palavras: 3
+  cor: neutro-2
+  cor_destaque: destaque
+  contorno: {cor: neutro-1, espessura: 0.08}
+  fundo: gradiente:eletrico
+  tratamento_foto: {saturacao: 1.25, contraste: 1.15, contorno_pessoa: destaque, espessura_contorno: 0.016}
+som:
+  identidade: "Arcade: blip, moeda, glitch e impacto nos picos."
+  efeitos: {entrada: whoosh, enfase: pop, numero: click, alerta: glitch}
+  volume_efeitos: 0.55
+  musica: {clima: phonk, bpm: [120, 150]}
+cenas:
+  tom: "Animado e com humor: palavras fortes, exagero na medida, ritmo rápido."
+  preferir: [palavra, alerta, numero, titulo]
+  evitar: [linha_do_tempo]
+  intervalo: 2.2
+  por_minuto: 18
+  duracao: [1.2, 4.0]
+  palavras_titulo: 4
+  palavras_rotulo: 6
+  regras:
+    - "A palavra forte é a reação de quem assiste (ex.: “QUE ISSO”), tirada da fala."

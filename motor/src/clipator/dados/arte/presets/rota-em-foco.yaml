@@ -1,0 +1,38 @@
+# Rota em Foco: direção visual da coleção Cinco estilos para cortes.
+herda: base
+nome: Rota em Foco
+conceito:
+  frase: "Um mapa de relevo escuro, percursos e chamadas editoriais acompanha lugares e deslocamentos mencionados na fala."
+  palavras_chave: [fala, explicação, rota]
+  faca: ["Sem coordenadas de um lugar real, não desenhar um contorno inventado e apresentá-lo como geografia verdadeira.", "Uma rota representa deslocamento; expansão territorial exige fala e dados que a sustentem.", "O canto ocupado pelo vídeo deve ser excluído da busca de posição de rótulos."]
+  nao_faca: ["Repetir o exemplo do estilo em outro assunto.", "Mostrar objeto, número ou fato que a fala não citou."]
+cor:
+  paleta: {fundo: '#101E24', superficie: '#233B3C', texto: '#EFF1DF', texto_suave: '#C4C7B8', primaria: '#72B6A1', destaque: '#E4B466', secundaria: '#A9A0DC', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ["A câmera enquadra o local que está sendo dito, uma linha percorre a rota e uma chamada nomeia o marco quando ele é mencionado. Pausar movimento de câmera enquanto uma informação exige leitura. Lugares não citados podem ser contexto discreto, nunca novas conclusões."]
+cenas:
+  tom: Acompanha o que está sendo dito, frase a frase.
+  intervalo: 1.5
+  por_minuto: 30.0
+  duracao: [1.0, 12.0]
+  regras: ["Uma ação por frase, presa ao trecho dito."]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.3
+x_direcao:
+  id: clipator-arte-rota-em-foco
+  backend_sugerido: three
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Polígonos isométricos com os lugares na ordem da fala.
+graficos:
+  selo: {cor_texto: neutro-1}

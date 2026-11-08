@@ -1,0 +1,51 @@
+# Painel de variações: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-painel-de-variacoes/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Painel de variações
+conceito:
+  frase: Uma foto própria vira uma matriz de estudos visuais; uma faixa diagonal percorre as células e revela diferenças
+    controladas.
+  palavras_chave: [grade fotográfica, comparar tratamentos, explicar alternativas]
+  faca: [Grade 3x3 com enquadramento idêntico em todas as células e uma legenda externa curta por linha., A célula
+      principal ocupa duas posições quando for necessário ler detalhes., 'Quatro tratamentos próprios: monocromia
+      suave, duotone quente, contorno e retícula.', Nunca combinar todos ao mesmo tempo na mesma célula.]
+  nao_faca: [Mosaico estroboscópico., Imagem de pessoa diferente por célula., Filtros que inventam detalhes da foto.]
+cor:
+  paleta: {fundo: '#233238', superficie: '#394C53', texto: '#F0EEE6', texto_suave: '#ACBAB8', primaria: '#DD9A67',
+    destaque: '#86B8AC', secundaria: '#77614D', positivo: '#3ECF8E', negativo: '#FF5D6C', alerta: '#FFA94D'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: mascara
+  principios: [Uma varredura diagonal troca apenas uma célula por vez com máscara de 180 ms., 'Segurar o painel
+      completo por pelo menos 1,5 s para comparação; reduzir movimento remove a varredura.']
+cenas:
+  tom: Para comparar tratamentos, explicar alternativas e mostrar uma transformação visual.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Mostrar a imagem única de partida; Dividir a área em nove células sem mudar
+      o crop; Aplicar os tratamentos na diagonal; Manter o painel e marcar a alternativa escolhida.', As células
+      mostram a mesma região da foto., O tratamento não altera o significado documental sem indicação., Uma troca
+      não dispara flash em toda a tela.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-painel-de-variacoes
+  backend_sugerido: canvas
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Painel estático com quatro tratamentos e sem trocas.
+  construcao: Cachear os quatro tratamentos da imagem local por hash de conteúdo. Calcular ordem por linha+coluna
+    e desempatar por índice estável. Todas as células compartilham crop e âncora facial fornecida localmente.
+  parametros_visuais: {linhas: 3, colunas: 3, tratamentos: 4, transicao_s: 0.18, leitura_final_s: 1.5}
+graficos:
+  selo: {cor_texto: neutro-1}

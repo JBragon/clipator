@@ -1,0 +1,9 @@
+id: direcao-de-arte
+nome: "Direção de arte"
+autor: Clipator
+versao: 2.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [estilo, cenas]
+ativa_por_padrao: true
+descricao: "Escolhe e ajusta a direção de arte de cada estilo, que guia a IA ao planejar o corte e o render; o canal só põe a marca. Também cria DAs novas com prancha e aprovação."

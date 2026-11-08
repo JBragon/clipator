@@ -1,0 +1,69 @@
+# Podcast e entrevista: o clima de um estúdio à noite, com luz coral no apresentador.
+herda: base
+nome: Palco noturno
+conceito:
+  frase: "Azul de estúdio à noite e um coral quente de refletor: a conversa parece ao vivo, de perto."
+  palavras_chave: [conversa, íntimo, quente, noturno, ao vivo]
+  faca:
+    - Legenda grande, em duas linhas, com a palavra dita em coral.
+    - Nome do convidado na tarja logo nos primeiros segundos.
+    - Fundo das telas com um brilho suave de refletor, nunca chapado.
+    - Cantos levemente arredondados em tudo.
+  nao_faca:
+    - Cortes de câmera tremidos ou zoom brusco.
+    - Mais de uma cor quente na mesma tela.
+    - Texto em cima do rosto de quem fala.
+    - Música alta por baixo da voz.
+cor:
+  paleta:
+    fundo: "#0D1321"
+    superficie: "#18223A"
+    texto: "#F4F6FB"
+    texto_suave: "#9DA9C4"
+    primaria: "#FF6B5B"
+    secundaria: "#2D3D6B"
+    destaque: "#FFD166"
+    positivo: "#4CD39B"
+    negativo: "#FF4F79"
+    alerta: "#FFAA4C"
+  serie: [primaria, destaque, texto, "#6FB7FF", positivo, texto_suave]
+  gradientes:
+    refletor: {tipo: radial, angulo: 0, paradas: [[secundaria, 0], [fundo, 1]]}
+    coral: {tipo: linear, angulo: 120, paradas: [[primaria, 0], [destaque, 1]]}
+tipografia:
+  papeis:
+    titulo: {familia: Anton, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.005, entrelinha: 1.0}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: false, italico: true, entrelinha: 1.1}
+layout: {raio: 0.02, densidade: arejada}
+movimento:
+  duracoes: {micro: 0.1, curta: 0.26, media: 0.46, longa: 0.85}
+  entrada: sobe
+  transicoes: [corte, fade]
+legenda:
+  estilo: karaoke
+  tamanho: 0.06
+  cor_destaque: primaria
+  max_linhas: 2
+  max_palavras: 5
+  y_vertical: 0.6
+graficos:
+  tarja: {estilo: barra, posicao: inferior_esquerda, cor_fundo: fundo, cor_acento: primaria}
+thumbnail:
+  cor_destaque: primaria
+  fundo: gradiente:refletor
+  borda: primaria
+som:
+  identidade: "Quente e próximo: whoosh macio, pop leve e a voz sempre na frente."
+  efeitos: {entrada: whoosh, enfase: pop, numero: ding, alerta: impacto}
+  volume_efeitos: 0.35
+  musica: {clima: chill, bpm: [80, 100]}
+cenas:
+  tom: "Conversa ao vivo: poucas telas, que reforçam a frase de efeito sem tirar o foco de quem fala."
+  preferir: [citacao, palavra, titulo]
+  evitar: [linha_do_tempo, comparacao]
+  intervalo: 5.0
+  por_minuto: 7
+  palavras_titulo: 5
+  regras:
+    - Prefira deixar o rosto livre a pôr uma tela de enfeite.
+    - Use citação para a frase que alguém repetiria depois.

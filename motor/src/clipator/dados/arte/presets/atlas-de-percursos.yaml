@@ -1,0 +1,53 @@
+# Atlas de percursos: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-atlas-de-percursos/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Atlas de percursos
+conceito:
+  frase: Um atlas claro mostra trajetos e relações entre regiões com um cursor de percurso e notas laterais.
+  palavras_chave: [geografia editorial, lugares, deslocamentos, logística, cronologia geográfica]
+  faca: [Mapa vetorial simplificado com no máximo cinco marcos e dois rótulos simultâneos., A escala e o norte só
+      aparecem se a projeção e os dados forem conhecidos., 'Terra em verde suave, água clara e linhas de limite
+      discretas.', Trajeto em cobre com ponto de progresso; nenhuma base de satélite ou tile remoto é necessária.]
+  nao_faca: [Território inventado., Fronteira como afirmação política automática., Expansão de mancha vermelha para
+      insinuar eventos não ditos.]
+cor:
+  paleta: {fundo: '#E8E6D7', superficie: '#D0D5BF', texto: '#2E4140', texto_suave: '#586963', primaria: '#B56540',
+    destaque: '#478C94', secundaria: '#D1AC93', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: desliza
+  principios: ['A câmera enquadra os marcos ativos com margem, percorre a rota e pausa antes de abrir cada nota.',
+    'Regiões mudam de preenchimento por fade, sem piscar.']
+cenas:
+  tom: Para lugares, deslocamentos, logística e cronologia geográfica.
+  intervalo: 5.0
+  por_minuto: 8.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Localizar os marcos do trecho; Traçar o caminho entre os dois primeiros; Abrir
+      a nota do destino enquanto o mapa para; Recuar para ver o percurso completo.', Lugar e direção do percurso
+      correspondem aos dados., Mapa esquemático é identificado como tal., O zoom mantém todos os marcos relevantes
+      legíveis.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-atlas-de-percursos
+  backend_sugerido: svg
+  complexidade: alta
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Diagrama de pontos e setas com a etiqueta “trajeto esquemático”, sem fronteiras inventadas.
+  construcao: Receba GeoJSON local com proveniência, projete por função documentada e faça fit dos bounds. Cruza
+    antimeridiano com geometria dividida; use placeholders abstratos claramente identificados quando faltarem dados.
+    Tempo ao longo da rota usa comprimento acumulado.
+  parametros_visuais: {max_marcos: 5, rotulos_simultaneos: 2, margem_enquadramento: 0.14, espessura_rota_px: 5}
+graficos:
+  selo: {cor_texto: neutro-1}
+x_contraste_corrigido: ['texto_suave #687D73 → #586963 (3.5:1 → 4.6:1)', 'destaque #4D929A → #478C94 (2.8:1 → 3.1:1)']

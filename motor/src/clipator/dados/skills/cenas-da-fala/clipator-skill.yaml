@@ -1,0 +1,9 @@
+id: cenas-da-fala
+nome: "Cenas que seguem a fala"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [cenas]
+ativa_por_padrao: true
+descricao: "Diz ao planejador de cenas qual tela usar para cada tipo de fala."

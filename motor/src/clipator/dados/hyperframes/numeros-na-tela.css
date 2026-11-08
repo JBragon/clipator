@@ -1,0 +1,21 @@
+/* Números na tela: quando o falante cita um número, um contador grande sobe na parte de cima. */
+@property --n { syntax: "<integer>"; initial-value: 0; inherits: false; }
+.numero {
+  display: flex; position: absolute; top: 30%; left: 0; right: 0; justify-content: center; align-items: baseline; gap: 0.2em;
+  font-family: 'Anton', sans-serif; color: var(--destaque); font-size: calc(var(--tamanho) * 2.4);
+  -webkit-text-stroke: calc(var(--espessura) * 1.2) #000; paint-order: stroke fill;
+  animation: numero-entra 0.3s cubic-bezier(.2, 1.4, .4, 1) both;
+}
+.numero .valor { font-size: 0; }
+.numero .valor::after {
+  font-size: calc(var(--tamanho) * 2.4); counter-reset: n var(--n); content: counter(n);
+  animation: conta 0.9s ease-out both; --n: 0;
+}
+@keyframes conta { from { --n: 0; } to { --n: var(--alvo); } }
+.numero .sufixo { font-size: calc(var(--tamanho) * 1.1); color: #fff; }
+.numero::after {
+  content: ""; position: absolute; left: 20%; right: 20%; bottom: -0.15em; height: 0.12em; background: var(--destaque);
+  transform-origin: left; animation: barra 0.9s ease-out both;
+}
+@keyframes numero-entra { from { opacity: 0; transform: translateY(20%) scale(.8); } to { opacity: 1; transform: none; } }
+@keyframes barra { from { transform: scaleX(0); } to { transform: scaleX(1); } }

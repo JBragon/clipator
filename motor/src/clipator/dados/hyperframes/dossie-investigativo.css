@@ -1,0 +1,18 @@
+/* Dossiê investigativo: papel envelhecido, texto datilografado e carimbo nas palavras-chave. */
+.frase {
+  font-family: 'Special Elite', monospace; font-weight: 400; color: #1c1a17; font-size: calc(var(--tamanho) * 0.82);
+  background: #efe3c8; padding: 0.35em 0.5em; left: 8%; right: 8%;
+  box-shadow: 0 0.2em 0.6em rgba(0,0,0,.45), inset 0 0 1.2em rgba(120, 90, 40, .35);
+  transform: translateY(-50%) rotate(-1.2deg);
+}
+.p { -webkit-text-stroke: 0; text-shadow: none; animation: datilografa 0.01s steps(1) both; animation-delay: var(--t); }
+.p.destaque { color: #a4161a; text-decoration: underline 0.08em; }
+@keyframes datilografa { from { opacity: 0; } to { opacity: 1; } }
+.chave { display: block; position: absolute; top: 18%; left: 0; right: 0; text-align: center; }
+.chave span {
+  display: inline-block; font-family: 'Anton', sans-serif; font-size: calc(var(--tamanho) * 1.15); color: #b3121a;
+  border: 0.09em solid #b3121a; padding: 0.05em 0.3em; border-radius: 0.1em; letter-spacing: 0.04em;
+  transform: rotate(-9deg); opacity: 0.88; animation: carimba 0.22s cubic-bezier(.3, 1.6, .5, 1) both;
+}
+@keyframes carimba { from { opacity: 0; transform: rotate(-9deg) scale(2.2); } to { opacity: .88; transform: rotate(-9deg) scale(1); } }
+.cartela .caixa { font-family: 'Special Elite', monospace; background: #efe3c8; color: #1c1a17; transform: rotate(-1.5deg); }

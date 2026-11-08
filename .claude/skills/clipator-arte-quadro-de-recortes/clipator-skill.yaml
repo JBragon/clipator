@@ -1,0 +1,9 @@
+id: clipator-arte-quadro-de-recortes
+nome: "Quadro de recortes — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de quadro de recortes para explicações com imagem, lista de componentes e antes/depois, ou implementa esse estilo no Clipator quando solicitado."

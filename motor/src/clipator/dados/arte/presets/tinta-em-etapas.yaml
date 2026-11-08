@@ -1,0 +1,51 @@
+# Tinta em etapas: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-tinta-em-etapas/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Tinta em etapas
+conceito:
+  frase: Uma faixa de tinta revela partes de um objeto e transforma cada passagem em uma etapa de processo.
+  palavras_chave: [impressão e máscara, tutorial, organização, transformação de estado, demonstração de recurso]
+  faca: ['Objeto grande em uma área de impressão, trilha de três marcas no rodapé e uma etiqueta com verbo.', O
+      objeto mantém a silhueta entre os estados., Tinta de duas cores com retícula fina e pequenos vazios; papel
+      claro e sombra curta., O ruído só muda dentro da máscara de impressão e permanece fixo no tempo.]
+  nao_faca: [Mão de cartoon tocando objetos como assinatura fixa., Selo violeta-laranja., Gráfico final sem dados.]
+cor:
+  paleta: {fundo: '#EFE8D6', superficie: '#DACFAF', texto: '#2D403B', texto_suave: '#5E6B5F', primaria: '#B75A40',
+    destaque: '#648E7E', secundaria: '#D6A892', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: mascara
+  principios: ['Uma lâmina de tinta atravessa o objeto em 0,6 s, revela o novo estado e sai pela borda.', A marca
+      da etapa preenche só depois que a passagem termina.]
+cenas:
+  tom: Para tutorial, organização, transformação de estado e demonstração de recurso.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Mostrar o objeto no estado inicial; Passar a primeira faixa e marcar a etapa;
+      Revelar o resultado da segunda passagem; Apresentar o objeto final e a trilha completa.', 'A máscara revela
+      só o objeto, sem apagar a etiqueta.', Cada etapa altera algo identificável., O padrão de retícula não produz
+      moiré na resolução de saída.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-tinta-em-etapas
+  backend_sugerido: canvas
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Máscara de cor sólida sem retícula, preservando a trilha de etapas.
+  construcao: Separe desenho de estado, máscara de varredura e textura de tinta. Calcule a retícula em uma grade
+    fixa; derive a borda por uma função de semente. Estados devem usar a mesma caixa e centro óptico.
+  parametros_visuais: {cores_tinta: 2, passagem_s: 0.6, reticula_passo_px: 6, etapas: 3}
+graficos:
+  selo: {cor_texto: neutro-2}
+x_contraste_corrigido: ['texto_suave #6C7D6D → #5E6B5F (3.6:1 → 4.6:1)', 'destaque #709A8A → #648E7E (2.6:1 → 3.0:1)']

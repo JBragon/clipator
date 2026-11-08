@@ -1,0 +1,9 @@
+id: revisao-antes-de-publicar
+nome: "Revisão antes de publicar"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [revisao]
+ativa_por_padrao: true
+descricao: "Checklist com nota de 0 a 100 antes de exportar: gancho, ritmo, legenda, zona segura, chamada e plataforma."

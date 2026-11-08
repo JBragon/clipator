@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-terrario-tecnico",
+  "nome": "Terrário técnico",
+  "familia": "Miniatura espacial",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Uma infraestrutura em miniatura aparece numa bandeja hexagonal com uma janela lateral que revela seu funcionamento.",
+  "usar_em": "processos urbanos, energia, logística e funcionamento de serviços",
+  "composicao": "Bandeja hexagonal com base rasa, três zonas funcionais e um corte lateral em janela. A informação principal usa o espaço livre à esquerda, ligada a uma peça por uma linha fina.",
+  "material_e_luz": "Pintura acetinada com vidro fosco só na janela. Miniaturas sem detalhes minúsculos; pisos e tubulações têm contraste de valor. Luz lateral e ambiente moderado.",
+  "movimento": "A câmera descreve um arco de no máximo 12 graus. Um percurso luminoso leva a atenção da entrada à saída; a tampa desliza para revelar o corte e retorna ao fim.",
+  "construcao": "Separe cenário estático, componentes ativos e tampa. Projete os pontos de ancoragem 3D no HUD a cada seek; desvie cartões que colidirem. Animar o percurso por comprimento acumulado, mantendo a velocidade uniforme.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Planta isométrica em SVG com janela de corte e percurso em traço; retirar vidro e volumes complexos.",
+  "parametros_visuais": {
+    "zonas": 3,
+    "arco_camera_graus": 12,
+    "altura_base_relativa": 0.12,
+    "velocidade_percurso": 0.8
+  },
+  "fases": [
+    "Mostrar o conjunto e o ponto de entrada",
+    "Abrir a janela e percorrer o processo",
+    "Destacar o componente que explica o resultado",
+    "Fechar a janela e segurar uma vista limpa"
+  ],
+  "criterios": [
+    "O caminho não some atrás de peças opacas durante a explicação.",
+    "Rótulos permanecem dentro da área útil quando a câmera gira.",
+    "Não há pessoas minúsculas usadas para representar dados não fornecidos."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "zonas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 5
+    },
+    "arco_camera_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 15
+    },
+    "altura_base_relativa": {
+      "tipo": "numero",
+      "minimo": 0.05,
+      "maximo": 0.25
+    },
+    "velocidade_percurso": {
+      "tipo": "numero",
+      "minimo": 0.2,
+      "maximo": 1.5
+    }
+  }
+}

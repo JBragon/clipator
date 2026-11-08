@@ -1,0 +1,155 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-encaixe-vivo",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 10,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.3225
+    },
+    {
+      "texto": "base",
+      "inicio": 0.3583,
+      "fim": 0.6808
+    },
+    {
+      "texto": "mantém",
+      "inicio": 0.7167,
+      "fim": 1.0392
+    },
+    {
+      "texto": "o",
+      "inicio": 1.075,
+      "fim": 1.3975
+    },
+    {
+      "texto": "microscópio",
+      "inicio": 1.4333,
+      "fim": 1.7558
+    },
+    {
+      "texto": "firme.",
+      "inicio": 1.7917,
+      "fim": 2.1142
+    },
+    {
+      "texto": "A",
+      "inicio": 2.5,
+      "fim": 2.7764
+    },
+    {
+      "texto": "coluna",
+      "inicio": 2.8071,
+      "fim": 3.0836
+    },
+    {
+      "texto": "sustenta",
+      "inicio": 3.1143,
+      "fim": 3.3907
+    },
+    {
+      "texto": "a",
+      "inicio": 3.4214,
+      "fim": 3.6979
+    },
+    {
+      "texto": "parte",
+      "inicio": 3.7286,
+      "fim": 4.005
+    },
+    {
+      "texto": "de",
+      "inicio": 4.0357,
+      "fim": 4.3121
+    },
+    {
+      "texto": "cima.",
+      "inicio": 4.3429,
+      "fim": 4.6193
+    },
+    {
+      "texto": "A",
+      "inicio": 5.0,
+      "fim": 5.3225
+    },
+    {
+      "texto": "lente",
+      "inicio": 5.3583,
+      "fim": 5.6808
+    },
+    {
+      "texto": "fica",
+      "inicio": 5.7167,
+      "fim": 6.0392
+    },
+    {
+      "texto": "sobre",
+      "inicio": 6.075,
+      "fim": 6.3975
+    },
+    {
+      "texto": "a",
+      "inicio": 6.4333,
+      "fim": 6.7558
+    },
+    {
+      "texto": "amostra.",
+      "inicio": 6.7917,
+      "fim": 7.1142
+    },
+    {
+      "texto": "No",
+      "inicio": 7.5,
+      "fim": 7.7419
+    },
+    {
+      "texto": "fim,",
+      "inicio": 7.7687,
+      "fim": 8.0106
+    },
+    {
+      "texto": "as",
+      "inicio": 8.0375,
+      "fim": 8.2794
+    },
+    {
+      "texto": "peças",
+      "inicio": 8.3063,
+      "fim": 8.5481
+    },
+    {
+      "texto": "se",
+      "inicio": 8.575,
+      "fim": 8.8169
+    },
+    {
+      "texto": "separam",
+      "inicio": 8.8438,
+      "fim": 9.0856
+    },
+    {
+      "texto": "de",
+      "inicio": 9.1125,
+      "fim": 9.3544
+    },
+    {
+      "texto": "novo.",
+      "inicio": 9.3812,
+      "fim": 9.6231
+    }
+  ],
+  "exemplo": "Um microscópio de brinquedo se monta pela base, coluna e conjunto óptico e retorna às peças."
+}

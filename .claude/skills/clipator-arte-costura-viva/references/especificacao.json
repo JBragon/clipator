@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-costura-viva",
+  "nome": "Costura viva",
+  "familia": "Mascote têxtil",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um personagem de tecido costurado reage à fala sobre uma mesa de ateliê, com pesponto e pequenas dobras.",
+  "usar_em": "explicações acolhedoras, reação leve e produtos artesanais",
+  "composicao": "Mascote único em primeiro plano, carretel pequeno no canto e cartão de tecido com uma palavra. Quando usado acima do vídeo, reduzir o cenário a um tampo e um fundo sem horizonte.",
+  "material_e_luz": "Tecido tramado curto, costura aparente nas bordas e enchimento irregular. Olhos bordados em linha escura e boca de linha; evitar pelos individuais caros. Textura de trama é procedural com semente.",
+  "movimento": "Preparação de 120 ms, inclinação do corpo, gesto e acomodação. Orelha ou braço chega 70 ms depois do tronco; deformação máxima de 8% preserva o volume aparente.",
+  "construcao": "Construa o mascote com elipsoides e fitas curvas para as costuras. Gere a trama local uma vez. Articulações recebem poses derivadas de curvas por fase, sem simulação de tecido. Use três expressões compatíveis com a fala.",
+  "cores": {
+    "fundo": "#EAE2D5",
+    "superficie": "#D9CCB9",
+    "texto": "#263C45",
+    "texto_suave": "#566A70",
+    "primaria": "#BA624F",
+    "destaque": "#4C8F82"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Recorte SVG com textura tramada estática, costura e três poses do mesmo personagem.",
+  "parametros_visuais": {
+    "deformacao_maxima": 0.08,
+    "atraso_membros_s": 0.07,
+    "densidade_trama": 34,
+    "expressoes": 3
+  },
+  "fases": [
+    "Mascote ergue a cabeça para ouvir",
+    "Braço indica o cartão que entra pela lateral",
+    "Corpo se inclina e confirma a ideia com um gesto",
+    "Personagem volta à pose neutra e o cartão fica legível"
+  ],
+  "criterios": [
+    "Costura acompanha a borda sem flutuar.",
+    "A expressão não muda o sentido de uma fala séria.",
+    "O rosto do apresentador continua mais importante que o mascote."
+  ],
+  "evitar": "Mascote reconhecível de terceiros, brinquedos licenciados e movimento elástico de gelatina.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "deformacao_maxima": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.1
+    },
+    "atraso_membros_s": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.15
+    },
+    "densidade_trama": {
+      "tipo": "inteiro",
+      "minimo": 16,
+      "maximo": 64
+    },
+    "expressoes": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 5
+    }
+  }
+}

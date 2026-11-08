@@ -1,0 +1,58 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-terreno-vivo",
+  "nome": "Terreno Vivo",
+  "familia": "Cortes guiados pela fala",
+  "estado": "implementado",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um bloco de terreno em corte se transforma por etapas, mostrando ocupação, água e vegetação conforme a fala.",
+  "usar_em": "Diorama Isométrico",
+  "composicao": "Projeção ortográfica isométrica, solo visível nas faces do corte, água identificável e superfície com volumes simplificados. Contornos definidos, cel-shading em poucos tons, hachuras moderadas e câmera fixa. A própria transformação do terreno conduz a explicação.",
+  "material_e_luz": "Projeção ortográfica isométrica, solo visível nas faces do corte, água identificável e superfície com volumes simplificados. Contornos definidos, cel-shading em poucos tons, hachuras moderadas e câmera fixa. A própria transformação do terreno conduz a explicação.",
+  "movimento": "Estado inicial, canais, canteiros e mudas aparecem no mesmo bloco espacial. As peças mudam no momento da menção, mantendo referências fixas para o público entender o antes e depois. Transformações não devem sugerir passagem de tempo real que a fala não sustenta.",
+  "construcao": "Construir um mesh de terreno ou uma malha regular de alturas e grupos de superfície. Interpolar estados a partir dos mesmos pontos. Separar solo em corte, infraestrutura, água e plantas; contornos e hachuras acompanham as faces. A câmera se ajusta ao layout no início e não orbita durante a transformação.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos com as transformações do lote.",
+  "parametros_visuais": {
+    "tamanho_lote": 8,
+    "altura_corte": 1.4,
+    "hachura": true,
+    "velocidade_agua": 0.6
+  },
+  "fases": [],
+  "criterios": [
+    "Sem trocar de câmera, manter visível que o mesmo lote recebe as transformações.",
+    "Distinguir o corte do solo e os canais de água por forma e contraste, não só por cor.",
+    "No modo janela, deixar a área de transformação fora do retângulo do apresentador."
+  ],
+  "amostra": {
+    "duracao_s": 10,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "tamanho_lote": {
+      "tipo": "inteiro",
+      "minimo": 6,
+      "maximo": 12
+    },
+    "altura_corte": {
+      "tipo": "numero",
+      "minimo": 0.6,
+      "maximo": 2.4
+    },
+    "hachura": {
+      "tipo": "booleano"
+    },
+    "velocidade_agua": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 2
+    }
+  }
+}

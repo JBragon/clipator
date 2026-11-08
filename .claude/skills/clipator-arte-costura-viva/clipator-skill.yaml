@@ -1,0 +1,9 @@
+id: clipator-arte-costura-viva
+nome: "Costura viva — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de costura viva para explicações acolhedoras, reação leve e produtos artesanais, ou implementa esse estilo no Clipator quando solicitado."

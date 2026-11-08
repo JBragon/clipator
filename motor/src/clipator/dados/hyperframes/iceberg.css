@@ -1,0 +1,10 @@
+/* Iceberg: um medidor de profundidade desce ao longo do clip e cada palavra-chave vira um nível. */
+.chave { display: block; position: absolute; left: 12%; top: 22%; }
+.chave span {
+  display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: calc(var(--tamanho) * 0.95); color: #e8f6ff;
+  background: rgba(8, 40, 70, .82); padding: 0.08em 0.4em; border-left: 0.12em solid #7fd3ff;
+  animation: nivel 0.3s ease-out both;
+}
+@keyframes nivel { from { opacity: 0; transform: translateX(-20%); } to { opacity: 1; transform: none; } }
+.frase { color: #fff; }
+.p.destaque { color: #7fd3ff; }

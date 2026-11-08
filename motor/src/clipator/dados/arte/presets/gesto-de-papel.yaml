@@ -1,0 +1,51 @@
+# Gesto de papel: direção visual do pacote clipator-artes-originais (AGPL), importada de
+# skills/clipator-arte-gesto-de-papel/references/especificacao.json por `clipator.arte.importar`.
+# O renderizador desta direção é outro trabalho; aqui ficam os tokens, o guia das cenas e as anotações x_.
+herda: base
+nome: Gesto de papel
+conceito:
+  frase: Objetos de papel dobrado fazem um gesto curto que ilustra uma ação e depois viram uma forma de transição.
+  palavras_chave: [recorte gestual, verbos, metáforas simples, lembretes, humor discreto]
+  faca: ['Um objeto central grande, uma sombra dobrada e um verbo no canto.', 'No máximo três objetos em tela, com
+      diferença clara de escala.', Duas tonalidades por folha e vinco visível; borda quase reta com irregularidade
+      leve., 'Cores médias, fundo claro e texto escuro estável.']
+  nao_faca: [Borda que ferve sem parar., Chicotes sucessivos., Imitação de personagem conhecido.]
+cor:
+  paleta: {fundo: '#EDE5CF', superficie: '#DBCCAA', texto: '#283F37', texto_suave: '#5A6A60', primaria: '#C36944',
+    destaque: '#638899', secundaria: '#DAAD90', positivo: '#1E7F4F', negativo: '#B3261E', alerta: '#A85A00'}
+tipografia:
+  papeis:
+    titulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.02, entrelinha: 1.0}
+    subtitulo: {familia: Bebas Neue, reserva: Impact, peso: 400, caixa_alta: true, espacamento: 0.08, entrelinha: 1.05}
+    corpo: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.25}
+    dados: {familia: Montserrat ExtraBold, peso: 800, entrelinha: 1.1}
+    legenda: {familia: Montserrat ExtraBold, peso: 800, caixa_alta: true, entrelinha: 1.08}
+movimento:
+  entrada: sobe
+  principios: ['Antecipar, executar e acomodar em três poses principais.', A saída é uma dobra que fecha o objeto
+      em uma faixa; a faixa abre o próximo objeto sem chicote de câmera.]
+cenas:
+  tom: Para verbos, metáforas simples, lembretes e humor discreto.
+  intervalo: 4.0
+  por_minuto: 10.0
+  duracao: [2.0, 6.0]
+  regras: ['Sequência de cada cena: Assentar o objeto e o verbo; Preparar o gesto com uma inclinação; Executar a
+      ação e segurar seu resultado; Dobrar o objeto numa faixa de saída.', O gesto é compreensível sem texto., A
+      dobra não corta informação do quadro seguinte., A legenda não herda o tremor do papel.]
+som:
+  efeitos: {entrada: click, enfase: ding, numero: click, alerta: impacto}
+  volume_efeitos: 0.4
+x_direcao:
+  id: clipator-arte-gesto-de-papel
+  backend_sugerido: svg
+  complexidade: media
+  layout_padrao: em-cima
+  proporcao_animacao: 0.5
+  alternativa_leve: Três poses estáticas alternadas com corte suave e o mesmo vinco.
+  construcao: Defina poses por pontos de controle de path compatíveis, ou troque grupos entre poses sem interpolação
+    inválida. O vinco divide duas faces; a quantização de 10 poses/s só afeta objeto e sombra, nunca a legenda.
+  parametros_visuais: {fps_poses: 10, objetos_maximos: 3, poses_principais: 3, inclinacao_maxima_graus: 7}
+graficos:
+  selo: {cor_texto: neutro-1}
+x_contraste_corrigido: ['texto_suave #6E8475 → #5A6A60 (3.2:1 → 4.6:1)', 'primaria #C66C46 → #C36944 (3.0:1 → 3.1:1)',
+  'destaque #759AAB → #638899 (2.4:1 → 3.0:1)', 'texto #30473F → #283F37 (7:1 também sobre a superfície)']

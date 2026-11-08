@@ -1,0 +1,65 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-gesto-de-papel",
+  "nome": "Gesto de papel",
+  "familia": "Recorte gestual",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Objetos de papel dobrado fazem um gesto curto que ilustra uma ação e depois viram uma forma de transição.",
+  "usar_em": "verbos, metáforas simples, lembretes e humor discreto",
+  "composicao": "Um objeto central grande, uma sombra dobrada e um verbo no canto. No máximo três objetos em tela, com diferença clara de escala.",
+  "material_e_luz": "Duas tonalidades por folha e vinco visível; borda quase reta com irregularidade leve. Cores médias, fundo claro e texto escuro estável.",
+  "movimento": "Antecipar, executar e acomodar em três poses principais. A saída é uma dobra que fecha o objeto em uma faixa; a faixa abre o próximo objeto sem chicote de câmera.",
+  "construcao": "Defina poses por pontos de controle de path compatíveis, ou troque grupos entre poses sem interpolação inválida. O vinco divide duas faces; a quantização de 10 poses/s só afeta objeto e sombra, nunca a legenda.",
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Três poses estáticas alternadas com corte suave e o mesmo vinco.",
+  "parametros_visuais": {
+    "fps_poses": 10,
+    "objetos_maximos": 3,
+    "poses_principais": 3,
+    "inclinacao_maxima_graus": 7
+  },
+  "fases": [
+    "Assentar o objeto e o verbo",
+    "Preparar o gesto com uma inclinação",
+    "Executar a ação e segurar seu resultado",
+    "Dobrar o objeto numa faixa de saída"
+  ],
+  "criterios": [
+    "O gesto é compreensível sem texto.",
+    "A dobra não corta informação do quadro seguinte.",
+    "A legenda não herda o tremor do papel."
+  ],
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "fps_poses": {
+      "tipo": "inteiro",
+      "minimo": 6,
+      "maximo": 12
+    },
+    "objetos_maximos": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 3
+    },
+    "poses_principais": {
+      "tipo": "inteiro",
+      "minimo": 3,
+      "maximo": 5
+    },
+    "inclinacao_maxima_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 8
+    }
+  }
+}

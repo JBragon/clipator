@@ -1,0 +1,9 @@
+id: clipator-arte-letras-de-oficina
+nome: "Letras de oficina — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de letras de oficina para palavra central, definição, abertura e fechamento de uma ideia, ou implementa esse estilo no Clipator quando solicitado."

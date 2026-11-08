@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-camadas-do-terreno",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "superfície",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "esconde",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "outras",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "camadas.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "Vamos",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "separá-las",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "para",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "observar",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "o",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "conjunto.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "A superfície esconde outras camadas.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "A superfície esconde outras",
+      "descricao": "Mostrar o bloco inteiro e a legenda; Separar dois níveis sem girar a câmera",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "niveis": 3,
+        "separacao_relativa": 0.22,
+        "canto_removivel": 0.18,
+        "angulo_camera_graus": 35
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Vamos separá-las para observar o conjunto.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Vamos separá-las para observar",
+      "descricao": "Mover o marcador pela seção exposta; Recompor os níveis e destacar a superfície",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "niveis": 3,
+        "separacao_relativa": 0.22,
+        "canto_removivel": 0.18,
+        "angulo_camera_graus": 35
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

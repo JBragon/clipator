@@ -1,0 +1,135 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-mesa-em-profundidade",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.27
+    },
+    {
+      "texto": "primeiro",
+      "inicio": 0.3,
+      "fim": 0.57
+    },
+    {
+      "texto": "cartão",
+      "inicio": 0.6,
+      "fim": 0.87
+    },
+    {
+      "texto": "apresenta",
+      "inicio": 0.9,
+      "fim": 1.17
+    },
+    {
+      "texto": "a",
+      "inicio": 1.2,
+      "fim": 1.47
+    },
+    {
+      "texto": "ideia.",
+      "inicio": 1.5,
+      "fim": 1.77
+    },
+    {
+      "texto": "O",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "segundo",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "avança",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "para",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "o",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "exemplo.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "O primeiro cartão apresenta a ideia.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "O primeiro cartão apresenta",
+      "descricao": "Abrir a mesa com três cartões; Avançar o primeiro assunto e revelar sua nota",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "cartoes": 3,
+        "paralaxe_maxima": 0.03,
+        "avanco_relativo": 0.18,
+        "rotacao_maxima_graus": 2
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "O segundo avança para o exemplo.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "O segundo avança para",
+      "descricao": "Recuar o primeiro e avançar o segundo; Alinhar os cartões numa vista final de conjunto",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "cartoes": 3,
+        "paralaxe_maxima": 0.03,
+        "avanco_relativo": 0.18,
+        "rotacao_maxima_graus": 2
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}
