@@ -244,6 +244,13 @@ def gerar_mascara(cmd_quadros: list[str], w: int, h: int, fps: float, duracao: f
     return saida
 
 
+def visao_disponivel() -> bool:
+    """OpenCV vem do extra 'visao'; sem ele o render cai para a máscara oval em vez de quebrar."""
+    import importlib.util
+
+    return importlib.util.find_spec("cv2") is not None
+
+
 def quadros_de_amostra(video: Path, tempos: list[float], largura: int = 320) -> list[np.ndarray]:
     """Alguns quadros (BGR, pequenos) para a detecção de chroma."""
     import cv2

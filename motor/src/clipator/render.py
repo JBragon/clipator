@@ -483,13 +483,19 @@ def _preparar_direcao(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Timeli
     modo, filtro_ch = "nenhum", ""
     if da.layout == "fundo":
         ch = None
-        if da.recorte in ("auto", "chroma"):
+        tem_visao = recorte.visao_disponivel()
+        if not tem_visao and da.recorte != "oval":
+            rel.passo("aviso: OpenCV não instalado (extra 'visao'); sem detecção de chroma nem recorte da pessoa, "
+                      "segui com a máscara oval. Instale com: uv tool install --reinstall 'clipator[visao]'")
+            if log:
+                log("aviso: OpenCV ausente, recorte caiu para a máscara oval")
+        if tem_visao and da.recorte in ("auto", "chroma"):
             meios = [(s + e) / 2 for s, e in tl.trechos][:3] or [0.0]
             ch = recorte.detectar_chroma(recorte.quadros_de_amostra(video, meios))
         if ch is not None:
             modo, filtro_ch = "chroma", recorte.filtro_chroma(ch)
             rel.passo(f"fundo {('verde' if ch.canal == 'green' else 'azul')} detectado: recorte por chroma key")
-        elif da.recorte == "oval":
+        elif da.recorte == "oval" or not tem_visao:
             png = pasta / "recorte-oval.png"
             if not png.exists():
                 from PIL import Image

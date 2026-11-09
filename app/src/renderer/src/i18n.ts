@@ -209,7 +209,7 @@ const pt = {
   videoOriginal: 'Vídeo original',
   glossarioCanal: 'Glossário do canal (nomes próprios)',
   glossarioDica: 'Um nome por linha. O Whisper recebe esses nomes ao transcrever, e depois o Clipator troca as palavras que soam como eles (os tempos não mudam).',
-  glossarioExemplo: 'Flávio Bolsonaro\nVorcaro\nINSS',
+  glossarioExemplo: 'Maria Silva\nEmpresa Exemplo\nSIGLA',
   glossarioSalvo: (n: number) => `Glossário salvo (${n} ${n === 1 ? 'termo' : 'termos'}).`,
   corrigirNomes: 'Corrigir nomes na transcrição',
   nomesCorrigidos: (n: number) => `${n} ${n === 1 ? 'nome corrigido' : 'nomes corrigidos'} na transcrição e nos cortes.`,

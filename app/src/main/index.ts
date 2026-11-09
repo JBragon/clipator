@@ -92,7 +92,8 @@ function comandoMotor(): { cmd: string; args: string[] } {
   }
   const dev = join(__dirname, '..', '..', '..', 'motor')
   if (!app.isPackaged && existsSync(join(dev, 'pyproject.toml'))) {
-    return { cmd: 'uv', args: ['run', '--project', dev, 'clipator'] }
+    // sem --extra visao o venv fica sem OpenCV/MediaPipe e o render quebra no recorte
+    return { cmd: 'uv', args: ['run', '--project', dev, '--extra', 'visao', 'clipator'] }
   }
   if (noPath('clipator')) return { cmd: 'clipator', args: [] }
   const empacotado = join(process.resourcesPath ?? '', 'motor')
