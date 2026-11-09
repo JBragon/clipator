@@ -1,4 +1,9 @@
-# Clipator
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/marca/clipator-horizontal-escuro.svg">
+    <img alt="Clipator" src="docs/marca/clipator-horizontal-claro.svg" height="96">
+  </picture>
+</p>
 
 App local, open-source e gratuito que transforma um vídeo longo (link ou upload) em clips curtos e cortes, para quem tem canal de cortes. Download, transcrição, análise, corte e renderização rodam na sua máquina. A IA (Claude Code ou Codex, com o seu login) é opcional e só recebe texto.
 

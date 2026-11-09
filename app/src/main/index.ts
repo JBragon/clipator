@@ -12,6 +12,7 @@ import { homedir } from 'node:os'
 import { isAbsolute, join, relative, resolve } from 'node:path'
 import * as terminal from './terminal'
 import * as chat from './chat'
+import icone from '../../resources/icon.png?asset'
 
 type Prefs = { workspace?: string; tema?: 'sistema' | 'claro' | 'escuro' }
 type InfoMotor = { porta?: number; token?: string; erro?: string; log: string; workspace: string }
@@ -167,6 +168,7 @@ function criarJanela(): void {
     minWidth: 1024,
     minHeight: 640,
     title: 'Clipator',
+    icon: icone,
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

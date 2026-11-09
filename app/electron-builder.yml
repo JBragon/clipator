@@ -2,9 +2,12 @@ appId: org.clipator.app
 productName: Clipator
 directories:
   output: release
+  buildResources: resources
 files:
   - out/**
   - package.json
+  # ícone da janela: o main lê resources/icon.png
+  - resources/icon.png
 # o node-pty (terminal das conversas com a IA) carrega binários nativos: ficam fora do .asar
 asarUnpack:
   - node_modules/node-pty/**
