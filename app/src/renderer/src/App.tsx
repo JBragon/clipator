@@ -178,7 +178,23 @@ export function App(): React.JSX.Element {
           <main className="centro">
             <div className="abas" role="tablist">
               {abas.map((a) => (
-                <div key={a.id} role="tab" aria-selected={a.id === ativa} className={`aba ${a.id === ativa ? 'ativa' : ''}`} onClick={() => setAtiva(a.id)}>
+                <div
+                  key={a.id}
+                  role="tab"
+                  aria-selected={a.id === ativa}
+                  className={`aba ${a.id === ativa ? 'ativa' : ''}`}
+                  onClick={() => setAtiva(a.id)}
+                  // Clique com o botão do meio (scroll) fecha a aba, como no navegador.
+                  // Sem o preventDefault no mousedown, o Windows liga o autoscroll.
+                  onMouseDown={(e) => {
+                    if (e.button === 1) e.preventDefault()
+                  }}
+                  onAuxClick={(e) => {
+                    if (e.button !== 1) return
+                    e.preventDefault()
+                    fechar(a.id)
+                  }}
+                >
                   {a.tipo === 'projeto' ? '🎬 ' : ''}
                   {a.titulo}
                   <button className="fechar" aria-label={t.fechar} onClick={(e) => (e.stopPropagation(), fechar(a.id))}>
