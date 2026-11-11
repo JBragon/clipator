@@ -19,6 +19,7 @@ import { AvisoCookies, ehErroDeCookies } from './AvisoCookies'
 import { abrirConversa, PainelConversa, type PedidoConversa } from './ConversaIA'
 import { EditorVideo } from './EditorVideo'
 import { EditarDuracao, type AlvoDuracao } from './EditarDuracao'
+import { Acabamento } from './Acabamento'
 
 type Detalhe = {
   meta: { titulo: string; etapas: Record<string, { status: string; erro?: string }>; origem?: { tipo: string; valor: string } }
@@ -655,6 +656,7 @@ function EditorClip(props: {
               <span className="dica">{msg}</span>
             </div>
           </div>
+          <Acabamento api={api} base={base} clip={clip} jobs={jobs} aoMudar={aoMudar} />
           <Thumbs api={api} base={base} clipId={c.id} jobs={jobs} raiz={raiz} />
           <section className="edicao-com-ia">
             <h4 style={{ margin: 0 }}>✨ {t.edicaoComIA}</h4>

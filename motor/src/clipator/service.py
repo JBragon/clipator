@@ -51,6 +51,7 @@ class Servico:
         self.fila.registrar("conta_youtube", self._job_conta_youtube)
         self.fila.registrar("firefox_youtube", self._job_firefox_youtube)
         self.fila.registrar("thumbnail_ia", self._job_thumbnail_ia)
+        self.fila.registrar("acabamento", self._job_acabamento)
 
     def projeto(self, canal: str, projeto: str) -> ProjetoWS:
         return self.ws.canal(canal).projeto(projeto)
@@ -172,6 +173,14 @@ class Servico:
         if p.get("canal") and p.get("projeto"):
             r["job"] = self.fila.enviar("analisar", {"canal": p["canal"], "projeto": p["projeto"], "cookies_navegador": "firefox"})
         return r
+
+    def _job_acabamento(self, p: dict, ctx: ContextoJob) -> Any:
+        """Música de fundo e ajustes de imagem em cima do clip gerado (vira uma versão do clip)."""
+        from . import acabamento
+
+        ac = acabamento.Acabamento.model_validate(p.get("ajustes") or {})
+        ctx.progresso(0.02, "aplicando o acabamento")
+        return acabamento.aplicar(self.projeto(p["canal"], p["projeto"]), p["clip"], ac, ctx.progresso, ctx.cancelar)
 
     def _job_revisao(self, p: dict, ctx: ContextoJob) -> Any:
         """Revisão antes de publicar (nota e o que corrigir); sem IA, pelas regras."""

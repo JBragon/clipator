@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from . import __version__, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
+from . import __version__, acabamento, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
 from .ai import detectar_agentes
 from .ai.adapter import ErroIA, abrir_login
 from .models import Clip, ConfigApp, PedidoIA
@@ -999,6 +999,48 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
         except FileNotFoundError as exc:
             raise HTTPException(404, str(exc)) from exc
         return {"ok": True}
+
+    # ---- acabamento do passo 4 (música de fundo e ajustes de imagem no clip gerado) ----
+    @app.get("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/acabamento", dependencies=dep)
+    def ver_acabamento(canal: str, projeto: str, clip_id: str) -> dict:
+        try:
+            return acabamento.estado(proj(canal, projeto), clip_id)
+        except acabamento.ErroAcabamento as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.post("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/acabamento", dependencies=dep)
+    def aplicar_acabamento(canal: str, projeto: str, clip_id: str, dados: acabamento.Acabamento) -> dict:
+        p = proj(canal, projeto)
+        try:
+            acabamento.base_do_clip(p, clip_id)
+            if dados.musica:
+                acabamento.caminho_musica(p.canal.path, dados.musica.arquivo)
+        except acabamento.ErroAcabamento as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+        return {"job": srv.fila.enviar("acabamento", {"canal": canal, "projeto": projeto, "clip": clip_id,
+                                                      "ajustes": dados.model_dump(mode="json")})}
+
+    @app.get("/api/canais/{canal}/musicas", dependencies=dep)
+    def listar_musicas(canal: str) -> list[dict]:
+        return acabamento.listar_musicas(_pasta_canal(canal))
+
+    @app.post("/api/canais/{canal}/musicas", dependencies=dep)
+    def enviar_musica(canal: str, dados: dict) -> dict:
+        import base64
+        import binascii
+
+        pasta = _pasta_canal(canal)
+        bruto = str(dados.get("arquivo") or "").split(",")[-1]
+        if len(bruto) > acabamento.LIMITE_MUSICA * 4 // 3 + 8:
+            raise HTTPException(400, f"O arquivo passa do limite de {acabamento.LIMITE_MUSICA // (1024 * 1024)} MB.")
+        try:
+            return acabamento.salvar_musica(pasta, str(dados.get("nome") or ""), base64.b64decode(bruto, validate=True))
+        except (acabamento.ErroAcabamento, binascii.Error, ValueError) as exc:
+            raise HTTPException(400, str(exc)) from exc
 
     @app.get("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/postagem", dependencies=dep)
     def ver_postagem(canal: str, projeto: str, clip_id: str) -> dict:
