@@ -1,3 +1,4 @@
+// @ts-nocheck: exemplo de documentação da skill, tirado de outro projeto (Lace); os imports '~/threads/...' não existem aqui
 // Complete implementation of condition-based waiting utilities
 // From: Lace test infrastructure improvements (2025-10-03)
 // Context: Fixed 15 flaky tests by replacing arbitrary timeouts
