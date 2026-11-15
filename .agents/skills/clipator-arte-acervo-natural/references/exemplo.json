@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-acervo-natural",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Vamos",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "comparar",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "estas",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "duas",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "formas.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "Observe",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "o",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "detalhe",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "em",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "cada",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "uma.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Vamos comparar estas duas formas.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Vamos comparar estas duas",
+      "descricao": "Abrir a prancheta com dois exemplares; Destacar a característica do primeiro",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "colunas": 2,
+        "ocupacao_celula": 0.75,
+        "zoom_detalhe": 1.6,
+        "margem_interna": 0.08
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Observe o detalhe em cada uma.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Observe o detalhe em",
+      "descricao": "Mover a lupa para o detalhe do segundo; Fechar com os dois exemplares e uma observação curta",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "colunas": 2,
+        "ocupacao_celula": 0.75,
+        "zoom_detalhe": 1.6,
+        "margem_interna": 0.08
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

@@ -1,0 +1,9 @@
+id: clipator-arte-mecanismo-facetado
+nome: "Mecanismo facetado — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de mecanismo facetado para como funciona, fluxo, componentes, dependência e comparação técnica, ou implementa esse estilo no Clipator quando solicitado."

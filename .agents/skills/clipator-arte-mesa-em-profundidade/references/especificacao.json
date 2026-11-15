@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-mesa-em-profundidade",
+  "nome": "Mesa em profundidade",
+  "familia": "Colagem espacial",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Cartões fotográficos são distribuídos em uma mesa vista de lado, revelando profundidade por sombras e deslocamento suave.",
+  "usar_em": "linha de raciocínio, sequência de fotos e apresentação de alternativas",
+  "composicao": "Três cartões em trilhos de profundidade, com o principal à frente e os dois seguintes parcialmente visíveis. Uma guia lateral conecta a ordem de leitura.",
+  "material_e_luz": "Cartão grosso com borda neutra, fotografia sem contorno de adesivo e mesa fosca. Sombras têm distância proporcional à altura do cartão.",
+  "movimento": "O cartão ativo desliza para a frente e para; câmera faz deslocamento horizontal de até 3%. Ao trocar de assunto, o cartão volta ao trilho e o próximo avança.",
+  "construcao": "Posicione cartões por profundidade normalizada e calcule escala, deslocamento e sombra a partir dela. Na alternativa CSS use perspectiva fixa; não acumule transformações de um seek anterior.",
+  "cores": {
+    "fundo": "#213638",
+    "superficie": "#365153",
+    "texto": "#F0E8D8",
+    "texto_suave": "#A8BCB7",
+    "primaria": "#D39362",
+    "destaque": "#88B1C2"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "hibrido",
+  "complexidade": "media",
+  "alternativa_leve": "Cartões sobrepostos em 2D com escala e sombra fixas; manter a ordem e o avanço por posição.",
+  "parametros_visuais": {
+    "cartoes": 3,
+    "paralaxe_maxima": 0.03,
+    "avanco_relativo": 0.18,
+    "rotacao_maxima_graus": 2
+  },
+  "fases": [
+    "Abrir a mesa com três cartões",
+    "Avançar o primeiro assunto e revelar sua nota",
+    "Recuar o primeiro e avançar o segundo",
+    "Alinhar os cartões numa vista final de conjunto"
+  ],
+  "criterios": [
+    "O cartão em leitura não fica coberto por outro.",
+    "O texto permanece nítido quando o cartão avança.",
+    "Trocar a foto não muda a ordem temporal."
+  ],
+  "evitar": "Adesivos recortados copiados, batidas repetidas na mesa e profundidade exagerada que distorce rostos.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "cartoes": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 4
+    },
+    "paralaxe_maxima": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.04
+    },
+    "avanco_relativo": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.25
+    },
+    "rotacao_maxima_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 3
+    }
+  }
+}

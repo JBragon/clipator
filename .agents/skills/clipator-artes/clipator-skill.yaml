@@ -1,0 +1,9 @@
+id: clipator-artes
+nome: Artes do Clipator — integração
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: Integra 22 direções visuais próprias ao motor local do Clipator.

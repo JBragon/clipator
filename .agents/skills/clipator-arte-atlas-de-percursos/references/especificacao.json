@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-atlas-de-percursos",
+  "nome": "Atlas de percursos",
+  "familia": "Geografia editorial",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um atlas claro mostra trajetos e relações entre regiões com um cursor de percurso e notas laterais.",
+  "usar_em": "lugares, deslocamentos, logística e cronologia geográfica",
+  "composicao": "Mapa vetorial simplificado com no máximo cinco marcos e dois rótulos simultâneos. A escala e o norte só aparecem se a projeção e os dados forem conhecidos.",
+  "material_e_luz": "Terra em verde suave, água clara e linhas de limite discretas. Trajeto em cobre com ponto de progresso; nenhuma base de satélite ou tile remoto é necessária.",
+  "movimento": "A câmera enquadra os marcos ativos com margem, percorre a rota e pausa antes de abrir cada nota. Regiões mudam de preenchimento por fade, sem piscar.",
+  "construcao": "Receba GeoJSON local com proveniência, projete por função documentada e faça fit dos bounds. Cruza antimeridiano com geometria dividida; use placeholders abstratos claramente identificados quando faltarem dados. Tempo ao longo da rota usa comprimento acumulado.",
+  "cores": {
+    "fundo": "#E8E6D7",
+    "superficie": "#D0D5BF",
+    "texto": "#2E4140",
+    "texto_suave": "#687D73",
+    "primaria": "#B56540",
+    "destaque": "#4D929A"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "alta",
+  "alternativa_leve": "Diagrama de pontos e setas com a etiqueta “trajeto esquemático”, sem fronteiras inventadas.",
+  "parametros_visuais": {
+    "max_marcos": 5,
+    "rotulos_simultaneos": 2,
+    "margem_enquadramento": 0.14,
+    "espessura_rota_px": 5
+  },
+  "fases": [
+    "Localizar os marcos do trecho",
+    "Traçar o caminho entre os dois primeiros",
+    "Abrir a nota do destino enquanto o mapa para",
+    "Recuar para ver o percurso completo"
+  ],
+  "criterios": [
+    "Lugar e direção do percurso correspondem aos dados.",
+    "Mapa esquemático é identificado como tal.",
+    "O zoom mantém todos os marcos relevantes legíveis."
+  ],
+  "evitar": "Território inventado, fronteira como afirmação política automática e expansão de mancha vermelha para insinuar eventos não ditos.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "max_marcos": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 5
+    },
+    "rotulos_simultaneos": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 2
+    },
+    "margem_enquadramento": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.25
+    },
+    "espessura_rota_px": {
+      "tipo": "inteiro",
+      "minimo": 3,
+      "maximo": 8
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-cidade-de-bolso",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "caminho",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "começa",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "nesta",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "rua.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "próxima",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "placa",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "mostra",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "o",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "destino.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "O caminho começa nesta rua.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "O caminho começa nesta",
+      "descricao": "Abrir a rua e o personagem parado; Atravessar dois marcos visuais ligados à fala",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "largura_buffer": 270,
+        "altura_buffer": 480,
+        "poses": 4,
+        "fps_sprite": 8,
+        "deslocamento_camera": 0.12
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A próxima placa mostra o destino.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A próxima placa mostra",
+      "descricao": "Parar diante da placa com a conclusão; Apagar a placa e terminar com a rua em repouso",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "largura_buffer": 270,
+        "altura_buffer": 480,
+        "poses": 4,
+        "fps_sprite": 8,
+        "deslocamento_camera": 0.12
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

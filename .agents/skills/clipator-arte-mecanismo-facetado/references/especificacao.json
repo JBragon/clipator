@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-mecanismo-facetado",
+  "nome": "Mecanismo facetado",
+  "familia": "Explicação 3D",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Peças de um mecanismo facetado se separam em uma vista explodida para explicar causa e resultado.",
+  "usar_em": "como funciona, fluxo, componentes, dependência e comparação técnica",
+  "composicao": "Até cinco componentes sobre uma base circular fosca, com um eixo comum de montagem. Um rótulo curto por componente e uma pequena faixa de entrada e saída.",
+  "material_e_luz": "Sólidos facetados de tons minerais, arestas limpas e um componente em destaque quente. Sem textura granulada; luz principal grande evita que as faces pareçam plástico brilhante.",
+  "movimento": "Separar componentes ao longo do eixo em 0,6 s, percorrer a transformação com um pulso lento e remontar. A câmera muda a aproximação no máximo 8%, sem orbitar durante rótulos.",
+  "construcao": "Defina transformações base e deslocamentos explodidos por peça; interpole os dois estados. Conexões aparecem só quando as peças estão separadas. Especifique uma entrada, uma operação e uma saída por cena.",
+  "cores": {
+    "fundo": "#23342F",
+    "superficie": "#364C43",
+    "texto": "#F0EFE1",
+    "texto_suave": "#AABDB1",
+    "primaria": "#E4A557",
+    "destaque": "#80C2C4"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Polígonos isométricos SVG com a mesma separação por eixo e o mesmo percurso.",
+  "parametros_visuais": {
+    "componentes": 4,
+    "explosao_relativa": 0.35,
+    "aproximacao_maxima": 0.08,
+    "duracao_separacao_s": 0.6
+  },
+  "fases": [
+    "Identificar o conjunto montado",
+    "Separar as peças e revelar suas funções",
+    "Percorrer entrada, transformação e saída",
+    "Remontar com o componente responsável destacado"
+  ],
+  "criterios": [
+    "A vista explodida não troca a ordem das peças.",
+    "O percurso explica a fala, em vez de só enfeitar o mecanismo.",
+    "Rótulos têm uma única peça de destino."
+  ],
+  "evitar": "Maquete urbana genérica para qualquer tema, partículas excessivas e HUD que não corresponde às peças.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "componentes": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 5
+    },
+    "explosao_relativa": {
+      "tipo": "numero",
+      "minimo": 0.1,
+      "maximo": 0.5
+    },
+    "aproximacao_maxima": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.08
+    },
+    "duracao_separacao_s": {
+      "tipo": "numero",
+      "minimo": 0.4,
+      "maximo": 1.2
+    }
+  }
+}

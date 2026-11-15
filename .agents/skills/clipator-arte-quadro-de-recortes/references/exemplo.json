@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-quadro-de-recortes",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Esta",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "peça",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "apresenta",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "o",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "assunto.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "seta",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "liga",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "as",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "partes.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Esta peça apresenta o assunto.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Esta peça apresenta o",
+      "descricao": "Assentar a peça principal na grade; Adicionar dois recortes de contexto",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "colunas": 3,
+        "fps_poses": 12,
+        "rotacao_maxima_graus": 3,
+        "margem_foto_relativa": 0.025
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A seta liga as partes.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A seta liga as",
+      "descricao": "Abrir a seta que mostra a relação; Imobilizar as peças e destacar a conclusão",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "colunas": 3,
+        "fps_poses": 12,
+        "rotacao_maxima_graus": 3,
+        "margem_foto_relativa": 0.025
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

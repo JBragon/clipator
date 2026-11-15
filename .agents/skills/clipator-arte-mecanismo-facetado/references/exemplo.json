@@ -1,0 +1,120 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-mecanismo-facetado",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Estas",
+      "inicio": 0.0,
+      "fim": 0.405
+    },
+    {
+      "texto": "partes",
+      "inicio": 0.45,
+      "fim": 0.855
+    },
+    {
+      "texto": "trabalham",
+      "inicio": 0.9,
+      "fim": 1.305
+    },
+    {
+      "texto": "juntas.",
+      "inicio": 1.35,
+      "fim": 1.755
+    },
+    {
+      "texto": "Separadas,",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "suas",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "funções",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "ficam",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "visíveis.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Estas partes trabalham juntas.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Estas partes trabalham juntas",
+      "descricao": "Identificar o conjunto montado; Separar as peças e revelar suas funções",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "componentes": 4,
+        "explosao_relativa": 0.35,
+        "aproximacao_maxima": 0.08,
+        "duracao_separacao_s": 0.6
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Separadas, suas funções ficam visíveis.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Separadas, suas funções ficam",
+      "descricao": "Percorrer entrada, transformação e saída; Remontar com o componente responsável destacado",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "componentes": 4,
+        "explosao_relativa": 0.35,
+        "aproximacao_maxima": 0.08,
+        "duracao_separacao_s": 0.6
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

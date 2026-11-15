@@ -1,0 +1,9 @@
+id: clipator-arte-arquivo-em-camadas
+nome: "Arquivo em camadas — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de arquivo em camadas para contexto histórico, análise de documentos e investigação com material fornecido, ou implementa esse estilo no Clipator quando solicitado."

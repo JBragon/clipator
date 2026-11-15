@@ -1,0 +1,9 @@
+id: clipator-arte-mapa-de-ideias
+nome: "Mapa de ideias — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de mapa de ideias para conceitos, relações, exemplos e tutoriais curtos, ou implementa esse estilo no Clipator quando solicitado."

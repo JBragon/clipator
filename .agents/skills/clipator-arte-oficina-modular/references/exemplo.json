@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-oficina-modular",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "A",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "base",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "sustenta",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "o",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "conjunto.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "Depois",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "as",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "partes",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "se",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "conectam.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "A base sustenta o conjunto.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "A base sustenta o",
+      "descricao": "Revelar bancada e primeiro módulo; Deslizar os subconjuntos em ordem e iluminar a junta ativa",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "modulos": 18,
+        "elevacao_relativa": 0.25,
+        "recuo_relativo": 0.03,
+        "ordem": "dependencias"
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Depois as partes se conectam.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Depois as partes se",
+      "descricao": "Segurar o objeto completo com uma etiqueta de função; Recolher a régua e devolver os módulos à bandeja se o modo laço estiver ativo",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "modulos": 18,
+        "elevacao_relativa": 0.25,
+        "recuo_relativo": 0.03,
+        "ordem": "dependencias"
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

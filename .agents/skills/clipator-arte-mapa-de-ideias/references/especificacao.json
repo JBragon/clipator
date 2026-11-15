@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-mapa-de-ideias",
+  "nome": "Mapa de ideias",
+  "familia": "Ilustração plana",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Formas planas e personagens geométricos organizam uma explicação em três ilhas conectadas.",
+  "usar_em": "conceitos, relações, exemplos e tutoriais curtos",
+  "composicao": "Uma ilha por etapa, com símbolo grande, rótulo de até quatro palavras e conector. Personagens sem identidade específica ocupam a borda, nunca o centro do dado.",
+  "material_e_luz": "Cores chapadas em áreas grandes, contorno escuro fino só em peças funcionais e sombras planas deslocadas. Evitar textura para preservar contraste em telas pequenas.",
+  "movimento": "Cada ilha cresce de 92% a 100%; o conector é desenhado depois da ilha de origem, antes da ilha de destino. Personagem aponta uma vez e fica quieto.",
+  "construcao": "Use primitivas SVG e paths próprios em uma biblioteca de componentes. Layout por grafo de até três nós com boxes medidos; caso não caiba, pagine em cenas, sem reduzir todos os elementos.",
+  "cores": {
+    "fundo": "#E6EEE8",
+    "superficie": "#C9DED4",
+    "texto": "#223D39",
+    "texto_suave": "#5D7970",
+    "primaria": "#C9664D",
+    "destaque": "#7198C3"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Mesmas ilhas sem personagem e com conectores estáticos.",
+  "parametros_visuais": {
+    "ilhas": 3,
+    "escala_entrada": 0.92,
+    "contorno_px": 3,
+    "duracao_conector_s": 0.4
+  },
+  "fases": [
+    "Apresentar a primeira ilha com o conceito",
+    "Desenhar a relação e abrir a segunda ilha",
+    "Mostrar o exemplo na terceira ilha",
+    "Reunir as ilhas numa vista de síntese"
+  ],
+  "criterios": [
+    "Setas só indicam relações realmente ditas.",
+    "Cada ícone é reconhecível sem depender da cor.",
+    "Texto não invade o conector."
+  ],
+  "evitar": "Nuvens moleculares decorativas, pessoas em toda cena e paleta rosa-ciano como fórmula fixa.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "ilhas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 3
+    },
+    "escala_entrada": {
+      "tipo": "numero",
+      "minimo": 0.9,
+      "maximo": 1
+    },
+    "contorno_px": {
+      "tipo": "inteiro",
+      "minimo": 2,
+      "maximo": 5
+    },
+    "duracao_conector_s": {
+      "tipo": "numero",
+      "minimo": 0.25,
+      "maximo": 0.8
+    }
+  }
+}

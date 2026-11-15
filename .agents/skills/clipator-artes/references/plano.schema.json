@@ -1,0 +1,368 @@
+{
+  "type": "object",
+  "properties": {
+    "contrato": {
+      "const": "clipator-arte/1"
+    },
+    "estilo": {
+      "enum": [
+        "clipator-arte-oficina-modular",
+        "clipator-arte-cidade-de-bolso",
+        "clipator-arte-costura-viva",
+        "clipator-arte-terrario-tecnico",
+        "clipator-arte-resina-em-movimento",
+        "clipator-arte-arquivo-em-camadas",
+        "clipator-arte-letras-de-oficina",
+        "clipator-arte-mecanismo-facetado",
+        "clipator-arte-acervo-natural",
+        "clipator-arte-jardim-de-luz",
+        "clipator-arte-anotacao-em-foco",
+        "clipator-arte-janela-em-profundidade",
+        "clipator-arte-mapa-de-ideias",
+        "clipator-arte-quadro-de-recortes",
+        "clipator-arte-painel-de-variacoes",
+        "clipator-arte-atlas-de-percursos",
+        "clipator-arte-revista-de-bancada",
+        "clipator-arte-camadas-do-terreno",
+        "clipator-arte-gesto-de-papel",
+        "clipator-arte-caderno-de-materiais",
+        "clipator-arte-tinta-em-etapas",
+        "clipator-arte-mesa-em-profundidade"
+      ]
+    },
+    "modo": {
+      "enum": [
+        "fala",
+        "manual"
+      ]
+    },
+    "semente": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "duracao_s": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 86400
+    },
+    "formato": {
+      "type": "object",
+      "properties": {
+        "largura": {
+          "type": "integer",
+          "minimum": 256,
+          "maximum": 7680
+        },
+        "altura": {
+          "type": "integer",
+          "minimum": 256,
+          "maximum": 7680
+        },
+        "fps": {
+          "enum": [
+            24,
+            25,
+            30,
+            50,
+            60
+          ]
+        }
+      },
+      "required": [
+        "largura",
+        "altura",
+        "fps"
+      ],
+      "additionalProperties": false
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "tipo": {
+          "const": "em-cima"
+        },
+        "proporcao": {
+          "type": "number",
+          "minimum": 0.25,
+          "maximum": 0.7
+        }
+      },
+      "required": [
+        "tipo",
+        "proporcao"
+      ],
+      "additionalProperties": false
+    },
+    "movimento_reduzido": {
+      "type": "boolean"
+    },
+    "palavras": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "texto": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "inicio": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "fim": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 86400
+          }
+        },
+        "required": [
+          "texto",
+          "inicio",
+          "fim"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 100000
+    },
+    "cenas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "ancora": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "texto": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  },
+                  "ocorrencia": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000
+                  }
+                },
+                "required": [
+                  "texto",
+                  "ocorrencia"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "inicio_s": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "fim_s": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "texto": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1600
+          },
+          "objetos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+                },
+                "tipo": {
+                  "enum": [
+                    "forma-procedural",
+                    "icone-local",
+                    "texto"
+                  ]
+                },
+                "descricao": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 800
+                }
+              },
+              "required": [
+                "id",
+                "tipo",
+                "descricao"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 100
+          },
+          "midias": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "arquivo": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "credito": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "licenca": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              },
+              "required": [
+                "id",
+                "arquivo",
+                "credito",
+                "licenca"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          },
+          "parametros": {
+            "type": "object",
+            "maxProperties": 30,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,63}$"
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "number",
+                  "minimum": -100000,
+                  "maximum": 100000
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "ancora",
+          "inicio_s",
+          "fim_s",
+          "texto",
+          "descricao",
+          "objetos",
+          "midias",
+          "parametros"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1000
+    },
+    "avisos": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      }
+    }
+  },
+  "required": [
+    "contrato",
+    "estilo",
+    "modo",
+    "semente",
+    "duracao_s",
+    "formato",
+    "layout",
+    "movimento_reduzido",
+    "palavras",
+    "cenas",
+    "avisos"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plano de arte proposto para o Clipator",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "modo": {
+            "const": "fala"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "palavras": {
+            "minItems": 1
+          },
+          "cenas": {
+            "items": {
+              "properties": {
+                "ancora": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "modo": {
+            "const": "manual"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "cenas": {
+            "items": {
+              "properties": {
+                "ancora": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

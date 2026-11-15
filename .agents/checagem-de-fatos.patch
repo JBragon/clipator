@@ -1,0 +1,2269 @@
+diff --git a/app/src/renderer/src/components/Acabamento.tsx b/app/src/renderer/src/components/Acabamento.tsx
+index 562e3b8..ecb2375 100644
+--- a/app/src/renderer/src/components/Acabamento.tsx
++++ b/app/src/renderer/src/components/Acabamento.tsx
+@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
+ import type { Api, Clip, Job } from '../api'
+ import { useT } from '../i18n'
+ 
+-// Acabamento do passo 4: música de fundo e ajustes de imagem em cima do clip já gerado.
++// Acabamento do passo 5: música de fundo e ajustes de imagem em cima do clip já gerado.
+ // O motor aplica tudo com FFmpeg numa versão nova do clip (edicoes/<data>-acabamento/); a prévia aqui é
+ // feita no navegador (filtros CSS e um <audio> sincronizado com o vídeo) e por isso é aproximada.
+ 
+diff --git a/app/src/renderer/src/components/DirecaoDoClip.tsx b/app/src/renderer/src/components/DirecaoDoClip.tsx
+index 2b7a2e2..df70a99 100644
+--- a/app/src/renderer/src/components/DirecaoDoClip.tsx
++++ b/app/src/renderer/src/components/DirecaoDoClip.tsx
+@@ -25,7 +25,7 @@ const CORES = ['fundo', 'texto', 'primaria', 'destaque', 'bom', 'ruim'] as const
+ const CANTOS = ['inferior-direito', 'inferior-esquerdo', 'superior-direito', 'superior-esquerdo'] as const
+ const opcaoDe = (c: Composicao): string => (c.layout === 'janela' ? (c.janela_canto ?? 'inferior-direito') : c.layout)
+ 
+-// Passo 4, depois do render: a direção de arte que a IA fez para o clip (análise, roteiro cena a cena, peças e
++// Passo 5, depois do render: a direção de arte que a IA fez para o clip (análise, roteiro cena a cena, peças e
+ // cores). O usuário ajusta o roteiro ou as cores e pede "Refazer com esta direção", que vira uma versão nova.
+ export function DirecaoDoClip(props: { api: Api; base: string; clip: string; jobs: Record<string, Job>; aoMudar(): void }): React.JSX.Element | null {
+   const { api, base, clip, jobs, aoMudar } = props
+diff --git a/app/src/renderer/src/components/EditarDuracao.tsx b/app/src/renderer/src/components/EditarDuracao.tsx
+index 5cff52c..585b641 100644
+--- a/app/src/renderer/src/components/EditarDuracao.tsx
++++ b/app/src/renderer/src/components/EditarDuracao.tsx
+@@ -5,7 +5,7 @@ import {
+   arrastar, arrastarEncaixado, bordasDasPalavras, janelaDePerto, lerTempo, marcas, mmss, type Modo, type Trecho
+ } from '../trecho'
+ 
+-// Tela "Editar duração" de um corte sugerido (passo 2) ou de um clip (passo 4), short ou longo: o vídeo pai em cima, tocando só o
++// Tela "Editar duração" de um corte sugerido (passo 2) ou de um clip (passo 5), short ou longo: o vídeo pai em cima, tocando só o
+ // trecho escolhido, e embaixo a trilha do vídeo pai inteiro e a trilha de perto, com a faixa do corte.
+ // Arrastar as alças muda o início ou o fim; arrastar a faixa move o corte inteiro. Salvar grava o trecho
+ // no motor (PUT .../trecho). No clip, o motor leva junto os itens do editor e renderiza de novo se já tinha vídeo.
+diff --git a/app/src/renderer/src/components/MelhorarIA.tsx b/app/src/renderer/src/components/MelhorarIA.tsx
+index 21b4625..084f9ca 100644
+--- a/app/src/renderer/src/components/MelhorarIA.tsx
++++ b/app/src/renderer/src/components/MelhorarIA.tsx
+@@ -10,7 +10,7 @@ type Lado = { n: number; resumo: string[]; feedback: string; origem: string; ite
+ // pede para abrir as Configurações (o App escuta)
+ export const abrirConfiguracoes = (): void => { window.dispatchEvent(new CustomEvent('clipator:abrir-configuracoes')) }
+ 
+-// Passo 4: "Melhorar com IA" e o histórico de versões da edição de um clip. Cada rodada da IA, cada edição à
++// Passo 5: "Melhorar com IA" e o histórico de versões da edição de um clip. Cada rodada da IA, cada edição à
+ // mão e cada mudança pelo MCP vira uma versão (v1, v2…) que dá para ver, comparar e pôr de volta em uso.
+ export function MelhorarIA(props: { api: Api; base: string; clip: string; jobs: Record<string, Job>; aoMudar(): void }): React.JSX.Element {
+   const { api, base, clip, jobs, aoMudar } = props
+diff --git a/app/src/renderer/src/components/PassoEstilo.tsx b/app/src/renderer/src/components/PassoEstilo.tsx
+index 83092da..38ba593 100644
+--- a/app/src/renderer/src/components/PassoEstilo.tsx
++++ b/app/src/renderer/src/components/PassoEstilo.tsx
+@@ -11,9 +11,25 @@ const semVazios = (a: AjustesEstilo): AjustesEstilo => Object.fromEntries(Object
+   .map(([k, v]) => [k, v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined && x !== '')) : v])
+   .filter(([, v]) => v !== undefined && (typeof v !== 'object' || Object.keys(v as object).length))) as AjustesEstilo
+ export const escolhaInicial = (): EscolhaEstilo => ({ estilo: '', ajustes: {}, formato: '', cartela: true, pedidoIA: null })
++const temAjustesEm = (a: AjustesEstilo): boolean => Object.values(a).some((v) => v !== undefined && (typeof v !== 'object' || Object.keys(v).length))
++
++// cria os clips dos cortes escolhidos com o estilo do passo 3 (e manda renderizar); usado nos passos 3 e 4
++export async function criarClips(api: Api, base: string, escolhidos: Candidato[], escolha: EscolhaEstilo, renderizar: boolean): Promise<number> {
++  const pedido = escolha.pedidoIA?.texto.trim() ? { ...escolha.pedidoIA, texto: escolha.pedidoIA.texto.trim() } : null
++  const clips = await api.post<{ id: string }[]>(`${base}/selecionar`, {
++    ids: escolhidos.map((c) => c.id),
++    formato: escolha.formato || null,
++    estilo: escolha.estilo || null,
++    cartela: escolha.cartela,
++    pedido_ia: pedido,
++    ajustes: temAjustesEm(escolha.ajustes) ? semVazios(escolha.ajustes) : null
++  })
++  if (renderizar) await api.post(`${base}/renderizar`, { clips: clips.map((c) => c.id) })
++  return clips.length
++}
+ 
+ // Passo 3: o estilo de animação e edição dos cortes escolhidos no passo 2, com a amostra de cada estilo.
+-// Daqui saem os clips (criar ou criar e renderizar).
++// Daqui o usuário segue para a checagem de fatos (passo 4) ou já cria os clips.
+ export function PassoEstilo(props: {
+   api: Api
+   base: string
+@@ -25,9 +41,10 @@ export function PassoEstilo(props: {
+   escolha: EscolhaEstilo
+   setEscolha(e: EscolhaEstilo): void
+   voltarCortes(): void
++  checarFatos(): void
+   aposCriar(n: number): void
+ }): React.JSX.Element {
+-  const { api, base, canal, cands, selecionados, setSelecionados, jobs, escolha, setEscolha, voltarCortes, aposCriar } = props
++  const { api, base, canal, cands, selecionados, setSelecionados, jobs, escolha, setEscolha, voltarCortes, checarFatos, aposCriar } = props
+   const t = useT()
+   const g = t.gal
+   const [msg, setMsg] = useState('')
+@@ -45,25 +62,16 @@ export function PassoEstilo(props: {
+     return () => { vivo = false }
+   }, [api, base, primeiro])
+   const melhor = sugestao[0]
+-  const temAjustes = Object.values(escolha.ajustes).some((v) => v !== undefined && (typeof v !== 'object' || Object.keys(v).length))
++  const temAjustes = temAjustesEm(escolha.ajustes)
+ 
+-  const criar = async (renderizar: boolean): Promise<void> => {
++  const criar = async (): Promise<void> => {
+     setEnviando(true)
+     try {
+-      const pedido = escolha.pedidoIA?.texto.trim() ? { ...escolha.pedidoIA, texto: escolha.pedidoIA.texto.trim() } : null
+-      const clips = await api.post<{ id: string }[]>(`${base}/selecionar`, {
+-        ids: escolhidos.map((c) => c.id),
+-        formato: escolha.formato || null,
+-        estilo: escolha.estilo || null,
+-        cartela: escolha.cartela,
+-        pedido_ia: pedido,
+-        ajustes: temAjustes ? semVazios(escolha.ajustes) : null
+-      })
+-      if (renderizar) await api.post(`${base}/renderizar`, { clips: clips.map((c) => c.id) })
++      const n = await criarClips(api, base, escolhidos, escolha, false)
+       setMsg('')
+       setSelecionados(new Set())
+       setEscolha({ ...escolha, pedidoIA: null })
+-      aposCriar(clips.length)
++      aposCriar(n)
+     } catch (e) {
+       setMsg(e instanceof Error ? e.message : String(e))
+     }
+@@ -92,9 +100,9 @@ export function PassoEstilo(props: {
+         <label className="linha">
+           <input type="checkbox" checked={escolha.cartela} onChange={(e) => mudar({ cartela: e.target.checked })} /> {t.cartela}
+         </label>
+-        <button disabled={!escolhidos.length || enviando} onClick={() => void criar(false)}>{t.criarClips}</button>
+-        <button className="primario" disabled={!escolhidos.length || enviando} onClick={() => void criar(true)}>
+-          {g.renderizarN(escolhidos.length)}
++        <button disabled={!escolhidos.length || enviando} onClick={() => void criar()}>{t.criarClips}</button>
++        <button className="primario" disabled={!escolhidos.length || enviando} onClick={checarFatos}>
++          {t.fatos.irPara} →
+         </button>
+       </div>
+       {!escolhidos.length && (
+diff --git a/app/src/renderer/src/components/ProjetoView.tsx b/app/src/renderer/src/components/ProjetoView.tsx
+index 7a4b05e..5175c11 100644
+--- a/app/src/renderer/src/components/ProjetoView.tsx
++++ b/app/src/renderer/src/components/ProjetoView.tsx
+@@ -12,7 +12,7 @@ import { MelhorarIA } from './MelhorarIA'
+ import { RelatoJob } from './RelatoJob'
+ import { DirecaoDoClip } from './DirecaoDoClip'
+ import { PassoEstilo, escolhaInicial, type EscolhaEstilo } from './PassoEstilo'
+-import { PASSO_CLIPS, PASSO_ESTILO, PASSO_PUBLICACAO, chavePasso, lerPasso, passoPadrao, type Passo } from '../passos'
++import { PASSO_CHECAGEM, PASSO_CLIPS, PASSO_ESTILO, PASSO_PUBLICACAO, chavePasso, lerPasso, passoPadrao, type Passo } from '../passos'
+ import { SonsPrevia } from './SonsPrevia'
+ import { EditarComIA } from './EditarComIA'
+ import { AvisoCookies, ehErroDeCookies } from './AvisoCookies'
+@@ -20,6 +20,7 @@ import { abrirConversa, PainelConversa, type PedidoConversa } from './ConversaIA
+ import { EditorVideo } from './EditorVideo'
+ import { EditarDuracao, type AlvoDuracao } from './EditarDuracao'
+ import { Acabamento } from './Acabamento'
++import { Checagem, type ResumoChecagem } from './Checagem'
+ 
+ type Detalhe = {
+   meta: { titulo: string; etapas: Record<string, { status: string; erro?: string }>; origem?: { tipo: string; valor: string } }
+@@ -72,7 +73,8 @@ export function ProjetoView(props: Props): React.JSX.Element {
+   const [raiz, setRaiz] = useState('')
+   const [temHF, setTemHF] = useState(true)
+   const [focado, setFocado] = useState<string | null>(null)
+-  // passo da tela: 1 vídeo e status, 2 cortes sugeridos, 3 estilo, 4 clips gerados, 5 publicação (lembrado por projeto)
++  // passo da tela: 1 vídeo e status, 2 cortes sugeridos, 3 estilo, 4 checagem de fatos, 5 clips gerados, 6 publicação
++  // (lembrado por projeto)
+   const [passo, setPassoEstado] = useState<Passo | null>(() => {
+     try {
+       return lerPasso(localStorage, canal, projeto)
+@@ -83,6 +85,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
+   const [escolha, setEscolha] = useState<EscolhaEstilo>(escolhaInicial)
+   const [avisoClips, setAvisoClips] = useState(0)
+   const [filtroClips, setFiltroClips] = useState<'todos' | 'shorts' | 'outros'>('todos')
++  const [resumoFatos, setResumoFatos] = useState<{ resumo: ResumoChecagem; candidatos: string[] } | null>(null)
+   const video = useRef<HTMLVideoElement>(null)
+ 
+   useEffect(() => {
+@@ -92,12 +95,16 @@ export function ProjetoView(props: Props): React.JSX.Element {
+     }, () => undefined)
+   }, [api])
+ 
++  const carregarFatos = (): void => {
++    api.get<{ resumo: ResumoChecagem; candidatos: string[] }>(`${base}/checagem`).then(setResumoFatos, () => setResumoFatos(null))
++  }
+   const carregar = useCallback(() => {
+     api.get<Detalhe>(base).then(setDet, (e) => setErro((e instanceof Error ? e.message : String(e))))
+     api.get<Transcricao>(`${base}/transcricao`).then(setTrans, () => setTrans(null))
+     api.get<Sinais>(`${base}/sinais`).then((s) => setSinais(s.energia_db ? s : null), () => setSinais(null))
+     api.get<Candidato[]>(`${base}/candidatos`).then(setCands, () => setCands([]))
+-  }, [api, base])
++    carregarFatos()
++  }, [api, base]) // eslint-disable-line react-hooks/exhaustive-deps
+ 
+   useEffect(carregar, [carregar, versao])
+   useEffect(() => {
+@@ -147,7 +154,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
+     else v.addEventListener('loadedmetadata', tocar, { once: true })
+   }, [passo, det?.video])
+ 
+-  // abre a conversa com a IA no painel do passo 4 (ou num terminal externo, fora do Electron)
++  // abre a conversa com a IA no painel do passo 5 (ou num terminal externo, fora do Electron)
+   const conversar = async (p: PedidoConversa): Promise<string> => {
+     const s = await abrirConversa(api, base, canal, projeto, p, det?.clips ?? [], { cols: 100, rows: 30 })
+     if (!s) return t.conversaExterna
+@@ -206,7 +213,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
+   const analisando = jobAtivo?.tipo === 'analisar'
+   const longos = cands.filter((c) => c.modo === 'longo').length
+   const shorts = cands.length - longos
+-  // passo padrão: 1 sem análise, 2 com cortes e sem clips, 4 com clips
++  // passo padrão: 1 sem análise, 2 com cortes e sem clips, 5 com clips
+   const passoAtual: Passo = passo ?? passoPadrao(analiseFeita && !analisando, det.clips.length > 0, cands.length > 0)
+   const estadoPasso = (p: Passo): 'feito' | 'andamento' | 'vazio' | 'erro' => {
+     if (p === 1) {
+@@ -216,6 +223,10 @@ export function ProjetoView(props: Props): React.JSX.Element {
+     }
+     if (p === 2) return cands.length ? 'feito' : analisando ? 'andamento' : 'vazio'
+     if (p === PASSO_ESTILO) return det.clips.length ? 'feito' : 'vazio'
++    if (p === PASSO_CHECAGEM) {
++      if (jobsDoProjeto.some((j) => j.tipo === 'checagem' && (j.status === 'rodando' || j.status === 'na_fila'))) return 'andamento'
++      return resumoFatos && resumoFatos.candidatos.length && !resumoFatos.resumo.pendente ? 'feito' : 'vazio'
++    }
+     if (p === PASSO_PUBLICACAO) return jobsDoProjeto.some((j) => j.tipo === 'postagem' && (j.status === 'rodando' || j.status === 'na_fila')) ? 'andamento' : 'vazio'
+     const renderizando = jobsDoProjeto.some((j) => j.tipo === 'renderizar' && (j.status === 'rodando' || j.status === 'na_fila'))
+     return renderizando ? 'andamento' : det.clips.length ? 'feito' : 'vazio'
+@@ -224,6 +235,8 @@ export function ProjetoView(props: Props): React.JSX.Element {
+     { n: 1, nome: t.passoVideo, detalhe: analisando ? `${Math.round((jobAtivo?.progresso ?? 0) * 100)}%` : analiseFeita ? t.analiseFeita : t.analisePendente },
+     { n: 2, nome: t.passoCortes, detalhe: t.contagemCortes(shorts, longos) },
+     { n: PASSO_ESTILO, nome: t.passoEstilo, detalhe: escolha.estilo || (selecionados.size ? t.selecionados(selecionados.size) : t.gal.escolher) },
++    { n: PASSO_CHECAGEM, nome: t.passoChecagem, detalhe: !resumoFatos?.candidatos.length ? t.fatos.naoChecado
++      : resumoFatos.resumo.pendente ? t.fatos.paraConferir(resumoFatos.resumo.pendente) : t.fatos.conferidos(resumoFatos.resumo.total) },
+     { n: PASSO_CLIPS, nome: t.passoClips, detalhe: t.contagemClips(det.clips.length) },
+     { n: PASSO_PUBLICACAO, nome: t.passoPublicacao, detalhe: t.contagemProntos(det.clips.filter((c) => c.saida).length) }
+   ]
+@@ -369,6 +382,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
+           )}
+           <PassoEstilo api={api} base={base} canal={canal} cands={cands} selecionados={selecionados} setSelecionados={setSelecionados}
+             jobs={jobs} escolha={escolha} setEscolha={setEscolha} voltarCortes={() => setPasso(2)}
++            checarFatos={() => setPasso(PASSO_CHECAGEM)}
+             aposCriar={(n) => {
+               aposCriar()
+               setPasso(PASSO_CLIPS)
+@@ -377,6 +391,19 @@ export function ProjetoView(props: Props): React.JSX.Element {
+         </>
+       )}
+ 
++      {passoAtual === PASSO_CHECAGEM && (
++        <Checagem api={api} base={base} canal={canal} projeto={projeto} cands={cands} jobs={jobs}
++          idsCortes={selecionados.size ? [...selecionados] : [...new Set(det.clips.map((c) => c.candidato).filter((x): x is string => !!x))]}
++          deClipsExistentes={!selecionados.size}
++          escolha={escolha} setEscolha={setEscolha} setSelecionados={setSelecionados}
++          voltarEstilo={() => setPasso(PASSO_ESTILO)} irParaClips={() => setPasso(PASSO_CLIPS)} aoMudar={carregarFatos}
++          aposCriar={(n) => {
++            aposCriar()
++            setPasso(PASSO_CLIPS)
++            setAvisoClips(n)
++          }} />
++      )}
++
+       {passoAtual === PASSO_CLIPS && (
+         <div className="passo-conteudo passo-clips">
+           {duracaoDe && det.clips.some((c) => c.id === duracaoDe) ? (
+diff --git a/app/src/renderer/src/estilo.css b/app/src/renderer/src/estilo.css
+index 7640a56..d0a0d66 100644
+--- a/app/src/renderer/src/estilo.css
++++ b/app/src/renderer/src/estilo.css
+@@ -502,7 +502,7 @@ label { color: var(--texto-2); }
+ .render-andamento { display: grid; gap: 4px; padding: 8px 10px; border-top: 1px solid var(--borda); }
+ .barra-render { height: 8px; border-radius: 4px; background: var(--fundo-3); overflow: hidden; }
+ .barra-render span { display: block; height: 100%; background: var(--acento); transition: width .4s; }
+-/* passo 4: publicação */
++/* passo 6: publicação */
+ .passo-publicacao { padding: 10px 14px; display: grid; gap: 12px; }
+ .pub-lista { display: flex; flex-wrap: wrap; gap: 6px; }
+ .pub-clip { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 14px; border: 1px solid var(--borda); border-radius: 10px; padding: 10px; background: var(--fundo-2); }
+@@ -587,7 +587,7 @@ label { color: var(--texto-2); }
+ .cena-previa .tipo { font-weight: 700; font-size: 11px; opacity: .9; }
+ .cena-previa .txt { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+ 
+-/* Melhorar com IA (passo 4) e a etiqueta "Usa IA" */
++/* Melhorar com IA (passo 5) e a etiqueta "Usa IA" */
+ .chip.usa-ia { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+ .cartao-estilo.sem-ia .amostra { opacity: .45; filter: grayscale(.6); }
+ .melhorar-ia { border: 1px solid var(--borda); border-radius: 8px; padding: 6px 10px; display: grid; gap: 6px; background: var(--fundo-2); }
+@@ -627,7 +627,7 @@ label { color: var(--texto-2); }
+ .modal.detalhe-estilo { position: relative; }
+ .fechar-modal { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; padding: 0; border-radius: 50%; z-index: 2;
+   display: grid; place-items: center; font-size: 15px; }
+-/* passo 4 depois de gerado: a edição com IA numa área só */
++/* passo 5 depois de gerado: a edição com IA numa área só */
+ .acabamento { border: 1px solid var(--borda); border-radius: 8px; padding: 8px 10px; display: grid; gap: 8px; }
+ .acab-corpo { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; align-items: start; }
+ .acab-previa { display: grid; gap: 4px; position: sticky; top: 0; }
+@@ -641,7 +641,7 @@ label { color: var(--texto-2); }
+ .acab-deslizante input[type=range] { grid-column: 1 / -1; width: 100%; padding: 0; border: none; background: none; accent-color: var(--acento); }
+ .acab-check { display: flex; gap: 6px; align-items: center; }
+ .edicao-com-ia { border: 1px solid var(--borda); border-radius: 8px; padding: 8px 10px; display: grid; gap: 8px; }
+-/* direção de arte do clip (passo 4, depois do render) */
++/* direção de arte do clip (passo 5, depois do render) */
+ .direcao-do-clip { display: grid; gap: 8px; }
+ .direcao-do-clip > summary { cursor: pointer; font-weight: 600; }
+ .direcao-do-clip section { display: grid; gap: 6px; }
+@@ -708,3 +708,38 @@ label { color: var(--texto-2); }
+ @media (max-width: 640px) {
+   .ed-dur-campos { grid-template-columns: 1fr; }
+ }
++
++/* passo 4: checagem de fatos */
++.passo-checagem { display: flex; flex-direction: column; min-height: 0; overflow: auto; }
++.checagem-corpo { display: grid; gap: 10px; padding: 10px 12px 16px; align-content: start; }
++.checagem-corpo > .dica { margin: 0; max-width: 900px; }
++.checagem-rodando { display: flex; align-items: center; gap: 10px; }
++.checagem-rodando .barra { flex: 0 1 260px; height: 6px; border-radius: 3px; background: var(--fundo-3); overflow: hidden; }
++.checagem-rodando .barra > span { display: block; height: 100%; background: var(--acento); transition: width .3s; }
++.checagem-avisos { margin: 0; padding-left: 4px; list-style: none; display: grid; gap: 2px; }
++.checagem-resumo { flex-wrap: wrap; gap: 6px; }
++.checagem-resumo .espaco { flex: 1; }
++.checagem-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 10px; }
++.cartao-fato { border: 1px solid var(--borda); border-left: 4px solid var(--aviso); border-radius: var(--raio); padding: 8px 10px; display: grid; gap: 8px; background: var(--fundo); }
++.cartao-fato.confirmado { border-left-color: var(--ok); }
++.cartao-fato.corrigido { border-left-color: var(--acento); }
++.cartao-fato.ignorado { border-left-color: var(--borda); opacity: .7; }
++.cabeca-fato { gap: 6px; }
++.cabeca-fato .espaco { flex: 1; }
++.cabeca-fato select { font-size: 12px; }
++.chip.status-fato.pendente { background: color-mix(in srgb, var(--aviso) 18%, transparent); color: var(--aviso); }
++.chip.status-fato.confirmado { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
++.chip.status-fato.corrigido { background: color-mix(in srgb, var(--acento) 18%, transparent); color: var(--acento); }
++.campo-fato { display: grid; gap: 3px; }
++.campo-fato .rotulo { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-2); }
++.campo-fato input { width: 100%; box-sizing: border-box; }
++.campo-fato .link { justify-self: start; font-size: 12px; }
++.trecho-fato { font-style: italic; }
++.fonte-fato { display: grid; gap: 4px; }
++.fonte-fato .linha { gap: 6px; }
++.campos-fonte { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
++.campos-fonte input { min-width: 0; }
++.fonte-fato .chip { margin-left: 6px; }
++.aviso-txt { color: var(--aviso); font-size: 12px; }
++.opcoes-fonte { margin: 0; padding: 6px 8px; list-style: none; display: grid; gap: 4px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--fundo-2); }
++.acoes-fato { gap: 8px; }
+diff --git a/app/src/renderer/src/i18n.ts b/app/src/renderer/src/i18n.ts
+index 9a87bee..3badf5a 100644
+--- a/app/src/renderer/src/i18n.ts
++++ b/app/src/renderer/src/i18n.ts
+@@ -163,6 +163,59 @@ const pt = {
+     usarV: (n: number) => `Usar a v${n}`,
+     ficarAtual: 'Ficar com a atual'
+   },
++  passoChecagem: '4. Checagem de fatos',
++  fatos: {
++    titulo: 'Checagem de fatos',
++    irPara: 'Checar fatos',
++    voltarEstilo: 'Voltar ao estilo',
++    explicacao: 'Antes de montar, confira o que a fala cita: pessoas, empresas, produtos, lugares e dados. Corrija o nome ou a fonte quando estiver errado. O que você conferir vai para a legenda, os textos na tela, as imagens reais e as fontes da descrição.',
++    explicacaoClips: 'Checagem dos cortes dos clips que já existem. O que você conferir vale quando o clip for renderizado de novo no passo 5.',
++    dosClips: (n: number) => `${n} corte${n === 1 ? '' : 's'} dos clips gerados`,
++    usarIA: 'Usar IA',
++    usarIADica: 'A IA lê só o texto dos cortes e acha mais nomes. Sem IA, valem as regras locais (nomes com maiúscula, lugares e números).',
++    identificar: 'Identificar',
++    identificarDeNovo: 'Identificar de novo',
++    identificando: 'Identificando…',
++    nadaAinda: 'Ainda não há checagem para estes cortes.',
++    cortesNovos: 'Há cortes escolhidos que ainda não foram checados.',
++    nadaCitado: 'Nenhum nome, lugar ou dado citado nestes cortes.',
++    comIA: 'identificado com IA',
++    semIA: 'identificado sem IA',
++    todos: 'Todos',
++    confirmarTodos: (n: number) => `Confirmar ${n} pendente${n === 1 ? '' : 's'}`,
++    irParaClips: 'Ver clips',
++    naoChecado: 'não checado',
++    paraConferir: (n: number) => `${n} para conferir`,
++    conferidos: (n: number) => (n ? `${n} conferido${n === 1 ? '' : 's'}` : 'nada citado'),
++    tipo: 'Tipo',
++    tipos: { pessoa: 'Pessoa', empresa: 'Empresa', organizacao: 'Organização', produto: 'Produto', lugar: 'Lugar', dado: 'Dado', outro: 'Outro nome' } as Record<string, string>,
++    status: { pendente: 'Para conferir', confirmado: 'Confirmado', corrigido: 'Corrigido', ignorado: 'Ignorado' } as Record<string, string>,
++    origens: { wikidata: 'Wikidata', 'natural-earth': 'base de mapas', fala: 'citada na fala', usuario: 'sua' } as Record<string, string>,
++    noCorte: (h: string) => `corte de ${h}`,
++    vezes: (n: number) => `${n} vezes`,
++    dito: 'Dito no vídeo',
++    identificado: 'Identificado como',
++    comoAparece: 'Como vai aparecer',
++    usarSugerido: (s: string) => `usar “${s}”`,
++    fonte: 'Fonte',
++    deOnde: 'De onde vem o dado',
++    semFonte: 'Sem fonte. Escreva uma ou busque no Wikidata.',
++    semFonteDado: 'Sem fonte. Escreva de onde vem o número (instituição, pesquisa ou link).',
++    fonteNome: 'Nome da fonte',
++    fonteLink: 'Link (opcional)',
++    editarFonte: 'Editar fonte',
++    buscarFonte: 'Buscar outra fonte',
++    limparFonte: 'Tirar a fonte',
++    nenhumaFonte: 'Nada encontrado no Wikidata com esse nome.',
++    salvarCorrecao: 'Salvar correção',
++    confirmar: 'Confirmar',
++    confirmado: 'Confirmado ✓',
++    corrigido: 'Correção salva ✓',
++    ignorar: 'Ignorar',
++    ignorarDica: 'Deixa como foi dito, sem troca, sem imagem e sem fonte',
++    ignoradoDica: 'Fica como foi dito no vídeo.',
++    desfazer: 'Desfazer'
++  },
+   passoEstilo: '3. Estilo',
+   gal: {
+     buscar: 'Buscar estilo',
+@@ -232,7 +285,7 @@ const pt = {
+     limparSelecao: 'Limpar seleção',
+     layouts: { 'em-cima': 'animação em cima', fundo: 'animação de fundo', sobreposto: 'cenas por cima', janela: 'vídeo na janela' } as Record<string, string>
+   },
+-  passoClips: '4. Clips gerados',
++  passoClips: '5. Clips gerados',
+   analiseFeita: 'análise pronta',
+   analisePendente: 'análise pendente',
+   contagemCortes: (s: number, l: number) => `${s} shorts · ${l} longos`,
+@@ -262,11 +315,11 @@ const pt = {
+   nTrechos: (n: number) => `${n} trecho${n === 1 ? '' : 's'}`,
+   seguirVideo: 'seguir o vídeo',
+   copiarTranscricao: 'Copiar',
+-  passoPublicacao: '5. Publicação',
++  passoPublicacao: '6. Publicação',
+   contagemProntos: (n: number) => `${n} clip${n === 1 ? '' : 's'} pronto${n === 1 ? '' : 's'}`,
+   pubTitulo: 'Publicação',
+   pubDica: 'Escolha os clips renderizados que vai publicar. Para cada um, gere o texto de cada plataforma (com ou sem IA), ajuste e copie; a thumb e a legenda .srt ficam junto.',
+-  pubSemClips: 'Nenhum clip renderizado ainda. Renderize no passo 4.',
++  pubSemClips: 'Nenhum clip renderizado ainda. Renderize no passo 5.',
+   pubIrClips: 'Ir para os clips',
+   pubTodos: 'Marcar todos',
+   pubNenhum: 'Desmarcar',
+@@ -526,7 +579,7 @@ const pt = {
+   conversaLote: (n: number) => `Lote do passo 2 (${n} clip${n === 1 ? '' : 's'})`,
+   conversaExterna: 'Abri a conversa num terminal fora do app.',
+   conversaAberta: 'Conversa aberta no painel ao lado.',
+-  conversaPronta: (n: number) => `Conversa com a IA pronta para ${n} clip${n === 1 ? '' : 's'}: ver no passo 4`,
++  conversaPronta: (n: number) => `Conversa com a IA pronta para ${n} clip${n === 1 ? '' : 's'}: ver no passo 5`,
+   mostrarConversa: 'Mostrar a conversa com a IA',
+   esconderConversa: 'Recolher a conversa',
+   larguraConversa: 'Arraste para mudar a largura (duplo clique volta ao padrão)',
+@@ -642,7 +695,7 @@ const pt = {
+   cancelarJob: 'Cancelar',
+   gruposThumb: { sua: 'Sua frase', insight: 'Insights (o que foi dito)', sensacionalista: 'Sensacionalistas (exagerado, sem mentir)', outras: 'Outras', ia: 'Por imagem (IA)' } as Record<string, string>,
+   provaThumb: 'Dito no corte',
+-  tiposJob: { postagem: 'Postagem', analisar: 'Análise do vídeo', renderizar: 'Renderização', ranquear: 'Ranking com IA', transcrever: 'Transcrição', candidatos: 'Candidatos', thumbnail: 'Thumbnail', thumbnail_ia: 'Thumbnail por imagem' } as Record<string, string>,
++  tiposJob: { checagem: 'Checagem de fatos', postagem: 'Postagem', analisar: 'Análise do vídeo', renderizar: 'Renderização', ranquear: 'Ranking com IA', transcrever: 'Transcrição', candidatos: 'Candidatos', thumbnail: 'Thumbnail', thumbnail_ia: 'Thumbnail por imagem' } as Record<string, string>,
+   decorrido: 'passou',
+   faltaCerca: 'falta cerca de',
+   calculando: 'calculando…',
+@@ -881,6 +934,59 @@ const en: Textos = {
+     usarV: (n: number) => `Use v${n}`,
+     ficarAtual: 'Keep the current one'
+   },
++  passoChecagem: '4. Fact check',
++  fatos: {
++    titulo: 'Fact check',
++    irPara: 'Check facts',
++    voltarEstilo: 'Back to style',
++    explicacao: 'Before building the clips, check what the speech mentions: people, companies, products, places and data. Fix the name or the source when it is wrong. What you check goes into the captions, the on-screen text, the real images and the sources in the description.',
++    explicacaoClips: 'Fact check of the cuts behind the clips you already have. What you check applies when the clip is rendered again in step 5.',
++    dosClips: (n: number) => `${n} cut${n === 1 ? '' : 's'} from the generated clips`,
++    usarIA: 'Use AI',
++    usarIADica: 'The AI reads only the text of the cuts and finds more names. Without AI, the local rules apply (capitalized names, places and numbers).',
++    identificar: 'Identify',
++    identificarDeNovo: 'Identify again',
++    identificando: 'Identifying…',
++    nadaAinda: 'There is no fact check for these cuts yet.',
++    cortesNovos: 'Some chosen cuts have not been checked yet.',
++    nadaCitado: 'No name, place or data mentioned in these cuts.',
++    comIA: 'identified with AI',
++    semIA: 'identified without AI',
++    todos: 'All',
++    confirmarTodos: (n: number) => `Confirm ${n} pending`,
++    irParaClips: 'See clips',
++    naoChecado: 'not checked',
++    paraConferir: (n: number) => `${n} to check`,
++    conferidos: (n: number) => (n ? `${n} checked` : 'nothing mentioned'),
++    tipo: 'Type',
++    tipos: { pessoa: 'Person', empresa: 'Company', organizacao: 'Organization', produto: 'Product', lugar: 'Place', dado: 'Data', outro: 'Other name' },
++    status: { pendente: 'To check', confirmado: 'Confirmed', corrigido: 'Fixed', ignorado: 'Ignored' },
++    origens: { wikidata: 'Wikidata', 'natural-earth': 'map data', fala: 'cited in the speech', usuario: 'yours' },
++    noCorte: (h: string) => `cut at ${h}`,
++    vezes: (n: number) => `${n} times`,
++    dito: 'Said in the video',
++    identificado: 'Identified as',
++    comoAparece: 'How it will appear',
++    usarSugerido: (s: string) => `use “${s}”`,
++    fonte: 'Source',
++    deOnde: 'Where the data comes from',
++    semFonte: 'No source. Type one or search Wikidata.',
++    semFonteDado: 'No source. Type where the number comes from (institution, survey or link).',
++    fonteNome: 'Source name',
++    fonteLink: 'Link (optional)',
++    editarFonte: 'Edit source',
++    buscarFonte: 'Search another source',
++    limparFonte: 'Remove source',
++    nenhumaFonte: 'Nothing found on Wikidata with that name.',
++    salvarCorrecao: 'Save fix',
++    confirmar: 'Confirm',
++    confirmado: 'Confirmed ✓',
++    corrigido: 'Fix saved ✓',
++    ignorar: 'Ignore',
++    ignorarDica: 'Keep it as said, with no replacement, image or source',
++    ignoradoDica: 'Stays as said in the video.',
++    desfazer: 'Undo'
++  },
+   passoEstilo: '3. Style',
+   gal: {
+     buscar: 'Search styles',
+@@ -950,7 +1056,7 @@ const en: Textos = {
+     limparSelecao: 'Clear selection',
+     layouts: { 'em-cima': 'animation on top', fundo: 'animated background', sobreposto: 'scenes over video', janela: 'video in a window' } as Record<string, string>
+   },
+-  passoClips: '4. Generated clips',
++  passoClips: '5. Generated clips',
+   analiseFeita: 'analysis done',
+   analisePendente: 'analysis pending',
+   contagemCortes: (s: number, l: number) => `${s} shorts · ${l} long`,
+@@ -980,11 +1086,11 @@ const en: Textos = {
+   nTrechos: (n: number) => `${n} line${n === 1 ? '' : 's'}`,
+   seguirVideo: 'follow the video',
+   copiarTranscricao: 'Copy',
+-  passoPublicacao: '5. Publishing',
++  passoPublicacao: '6. Publishing',
+   contagemProntos: (n: number) => `${n} clip${n === 1 ? '' : 's'} ready`,
+   pubTitulo: 'Publishing',
+   pubDica: 'Pick the rendered clips you are going to publish. For each one, generate the text for each platform (with or without AI), adjust and copy; the thumb and the .srt captions are right there.',
+-  pubSemClips: 'No rendered clip yet. Render them in step 4.',
++  pubSemClips: 'No rendered clip yet. Render them in step 5.',
+   pubIrClips: 'Go to clips',
+   pubTodos: 'Select all',
+   pubNenhum: 'Clear',
+@@ -1244,7 +1350,7 @@ const en: Textos = {
+   conversaLote: (n: number) => `Step 2 batch (${n} clip${n === 1 ? '' : 's'})`,
+   conversaExterna: 'Opened the conversation in a terminal outside the app.',
+   conversaAberta: 'Conversation opened in the side panel.',
+-  conversaPronta: (n: number) => `AI conversation ready for ${n} clip${n === 1 ? '' : 's'}: see step 4`,
++  conversaPronta: (n: number) => `AI conversation ready for ${n} clip${n === 1 ? '' : 's'}: see step 5`,
+   mostrarConversa: 'Show the AI conversation',
+   esconderConversa: 'Collapse the conversation',
+   larguraConversa: 'Drag to change the width (double click resets)',
+@@ -1360,7 +1466,7 @@ const en: Textos = {
+   cancelarJob: 'Cancel',
+   gruposThumb: { sua: 'Your text', insight: 'Insights (what was said)', sensacionalista: 'Sensational (exaggerated, never false)', outras: 'Other', ia: 'Image (AI)' },
+   provaThumb: 'Said in the cut',
+-  tiposJob: { postagem: 'Posting', analisar: 'Video analysis', renderizar: 'Rendering', ranquear: 'AI ranking', transcrever: 'Transcription', candidatos: 'Candidates', thumbnail: 'Thumbnail', thumbnail_ia: 'Image thumbnail' },
++  tiposJob: { checagem: 'Fact check', postagem: 'Posting', analisar: 'Video analysis', renderizar: 'Rendering', ranquear: 'AI ranking', transcrever: 'Transcription', candidatos: 'Candidates', thumbnail: 'Thumbnail', thumbnail_ia: 'Image thumbnail' },
+   decorrido: 'elapsed',
+   faltaCerca: 'about',
+   calculando: 'estimating…',
+diff --git a/app/src/renderer/src/passos.test.ts b/app/src/renderer/src/passos.test.ts
+index 6db4410..a19b33b 100644
+--- a/app/src/renderer/src/passos.test.ts
++++ b/app/src/renderer/src/passos.test.ts
+@@ -1,7 +1,7 @@
+ // node --test (o Node tira os tipos sozinho): npm run test
+ import assert from 'node:assert/strict'
+ import { test } from 'node:test'
+-import { chavePasso, chavePassoAntiga, lerPasso, passoGuardado, passoPadrao } from './passos.ts'
++import { chavePasso, chavePassoAntiga, chavePassoV2, lerPasso, passoGuardado, passoPadrao } from './passos.ts'
+ 
+ class Armazem {
+   dados = new Map<string, string>()
+@@ -13,28 +13,41 @@ class Armazem {
+ test('o passo antigo cai na mesma tela com o número novo', () => {
+   assert.equal(passoGuardado(null, '1'), 1)
+   assert.equal(passoGuardado(null, '2'), 2)
+-  assert.equal(passoGuardado(null, '3'), 4) // clips gerados
+-  assert.equal(passoGuardado(null, '4'), 5) // publicação
++  assert.equal(passoGuardado(null, '3'), 5) // clips gerados
++  assert.equal(passoGuardado(null, '4'), 6) // publicação
+   assert.equal(passoGuardado(null, '7'), null)
+   assert.equal(passoGuardado(null, 'x'), null)
+   assert.equal(passoGuardado('3', '3'), 3) // o novo (Estilo) vale mais que o antigo
++  assert.equal(passoGuardado('4', null), 4) // checagem de fatos
+   assert.equal(passoGuardado('9', '2'), 2)
+   assert.equal(passoGuardado(null, null), null)
+ })
+ 
+-test('lerPasso migra a chave antiga uma vez', () => {
++test('o passo da versão 2 (sem a checagem) também muda de número', () => {
++  assert.equal(passoGuardado(null, null, '3'), 3) // estilo
++  assert.equal(passoGuardado(null, null, '4'), 5) // clips gerados
++  assert.equal(passoGuardado(null, null, '5'), 6) // publicação
++  assert.equal(passoGuardado(null, '3', '4'), 5) // a v2 vale mais que a v1
++  assert.equal(passoGuardado('4', null, '5'), 4)
++})
++
++test('lerPasso migra as chaves antigas uma vez', () => {
+   const a = new Armazem()
+   a.setItem(chavePassoAntiga('c', 'p'), '3')
+-  assert.equal(lerPasso(a, 'c', 'p'), 4)
+-  assert.equal(a.getItem(chavePasso('c', 'p')), '4')
++  assert.equal(lerPasso(a, 'c', 'p'), 5)
++  assert.equal(a.getItem(chavePasso('c', 'p')), '5')
+   assert.equal(a.getItem(chavePassoAntiga('c', 'p')), null)
+-  assert.equal(lerPasso(a, 'c', 'p'), 4)
++  assert.equal(lerPasso(a, 'c', 'p'), 5)
+   assert.equal(lerPasso(a, 'c', 'outro'), null)
++  a.setItem(chavePassoV2('c', 'q'), '4')
++  assert.equal(lerPasso(a, 'c', 'q'), 5)
++  assert.equal(a.getItem(chavePasso('c', 'q')), '5')
++  assert.equal(a.getItem(chavePassoV2('c', 'q')), null)
+ })
+ 
+ test('passo padrão', () => {
+   assert.equal(passoPadrao(false, false, false), 1)
+-  assert.equal(passoPadrao(true, true, true), 4)
++  assert.equal(passoPadrao(true, true, true), 5)
+   assert.equal(passoPadrao(true, false, true), 2)
+   assert.equal(passoPadrao(true, false, false), 1)
+ })
+diff --git a/app/src/renderer/src/passos.ts b/app/src/renderer/src/passos.ts
+index c6ef530..07c9bd3 100644
+--- a/app/src/renderer/src/passos.ts
++++ b/app/src/renderer/src/passos.ts
+@@ -1,38 +1,47 @@
+-// Passos da tela do vídeo. O passo 3 (Estilo) entrou entre os cortes e os clips: quem tinha guardado o
+-// passo antigo (1 vídeo, 2 cortes, 3 clips, 4 publicação) cai na mesma tela com o número novo.
+-export type Passo = 1 | 2 | 3 | 4 | 5
++// Passos da tela do vídeo. O passo 3 (Estilo) entrou entre os cortes e os clips, e depois o passo 4 (Checagem de
++// fatos) entrou entre o estilo e os clips: quem tinha guardado um passo antigo cai na mesma tela com o número novo.
++export type Passo = 1 | 2 | 3 | 4 | 5 | 6
+ export const PASSO_ESTILO: Passo = 3
+-export const PASSO_CLIPS: Passo = 4
+-export const PASSO_PUBLICACAO: Passo = 5
++export const PASSO_CHECAGEM: Passo = 4
++export const PASSO_CLIPS: Passo = 5
++export const PASSO_PUBLICACAO: Passo = 6
+ 
+-export const chavePasso = (canal: string, projeto: string): string => `clipator.passo.v2.${canal}/${projeto}`
++export const chavePasso = (canal: string, projeto: string): string => `clipator.passo.v3.${canal}/${projeto}`
++// v2: 1 vídeo, 2 cortes, 3 estilo, 4 clips, 5 publicação
++export const chavePassoV2 = (canal: string, projeto: string): string => `clipator.passo.v2.${canal}/${projeto}`
++// v1: 1 vídeo, 2 cortes, 3 clips, 4 publicação
+ export const chavePassoAntiga = (canal: string, projeto: string): string => `clipator.passo.${canal}/${projeto}`
+ 
++const DO_V2: Record<number, Passo> = { 1: 1, 2: 2, 3: PASSO_ESTILO, 4: PASSO_CLIPS, 5: PASSO_PUBLICACAO }
+ const DO_ANTIGO: Record<number, Passo> = { 1: 1, 2: 2, 3: PASSO_CLIPS, 4: PASSO_PUBLICACAO }
+ 
+-const valido = (v: number): v is Passo => Number.isInteger(v) && v >= 1 && v <= 5
++const valido = (v: number): v is Passo => Number.isInteger(v) && v >= 1 && v <= 6
+ 
+-// o passo guardado (no formato novo) ou o antigo convertido; null se não houver nada que preste
+-export function passoGuardado(novo: string | null, antigo: string | null): Passo | null {
++const converter = (s: string | null, mapa: Record<number, Passo>): Passo | null => {
++  if (s === null || s === '') return null
++  const v = Number(s)
++  return Number.isInteger(v) && mapa[v] ? mapa[v] : null
++}
++
++// o passo guardado (no formato novo) ou o de um formato antigo convertido; null se não houver nada que preste
++export function passoGuardado(novo: string | null, antigo: string | null, v2: string | null = null): Passo | null {
+   if (novo !== null && novo !== '') {
+     const v = Number(novo)
+     if (valido(v)) return v
+   }
+-  if (antigo !== null && antigo !== '') {
+-    const v = Number(antigo)
+-    if (Number.isInteger(v) && DO_ANTIGO[v]) return DO_ANTIGO[v]
+-  }
+-  return null
++  return converter(v2, DO_V2) ?? converter(antigo, DO_ANTIGO)
+ }
+ 
+-// lê do armazenamento (migrando a chave antiga para a nova)
++// lê do armazenamento (migrando as chaves antigas para a nova)
+ export function lerPasso(armazem: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>, canal: string, projeto: string): Passo | null {
+   const novo = armazem.getItem(chavePasso(canal, projeto))
++  const v2 = armazem.getItem(chavePassoV2(canal, projeto))
+   const antigo = armazem.getItem(chavePassoAntiga(canal, projeto))
+-  const p = passoGuardado(novo, antigo)
+-  if (antigo !== null) {
++  const p = passoGuardado(novo, antigo, v2)
++  if (antigo !== null || v2 !== null) {
+     if (p !== null && novo === null) armazem.setItem(chavePasso(canal, projeto), String(p))
+     armazem.removeItem(chavePassoAntiga(canal, projeto))
++    armazem.removeItem(chavePassoV2(canal, projeto))
+   }
+   return p
+ }
+diff --git a/motor/src/clipator/acabamento.py b/motor/src/clipator/acabamento.py
+index dd5e937..7fe904c 100644
+--- a/motor/src/clipator/acabamento.py
++++ b/motor/src/clipator/acabamento.py
+@@ -1,4 +1,4 @@
+-"""Acabamento do passo 4: música de fundo e ajustes de imagem em cima do clip já gerado.
++"""Acabamento do passo 5: música de fundo e ajustes de imagem em cima do clip já gerado.
+ 
+ O clip gerado não muda (formato, estilo e edição ficam como estão). O acabamento é uma passada a mais
+ do FFmpeg sobre o vídeo pronto e vira uma versão do clip, igual às edições com IA:
+diff --git a/motor/src/clipator/api.py b/motor/src/clipator/api.py
+index ccf3628..62226da 100644
+--- a/motor/src/clipator/api.py
++++ b/motor/src/clipator/api.py
+@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
+ from fastapi.responses import FileResponse
+ from pydantic import BaseModel
+ 
+-from . import __version__, acabamento, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
++from . import __version__, acabamento, checagem, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
+ from .ai import detectar_agentes
+ from .ai.adapter import ErroIA, abrir_login
+ from .models import Clip, ConfigApp, PedidoIA
+@@ -81,6 +81,18 @@ class Trecho(BaseModel):
+     renderizar: bool = True  # já tinha vídeo: gera de novo com o trecho novo
+ 
+ 
++class PedidoChecagem(BaseModel):
++    candidatos: list[str]
++    usar_ia: bool = True
++
++
++class MudancaItemChecagem(BaseModel):
++    status: str | None = None
++    nome: str | None = None
++    tipo: str | None = None
++    fonte: dict | None = None
++
++
+ class PedidoRender(BaseModel):
+     clips: list[str]
+     preview: bool = False
+@@ -1000,7 +1012,43 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
+             raise HTTPException(404, str(exc)) from exc
+         return {"ok": True}
+ 
+-    # ---- acabamento do passo 4 (música de fundo e ajustes de imagem no clip gerado) ----
++    # ---- checagem de fatos do passo 4 (o que a fala cita, o nome certo e a fonte) ----
++    @app.get("/api/canais/{canal}/projetos/{projeto}/checagem", dependencies=dep)
++    def ver_checagem(canal: str, projeto: str) -> dict:
++        ch = checagem.carregar(proj(canal, projeto))
++        return {**ch.model_dump(mode="json"), "resumo": checagem.resumo(ch)}
++
++    @app.post("/api/canais/{canal}/projetos/{projeto}/checagem", dependencies=dep)
++    def identificar_checagem(canal: str, projeto: str, dados: PedidoChecagem) -> dict:
++        p = proj(canal, projeto)
++        if not p.transcricao():
++            raise HTTPException(409, "O vídeo ainda não tem transcrição. Rode a análise no passo 1.")
++        if not dados.candidatos:
++            raise HTTPException(400, "Nenhum corte para checar. Escolha os cortes no passo 2.")
++        return {"job": srv.fila.enviar("checagem", {"canal": canal, "projeto": projeto, "candidatos": dados.candidatos,
++                                                    "usar_ia": dados.usar_ia})}
++
++    @app.put("/api/canais/{canal}/projetos/{projeto}/checagem/itens/{item_id}", dependencies=dep)
++    def mudar_item_checagem(canal: str, projeto: str, item_id: str, dados: MudancaItemChecagem) -> dict:
++        try:
++            return checagem.atualizar_item(proj(canal, projeto), item_id, dados.status, dados.nome, dados.fonte,
++                                           dados.tipo).model_dump(mode="json")
++        except checagem.ErroChecagem as exc:
++            raise HTTPException(400, str(exc)) from exc
++
++    @app.post("/api/canais/{canal}/projetos/{projeto}/checagem/confirmar-pendentes", dependencies=dep)
++    def confirmar_checagem(canal: str, projeto: str) -> dict:
++        return {"confirmados": checagem.confirmar_pendentes(proj(canal, projeto))}
++
++    @app.get("/api/checagem/fontes", dependencies=dep)
++    def buscar_fontes(busca: str) -> list[dict]:
++        """Outras fontes no Wikidata para o usuário escolher (precisa de rede)."""
++        try:
++            return checagem.opcoes_wikidata(busca)
++        except Exception as exc:
++            raise HTTPException(502, f"Não consegui buscar no Wikidata agora ({exc}). Escreva a fonte à mão.") from exc
++
++    # ---- acabamento do passo 5 (música de fundo e ajustes de imagem no clip gerado) ----
+     @app.get("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/acabamento", dependencies=dep)
+     def ver_acabamento(canal: str, projeto: str, clip_id: str) -> dict:
+         try:
+diff --git a/motor/src/clipator/artes/pesquisa.py b/motor/src/clipator/artes/pesquisa.py
+index 76b7bf5..6acbaa7 100644
+--- a/motor/src/clipator/artes/pesquisa.py
++++ b/motor/src/clipator/artes/pesquisa.py
+@@ -302,13 +302,18 @@ def _arquivo_commons(nome: str, abrir: Abrir, timeout: float, largura: int = 720
+             "autor": _sem_html((meta.get("Artist") or {}).get("value"), 120)}
+ 
+ 
+-def _entidade(busca: str, tipo: str, abrir: Abrir, timeout: float) -> dict[str, Any]:
+-    """O item do Wikidata para a busca: nome, contexto e o arquivo de imagem (logo para empresa e produto, foto para pessoa)."""
+-    q = {"action": "wbsearchentities", "search": busca, "language": "pt", "uselang": "pt", "format": "json", "limit": "5", "type": "item"}
+-    try:
+-        achados = json.loads(abrir(WIKIDATA + "?" + urllib.parse.urlencode(q), timeout)).get("search") or []
+-    except Exception:  # noqa: BLE001
+-        return {}
++def _entidade(busca: str, tipo: str, abrir: Abrir, timeout: float, qid: str = "") -> dict[str, Any]:
++    """O item do Wikidata para a busca: nome, contexto e o arquivo de imagem (logo para empresa e produto, foto para pessoa).
++
++    `qid`: o item já escolhido pelo usuário na checagem de fatos (checagem.py); aí não há busca."""
++    if re.fullmatch(r"Q\d+", qid or ""):
++        achados = [{"id": qid, "label": busca}]
++    else:
++        q = {"action": "wbsearchentities", "search": busca, "language": "pt", "uselang": "pt", "format": "json", "limit": "5", "type": "item"}
++        try:
++            achados = json.loads(abrir(WIKIDATA + "?" + urllib.parse.urlencode(q), timeout)).get("search") or []
++        except Exception:  # noqa: BLE001
++            return {}
+     for a in achados[:3]:
+         qid = str(a.get("id") or "")
+         if not re.fullmatch(r"Q\d+", qid):
+@@ -348,7 +353,8 @@ def imagens_reais(entidades: list[dict], pasta: Path, abrir: Abrir | None = None
+         tipo = ent.get("tipo") if ent.get("tipo") in TIPOS_ENTIDADE else "empresa"
+         if not busca:
+             continue
+-        chave = hashlib.sha1(f"{tipo}|{busca.lower()}".encode()).hexdigest()[:16]
++        qid = str(ent.get("qid") or "")
++        chave = hashlib.sha1(f"{tipo}|{busca.lower()}".encode() + (f"|{qid}".encode() if qid else b"")).hexdigest()[:16]
+         meta = dest / f"{chave}.json"
+         r: dict[str, Any] | None = None
+         if meta.exists():
+@@ -358,7 +364,7 @@ def imagens_reais(entidades: list[dict], pasta: Path, abrir: Abrir | None = None
+                 r = None
+         if r is None:
+             r = {}
+-            e = _entidade(busca, tipo, abrir, timeout)
++            e = _entidade(busca, tipo, abrir, timeout, qid)
+             img = _arquivo_commons(e["arquivo"], abrir, timeout) if e.get("arquivo") else {}
+             if not img and tipo in ("produto", "tecnologia"):  # produto sem imagem no Wikidata: a foto livre mais citada no Commons
+                 fotos = _commons(busca, abrir, timeout, 1)
+diff --git a/motor/src/clipator/dados/estilos/desenho-caderno.md b/motor/src/clipator/dados/estilos/desenho-caderno.md
+index c3349ff..535e082 100644
+--- a/motor/src/clipator/dados/estilos/desenho-caderno.md
++++ b/motor/src/clipator/dados/estilos/desenho-caderno.md
+@@ -30,4 +30,4 @@ A IA faz três etapas antes do render: analisa o corte (tema e ideias com tempo)
+ escreve o roteiro do desenho (uma cena a cada poucos segundos, presa à fala) e
+ compõe cada cena com as peças da biblioteca do Clipator (bonequinhos, objetos,
+ setas, check e X), balões e dados grandes (número, quadradinhos, barras). Depois
+-do render, a direção de arte do clip aparece no passo 4 para ajustar e refazer.
++do render, a direção de arte do clip aparece no passo 5 para ajustar e refazer.
+diff --git a/motor/src/clipator/dados/estilos/desenho-em-cima.md b/motor/src/clipator/dados/estilos/desenho-em-cima.md
+index d1bcb0c..e28bcbb 100644
+--- a/motor/src/clipator/dados/estilos/desenho-em-cima.md
++++ b/motor/src/clipator/dados/estilos/desenho-em-cima.md
+@@ -30,4 +30,4 @@ A IA faz três etapas antes do render: analisa o corte (tema e ideias com tempo)
+ escreve o roteiro do desenho (uma cena a cada poucos segundos, presa à fala) e
+ compõe cada cena com as peças da biblioteca do Clipator (bonequinhos, objetos,
+ setas, check e X), balões e dados grandes (número, quadradinhos, barras). Depois
+-do render, a direção de arte do clip aparece no passo 4 para ajustar e refazer.
++do render, a direção de arte do clip aparece no passo 5 para ajustar e refazer.
+diff --git a/motor/src/clipator/dados/estilos/desenho-noite.md b/motor/src/clipator/dados/estilos/desenho-noite.md
+index dd57e5a..8141d09 100644
+--- a/motor/src/clipator/dados/estilos/desenho-noite.md
++++ b/motor/src/clipator/dados/estilos/desenho-noite.md
+@@ -30,4 +30,4 @@ A IA faz três etapas antes do render: analisa o corte (tema e ideias com tempo)
+ escreve o roteiro do desenho (uma cena a cada poucos segundos, presa à fala) e
+ compõe cada cena com as peças da biblioteca do Clipator (bonequinhos, objetos,
+ setas, check e X), balões e dados grandes (número, quadradinhos, barras). Depois
+-do render, a direção de arte do clip aparece no passo 4 para ajustar e refazer.
++do render, a direção de arte do clip aparece no passo 5 para ajustar e refazer.
+diff --git a/motor/src/clipator/mcp_server.py b/motor/src/clipator/mcp_server.py
+index 282d2dd..6a9700f 100644
+--- a/motor/src/clipator/mcp_server.py
++++ b/motor/src/clipator/mcp_server.py
+@@ -237,7 +237,7 @@ def criar_servidor(servico: Servico | None = None) -> MCPServer:
+ 
+         melhorar.garantir_inicial(p, clip)
+         ed = edicao.salvar(pasta, atual.model_copy(update={"itens": itens + novos}), edicao.duracao_do_clip(p, clip))
+-        n = melhorar.registrar(p, clip, "mcp")  # o usuário compara e desfaz no passo 4
++        n = melhorar.registrar(p, clip, "mcp")  # o usuário compara e desfaz no passo 5
+         return {"revisao": ed.revisao, "itens": len(ed.itens), "versao": n}
+ 
+     @mcp.tool()
+diff --git a/motor/src/clipator/melhorar.py b/motor/src/clipator/melhorar.py
+index 3c4db78..69af2af 100644
+--- a/motor/src/clipator/melhorar.py
++++ b/motor/src/clipator/melhorar.py
+@@ -530,5 +530,5 @@ def pedido_para_conversa(projeto: ProjetoWS, clip_id: str) -> str:
+             "## Mudar a edição\n"
+             f"Use as ferramentas MCP do Clipator: `ler_edicao` (canal {projeto.canal.slug}, projeto {projeto.id}, clip {clip_id}) para ver "
+             "a edição atual e `aplicar_edicao` para mudar (cada mudança vira uma versão nova, que o usuário pode comparar e desfazer "
+-            "no passo 4). Cenas da direção de arte são itens do tipo `cena` com `params.cena`, `params.ancora` (o trecho da fala que "
++            "no passo 5). Cenas da direção de arte são itens do tipo `cena` com `params.cena`, `params.ancora` (o trecho da fala que "
+             "a cena ilustra) e os textos. Use as suas skills de edição, se tiver, mas só com o que foi dito no clip.\n")
+diff --git a/motor/src/clipator/postagem.py b/motor/src/clipator/postagem.py
+index f14eb2d..8d1e66a 100644
+--- a/motor/src/clipator/postagem.py
++++ b/motor/src/clipator/postagem.py
+@@ -102,7 +102,7 @@ def _descricao(p: dict[str, Any]) -> str:
+     partes = []
+     if p.get("titulo") is None and blocos.get("titulo"):
+         partes.append(blocos["titulo"])
+-    for k in ("resumo", "contexto", "link", "creditos"):
++    for k in ("resumo", "contexto", "fontes", "link", "creditos"):
+         if blocos.get(k):
+             partes.append(blocos[k])
+     if p.get("hashtags"):
+@@ -129,10 +129,16 @@ def _base(projeto: ProjetoWS, clip: Clip, pasta: Path, texto: str) -> dict[str,
+ 
+     refs = [i.params.get("ref", "") for i in edicao.carregar(pasta).itens if i.tipo == "sticker"]
+     creditos = stickers.creditos_do_clip(refs, projeto.canal.path) if refs else ""
++    from . import checagem  # as fontes conferidas no passo 4
++
++    try:
++        fontes = checagem.fontes_do_texto(projeto, texto) if texto else ""
++    except Exception:  # noqa: BLE001
++        fontes = ""
+     return {
+         "titulo": clip.titulo or "",
+         "blocos": {"titulo": clip.titulo or "", "resumo": resumo, "contexto": contexto, "link": link,
+-                   **({"creditos": creditos} if creditos else {})},
++                   **({"fontes": fontes} if fontes else {}), **({"creditos": creditos} if creditos else {})},
+         "hashtags": hashtags,
+         "tags": tags,
+         "legenda": "legenda.srt" if (pasta / "legenda.srt").exists() else None,
+diff --git a/motor/src/clipator/referencias.py b/motor/src/clipator/referencias.py
+index 24bd665..baac494 100644
+--- a/motor/src/clipator/referencias.py
++++ b/motor/src/clipator/referencias.py
+@@ -112,14 +112,18 @@ def _tempo(termo: str, pals: list[dict]) -> float | None:
+ 
+ 
+ def obter(pasta: Path, pals: list[dict], ad: Any, titulo: str = "", cancelar: threading.Event | None = None,
+-          passo: Any = None, cache: Any = None) -> list[dict[str, Any]]:
+-    """As imagens reais do clip, cada uma com `t` (segundo do clip em que o nome é dito). Guardadas em referencias.json."""
++          passo: Any = None, cache: Any = None, conferidas: list[dict] | None = None) -> list[dict[str, Any]]:
++    """As imagens reais do clip, cada uma com `t` (segundo do clip em que o nome é dito). Guardadas em referencias.json.
++
++    `conferidas`: a lista da checagem de fatos (checagem.entidades_do_clip). Com ela a IA não é chamada: valem os nomes
++    e as fontes que o usuário conferiu."""
+     from .artes import pesquisa
+ 
+     passo = passo or (lambda _t: None)
+-    if ad is None or not pals or not pesquisa.ligada():
++    if (ad is None and conferidas is None) or not pals or not pesquisa.ligada():
+         return []
+-    chave = hashlib.sha1(" ".join(f"{w['inicio']:.2f}{w['texto']}" for w in pals).encode()).hexdigest()[:16]
++    chave = hashlib.sha1(" ".join(f"{w['inicio']:.2f}{w['texto']}" for w in pals).encode()
++                         + (json.dumps(conferidas, sort_keys=True, ensure_ascii=False).encode() if conferidas is not None else b"")).hexdigest()[:16]
+     arq = pasta / "referencias.json"
+     try:
+         salvo = json.loads(arq.read_text(encoding="utf-8")) if arq.exists() else {}
+@@ -128,13 +132,18 @@ def obter(pasta: Path, pals: list[dict], ad: Any, titulo: str = "", cancelar: th
+     if salvo.get("chave") == chave:
+         refs = salvo.get("referencias") or []
+     else:
+-        from .ai.adapter import chamar
+-
+-        try:
+-            ents = de_resposta(chamar(ad, prompt(pals, titulo), schema(), cache, cancelar), pals)
+-        except Exception as exc:  # noqa: BLE001 - sem a lista, o clip sai sem imagens reais
+-            passo(f"imagens reais: a IA não listou os nomes citados ({exc})")
+-            ents = []
++        if conferidas is not None:
++            ents = conferidas[:MAX_REFS]
++            if ents:
++                passo("imagens reais: pela checagem de fatos, sem perguntar à IA")
++        else:
++            from .ai.adapter import chamar
++
++            try:
++                ents = de_resposta(chamar(ad, prompt(pals, titulo), schema(), cache, cancelar), pals)
++            except Exception as exc:  # noqa: BLE001 - sem a lista, o clip sai sem imagens reais
++                passo(f"imagens reais: a IA não listou os nomes citados ({exc})")
++                ents = []
+         refs = []
+         if ents:
+             passo("imagens reais: " + ", ".join(f"{e['busca']} ({e['tipo']})" for e in ents))
+diff --git a/motor/src/clipator/render.py b/motor/src/clipator/render.py
+index 6810034..2d9c663 100644
+--- a/motor/src/clipator/render.py
++++ b/motor/src/clipator/render.py
+@@ -261,12 +261,15 @@ def _camada_referencias(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Time
+             from .melhorar import ia_do_workspace
+ 
+             ad = ia_do_workspace(projeto.ws)
+-        if ad is None or hyperframes.comando() is None:
+-            return None
++        from . import checagem
+         from .ai.adapter import CacheIA
+ 
+         pals_clip = subtitles.palavras_do_clip(pals, tl) if pals else []
+-        refs = referencias.obter(pasta, pals_clip, ad, clip.titulo, cancelar, rel.passo, CacheIA(projeto.analise_dir / "cache_ia"))
++        conferidas = checagem.entidades_do_clip(projeto, clip.candidato, pals_clip)  # None: o corte não passou pela checagem
++        if (ad is None and conferidas is None) or hyperframes.comando() is None:
++            return None
++        refs = referencias.obter(pasta, pals_clip, ad, clip.titulo, cancelar, rel.passo, CacheIA(projeto.analise_dir / "cache_ia"),
++                                 conferidas)
+         if not refs:
+             return None
+         pasta_r = pasta / "referencias-camada"
+@@ -726,6 +729,19 @@ def renderizar_clip(
+     from .transcribe import palavras as _palavras
+ 
+     pals = _palavras(trans) if trans else []
++    if pals:  # checagem de fatos (passo 4): o nome e o dado conferidos entram no lugar do que foi dito
++        from . import checagem
++
++        try:
++            fatos = checagem.revisados(projeto)
++            if fatos:
++                pals, trocas = checagem.aplicar_nas_palavras(pals, fatos)
++                no_clip = [x for x in trocas if tl.inicio <= x["inicio"] < tl.fim]
++                if no_clip and log:
++                    log("checagem de fatos: " + "; ".join(f"“{x['de']}” → “{x['para']}”" for x in no_clip[:8]))
++        except Exception as exc:  # noqa: BLE001 - checagem com problema não derruba o render
++            if log:
++                log(f"checagem de fatos ficou de fora: {exc}")
+     if estilo.legenda.destacar_chave and pals:  # sem IA: as palavras do assunto saem destacadas
+         destaques_ia = list(destaques_ia or []) + subtitles.palavras_chave(subtitles.palavras_do_clip(pals, tl))
+     base_hf =0.3 if layout in ("seguir-rosto", "dividido") else 0.0
+diff --git a/motor/src/clipator/revisao.py b/motor/src/clipator/revisao.py
+index a4cad48..bf55849 100644
+--- a/motor/src/clipator/revisao.py
++++ b/motor/src/clipator/revisao.py
+@@ -1,4 +1,4 @@
+-"""Revisão antes de publicar: uma nota de 0 a 100 e a lista do que corrigir, por clip (passo 5).
++"""Revisão antes de publicar: uma nota de 0 a 100 e a lista do que corrigir, por clip (passo 6).
+ 
+ Sem IA, por regras que o motor sabe medir: gancho (quanto demora a primeira palavra), fechamento (a
+ última frase termina?), pausas mortas, duração para a plataforma, título, chamada para seguir e números
+diff --git a/motor/src/clipator/service.py b/motor/src/clipator/service.py
+index 1ee3aad..b4dc8c0 100644
+--- a/motor/src/clipator/service.py
++++ b/motor/src/clipator/service.py
+@@ -52,6 +52,7 @@ class Servico:
+         self.fila.registrar("firefox_youtube", self._job_firefox_youtube)
+         self.fila.registrar("thumbnail_ia", self._job_thumbnail_ia)
+         self.fila.registrar("acabamento", self._job_acabamento)
++        self.fila.registrar("checagem", self._job_checagem)
+ 
+     def projeto(self, canal: str, projeto: str) -> ProjetoWS:
+         return self.ws.canal(canal).projeto(projeto)
+@@ -182,6 +183,20 @@ class Servico:
+         ctx.progresso(0.02, "aplicando o acabamento")
+         return acabamento.aplicar(self.projeto(p["canal"], p["projeto"]), p["clip"], ac, ctx.progresso, ctx.cancelar)
+ 
++    def _job_checagem(self, p: dict, ctx: ContextoJob) -> Any:
++        """Checagem de fatos (passo 4): o que os cortes citam e a fonte de cada um. A IA é opcional."""
++        from . import checagem
++        from .ai.adapter import CacheIA
++        from .melhorar import ia_do_workspace
++
++        proj = self.projeto(p["canal"], p["projeto"])
++        ad = ia_do_workspace(self.ws, self._esperar_login(ctx)) if p.get("usar_ia", True) else None
++        ch = checagem.identificar(proj, list(p.get("candidatos") or []), ad, ctx.progresso, ctx.cancelar,
++                                  cache=CacheIA(proj.analise_dir / "cache_ia"))
++        for a in ch.avisos:
++            ctx.log(a)
++        return checagem.resumo(ch)
++
+     def _job_revisao(self, p: dict, ctx: ContextoJob) -> Any:
+         """Revisão antes de publicar (nota e o que corrigir); sem IA, pelas regras."""
+         from . import revisao
+diff --git a/motor/tests/test_acabamento.py b/motor/tests/test_acabamento.py
+index 6698cbe..c196967 100644
+--- a/motor/tests/test_acabamento.py
++++ b/motor/tests/test_acabamento.py
+@@ -1,4 +1,4 @@
+-"""Acabamento do passo 4: música de fundo e ajustes de imagem no clip já gerado."""
++"""Acabamento do passo 5: música de fundo e ajustes de imagem no clip já gerado."""
+ 
+ from __future__ import annotations
+ 
+diff --git a/app/src/renderer/src/components/Checagem.tsx b/app/src/renderer/src/components/Checagem.tsx
+new file mode 100644
+index 0000000..ece0c84
+--- /dev/null
++++ b/app/src/renderer/src/components/Checagem.tsx
+@@ -0,0 +1,324 @@
++import { useEffect, useState } from 'react'
++import { hms, type Api, type Candidato, type Job } from '../api'
++import { useT } from '../i18n'
++import { criarClips, type EscolhaEstilo } from './PassoEstilo'
++
++// Passo 4: checagem de fatos. O motor lista o que os cortes citam (pessoas, empresas, produtos, lugares e dados) com o
++// nome que identificou e a fonte; o usuário confirma, corrige o nome e/ou a fonte, ou ignora. O que foi conferido vale
++// na montagem: o texto na tela, as imagens reais e as fontes da descrição (motor/checagem.py).
++
++export type TipoFato = 'pessoa' | 'empresa' | 'organizacao' | 'produto' | 'lugar' | 'dado' | 'outro'
++export type StatusFato = 'pendente' | 'confirmado' | 'corrigido' | 'ignorado'
++export type Fonte = { titulo: string; url: string; descricao: string; origem: string; id: string }
++export type ItemFato = {
++  id: string
++  termo: string
++  tipo: TipoFato
++  nome: string
++  fonte: Fonte
++  sugerido_nome: string
++  sugerido_fonte: Fonte
++  ocorrencias: { candidato: string; inicio: number; trecho: string }[]
++  origem: string
++  status: StatusFato
++}
++export type ResumoChecagem = { total: number; pendente: number; confirmado: number; corrigido: number; ignorado: number }
++export type EstadoChecagem = { candidatos: string[]; itens: ItemFato[]; usou_ia: boolean; avisos: string[]; atualizado_em: string; resumo: ResumoChecagem }
++
++const TIPOS: TipoFato[] = ['pessoa', 'empresa', 'organizacao', 'produto', 'lugar', 'dado', 'outro']
++const FONTE_VAZIA: Fonte = { titulo: '', url: '', descricao: '', origem: '', id: '' }
++
++export function Checagem(props: {
++  api: Api
++  base: string
++  canal: string
++  projeto: string
++  cands: Candidato[]
++  idsCortes: string[] // os cortes que vão virar clip (os escolhidos, ou os dos clips que já existem)
++  deClipsExistentes: boolean
++  jobs: Record<string, Job>
++  escolha: EscolhaEstilo
++  setEscolha(e: EscolhaEstilo): void
++  setSelecionados(s: Set<string>): void
++  voltarEstilo(): void
++  irParaClips(): void
++  aposCriar(n: number): void
++  aoMudar(): void
++}): React.JSX.Element {
++  const { api, base, canal, projeto, cands, idsCortes, deClipsExistentes, jobs, escolha, setEscolha, setSelecionados, voltarEstilo, irParaClips, aposCriar, aoMudar } = props
++  const t = useT()
++  const tf = t.fatos
++  const [estado, setEstado] = useState<EstadoChecagem | null>(null)
++  const [msg, setMsg] = useState('')
++  const [usarIA, setUsarIA] = useState(true)
++  const [jobId, setJobId] = useState<string | null>(null)
++  const [enviando, setEnviando] = useState(false)
++  const [filtro, setFiltro] = useState<'todos' | StatusFato>('todos')
++
++  const carregar = async (): Promise<void> => {
++    try {
++      setEstado(await api.get<EstadoChecagem>(`${base}/checagem`))
++    } catch (e) {
++      setMsg(e instanceof Error ? e.message : String(e))
++    }
++  }
++  useEffect(() => {
++    void carregar()
++  }, [base]) // eslint-disable-line react-hooks/exhaustive-deps
++
++  // o job da identificação: quem já estava rodando (de outra visita ao passo) também conta
++  const jobAtual = jobId ? jobs[jobId] : Object.values(jobs).find((j) => j.tipo === 'checagem' && j.params.canal === canal
++    && j.params.projeto === projeto && (j.status === 'rodando' || j.status === 'na_fila'))
++  const rodando = (!!jobId && !jobAtual) || (!!jobAtual && (jobAtual.status === 'rodando' || jobAtual.status === 'na_fila'))
++  useEffect(() => {
++    if (!jobAtual || rodando) return
++    if (jobAtual.status === 'erro') setMsg(jobAtual.erro ?? t.status.erro)
++    setJobId(null)
++    void carregar().then(aoMudar)
++  }, [jobAtual?.status]) // eslint-disable-line react-hooks/exhaustive-deps
++
++  const escolhidos = cands.filter((c) => idsCortes.includes(c.id)).sort((a, b) => b.nota - a.nota)
++  const ids = escolhidos.map((c) => c.id)
++  const cobre = !!estado && ids.length > 0 && ids.every((id) => estado.candidatos.includes(id))
++  const doCorte = (it: ItemFato): boolean => it.ocorrencias.some((o) => ids.includes(o.candidato))
++  const itens = (estado?.itens ?? []).filter(doCorte)
++  const pendentes = itens.filter((i) => i.status === 'pendente').length
++  const visiveis = itens.filter((i) => filtro === 'todos' || i.status === filtro)
++
++  const identificar = async (): Promise<void> => {
++    setMsg('')
++    try {
++      const r = await api.post<{ job: string }>(`${base}/checagem`, { candidatos: ids, usar_ia: usarIA })
++      setJobId(r.job)
++    } catch (e) {
++      setMsg(e instanceof Error ? e.message : String(e))
++    }
++  }
++
++  const trocar = (novo: ItemFato): void => {
++    if (!estado) return
++    setEstado({ ...estado, itens: estado.itens.map((i) => (i.id === novo.id ? novo : i)) })
++    aoMudar()
++  }
++
++  const confirmarTodos = async (): Promise<void> => {
++    try {
++      await api.post(`${base}/checagem/confirmar-pendentes`)
++      await carregar()
++      aoMudar()
++    } catch (e) {
++      setMsg(e instanceof Error ? e.message : String(e))
++    }
++  }
++
++  const criar = async (renderizar: boolean): Promise<void> => {
++    setEnviando(true)
++    try {
++      const n = await criarClips(api, base, escolhidos, escolha, renderizar)
++      setMsg('')
++      setSelecionados(new Set())
++      setEscolha({ ...escolha, pedidoIA: null })
++      aposCriar(n)
++    } catch (e) {
++      setMsg(e instanceof Error ? e.message : String(e))
++    }
++    setEnviando(false)
++  }
++
++  return (
++    <div className="passo-conteudo passo-checagem">
++      <div className="barra-grade">
++        <button className="link" onClick={voltarEstilo}>← {tf.voltarEstilo}</button>
++        <strong>{tf.titulo}</strong>
++        <span className="dica">{deClipsExistentes ? tf.dosClips(ids.length) : t.selecionados(ids.length)}</span>
++        <span className="espaco" />
++        <label className="linha" title={tf.usarIADica}>
++          <input type="checkbox" checked={usarIA} onChange={(e) => setUsarIA(e.target.checked)} /> {tf.usarIA}
++        </label>
++        <button disabled={!ids.length || rodando} onClick={() => void identificar()}>{cobre ? tf.identificarDeNovo : tf.identificar}</button>
++        {!deClipsExistentes && (
++          <>
++            <button disabled={!escolhidos.length || enviando || rodando} onClick={() => void criar(false)}>{t.criarClips}</button>
++            <button className="primario" disabled={!escolhidos.length || enviando || rodando} onClick={() => void criar(true)}>
++              {t.gal.renderizarN(escolhidos.length)}
++            </button>
++          </>
++        )}
++        {deClipsExistentes && <button className="primario" onClick={irParaClips}>{tf.irParaClips} →</button>}
++      </div>
++
++      <div className="checagem-corpo">
++        <p className="dica">{deClipsExistentes ? tf.explicacaoClips : tf.explicacao}</p>
++        {!ids.length && (
++          <div className="sem-longos">
++            <span className="dica">{t.gal.semCortes}</span>
++          </div>
++        )}
++        {msg && <p className="erro-txt">{msg}</p>}
++        {rodando && (
++          <div className="checagem-rodando">
++            <span>{jobAtual?.mensagem || tf.identificando}</span>
++            <span className="barra"><span style={{ width: `${Math.round((jobAtual?.progresso ?? 0) * 100)}%` }} /></span>
++            <span className="dica">{Math.round((jobAtual?.progresso ?? 0) * 100)}%</span>
++          </div>
++        )}
++        {ids.length > 0 && !rodando && !cobre && (
++          <div className="sem-longos">
++            <span className="dica">{estado?.candidatos.length ? tf.cortesNovos : tf.nadaAinda}</span>
++            <button className="primario" onClick={() => void identificar()}>{tf.identificar}</button>
++          </div>
++        )}
++        {cobre && estado && estado.avisos.length > 0 && (
++          <ul className="checagem-avisos">{estado.avisos.map((a, i) => <li key={i} className="dica">⚠ {a}</li>)}</ul>
++        )}
++        {cobre && (
++          <div className="linha checagem-resumo">
++            <span className="chip">{estado?.usou_ia ? tf.comIA : tf.semIA}</span>
++            {(['todos', 'pendente', 'corrigido', 'confirmado', 'ignorado'] as const).map((f) => (
++              <button key={f} className={`chip-filtro ${filtro === f ? 'ativo' : ''}`} onClick={() => setFiltro(f)}>
++                {f === 'todos' ? `${tf.todos} · ${itens.length}` : `${tf.status[f]} · ${itens.filter((i) => i.status === f).length}`}
++              </button>
++            ))}
++            <span className="espaco" />
++            {pendentes > 0 && <button onClick={() => void confirmarTodos()}>{tf.confirmarTodos(pendentes)}</button>}
++          </div>
++        )}
++        {cobre && !itens.length && <p className="dica">{tf.nadaCitado}</p>}
++        {cobre && (
++          <div className="checagem-lista">
++            {visiveis.map((it) => (
++              <CartaoFato key={it.id} api={api} base={base} item={it} cands={ids.length > 1 ? cands : []} aoSalvar={trocar} />
++            ))}
++          </div>
++        )}
++      </div>
++    </div>
++  )
++}
++
++function CartaoFato(props: { api: Api; base: string; item: ItemFato; cands: Candidato[]; aoSalvar(i: ItemFato): void }): React.JSX.Element {
++  const { api, base, item, cands, aoSalvar } = props
++  const t = useT()
++  const tf = t.fatos
++  const [nome, setNome] = useState(item.nome)
++  const [tipo, setTipo] = useState<TipoFato>(item.tipo)
++  const [fonte, setFonte] = useState<Fonte>(item.fonte)
++  const [opcoes, setOpcoes] = useState<Fonte[] | null>(null)
++  const [buscando, setBuscando] = useState(false)
++  const [erro, setErro] = useState('')
++  const [editandoFonte, setEditandoFonte] = useState(false)
++  useEffect(() => {
++    setNome(item.nome)
++    setTipo(item.tipo)
++    setFonte(item.fonte)
++  }, [item])
++
++  const mudou = nome.trim() !== item.nome || tipo !== item.tipo || JSON.stringify(fonte) !== JSON.stringify(item.fonte)
++  const dado = tipo === 'dado'
++  const oc = item.ocorrencias[0]
++  const corte = oc ? cands.find((c) => c.id === oc.candidato) : undefined
++
++  const enviar = async (corpo: Record<string, unknown>): Promise<void> => {
++    setErro('')
++    try {
++      aoSalvar(await api.put<ItemFato>(`${base}/checagem/itens/${encodeURIComponent(item.id)}`, corpo))
++      setOpcoes(null)
++      setEditandoFonte(false)
++    } catch (e) {
++      setErro(e instanceof Error ? e.message : String(e))
++    }
++  }
++  const salvar = (): Promise<void> => enviar({ nome: nome.trim(), tipo, fonte, ...(mudou ? {} : { status: 'confirmado' }) })
++
++  const buscar = async (): Promise<void> => {
++    setBuscando(true)
++    setErro('')
++    try {
++      setOpcoes(await api.get<Fonte[]>('/api/checagem/fontes', { busca: nome.trim() || item.termo }))
++    } catch (e) {
++      setErro(e instanceof Error ? e.message : String(e))
++    }
++    setBuscando(false)
++  }
++
++  // o trecho da fala com o termo em negrito
++  const trecho = (oc?.trecho ?? '').split(new RegExp(`(${item.termo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'i'))
++
++  return (
++    <div className={`cartao-fato ${item.status}`}>
++      <div className="linha cabeca-fato">
++        <select value={tipo} onChange={(e) => setTipo(e.target.value as TipoFato)} aria-label={tf.tipo}>
++          {TIPOS.map((x) => <option key={x} value={x}>{tf.tipos[x]}</option>)}
++        </select>
++        <span className={`chip status-fato ${item.status}`}>{tf.status[item.status]}</span>
++        {item.origem === 'ia' && <span className="chip usa-ia">IA</span>}
++        <span className="espaco" />
++        {oc && <span className="dica">{hms(oc.inicio)}{corte ? ` · ${tf.noCorte(hms(corte.inicio))}` : ''}{item.ocorrencias.length > 1 ? ` · ${tf.vezes(item.ocorrencias.length)}` : ''}</span>}
++      </div>
++      <div className="campo-fato">
++        <span className="rotulo">{tf.dito}</span>
++        <span><strong>“{item.termo}”</strong>{oc?.trecho && <span className="dica trecho-fato"> … {trecho.map((p, i) => i % 2 ? <b key={i}>{p}</b> : p)} …</span>}</span>
++      </div>
++      <label className="campo-fato">
++        <span className="rotulo">{dado ? tf.comoAparece : tf.identificado}</span>
++        <input value={nome} onChange={(e) => setNome(e.target.value)} />
++        {item.sugerido_nome && item.sugerido_nome !== nome && (
++          <button className="link" onClick={() => setNome(item.sugerido_nome)}>{tf.usarSugerido(item.sugerido_nome)}</button>
++        )}
++      </label>
++      <div className="campo-fato">
++        <span className="rotulo">{dado ? tf.deOnde : tf.fonte}</span>
++        <div className="fonte-fato">
++          {fonte.url || fonte.titulo ? (
++            <span>
++              {fonte.url ? <a href={fonte.url} target="_blank" rel="noreferrer">{fonte.titulo || fonte.url}</a> : <strong>{fonte.titulo}</strong>}
++              {fonte.descricao && <span className="dica"> · {fonte.descricao}</span>}
++              {fonte.origem && <span className="chip">{tf.origens[fonte.origem] ?? fonte.origem}</span>}
++            </span>
++          ) : (
++            <span className="aviso-txt">{dado ? tf.semFonteDado : tf.semFonte}</span>
++          )}
++          {(editandoFonte || !(fonte.url || fonte.titulo)) && (
++            <div className="campos-fonte">
++              <input placeholder={tf.fonteNome} value={fonte.titulo}
++                onChange={(e) => setFonte({ ...fonte, titulo: e.target.value, descricao: '', origem: 'usuario', id: '' })} />
++              <input placeholder={tf.fonteLink} value={fonte.url}
++                onChange={(e) => setFonte({ ...fonte, url: e.target.value, descricao: '', origem: 'usuario', id: '' })} />
++            </div>
++          )}
++          <div className="linha">
++            {(fonte.url || fonte.titulo) && !editandoFonte && <button onClick={() => setEditandoFonte(true)}>{tf.editarFonte}</button>}
++            {!dado && tipo !== 'lugar' && (
++              <button disabled={buscando} onClick={() => void buscar()}>{buscando ? '…' : tf.buscarFonte}</button>
++            )}
++            {(fonte.titulo || fonte.url) && (
++              <button className="link" onClick={() => setFonte(FONTE_VAZIA)}>{tf.limparFonte}</button>
++            )}
++          </div>
++          {opcoes && (
++            <ul className="opcoes-fonte">
++              {!opcoes.length && <li className="dica">{tf.nenhumaFonte}</li>}
++              {opcoes.map((o) => (
++                <li key={o.id}>
++                  <button className="link" onClick={() => {
++                    setFonte({ titulo: o.titulo, url: o.url, descricao: o.descricao, origem: 'wikidata', id: o.id })
++                    setOpcoes(null)
++                  }}>{o.titulo}</button>
++                  <span className="dica"> · {o.descricao || o.id}</span>
++                </li>
++              ))}
++            </ul>
++          )}
++        </div>
++      </div>
++      {erro && <p className="erro-txt">{erro}</p>}
++      <div className="linha acoes-fato">
++        <button className="primario" onClick={() => void salvar()}>{mudou ? tf.salvarCorrecao : item.status === 'confirmado' ? tf.confirmado : item.status === 'corrigido' ? tf.corrigido : tf.confirmar}</button>
++        {item.status !== 'ignorado'
++          ? <button onClick={() => void enviar({ status: 'ignorado' })} title={tf.ignorarDica}>{tf.ignorar}</button>
++          : <span className="dica">{tf.ignoradoDica}</span>}
++        {mudou && <button className="link" onClick={() => { setNome(item.nome); setTipo(item.tipo); setFonte(item.fonte); setEditandoFonte(false) }}>{tf.desfazer}</button>}
++      </div>
++    </div>
++  )
++}
+diff --git a/motor/src/clipator/checagem.py b/motor/src/clipator/checagem.py
+new file mode 100644
+index 0000000..7f0d699
+--- /dev/null
++++ b/motor/src/clipator/checagem.py
+@@ -0,0 +1,651 @@
++"""Checagem de fatos (passo 4): o que a fala cita, o que o Clipator entendeu e a fonte que vai usar.
++
++Antes de montar os clips, o usuário vê cada pessoa, empresa, organização, produto, lugar e dado (número) citado nos
++cortes escolhidos, com o nome que o Clipator identificou e a fonte. Ele confirma, corrige o nome e/ou a fonte, ou manda
++ignorar. O que foi conferido vale na montagem:
++
++- **Texto na tela**: a palavra dita ("Iliasat Skiver", "40 %") é trocada pelo nome conferido ("Ilya Sutskever",
++  "45%") nas palavras que o render usa. Legenda, cenas, cartões, roteiro da IA e imagens reais leem essas palavras, então
++  todos saem com o nome certo, nos mesmos tempos.
++- **Imagens reais** (referencias.py): com a checagem feita, a lista conferida substitui a chamada à IA, e a fonte
++  escolhida no Wikidata é a que dá a imagem e a linha de contexto.
++- **Descrição da postagem**: as fontes conferidas entram num bloco "Fontes".
++
++Identificação em duas camadas, como o resto do Clipator:
++
++1. **Sem IA, offline**: nomes próprios (palavras com maiúscula no meio da frase, artes/pesquisa.termos), lugares da base
++   cartográfica local (Natural Earth, artes/geografia) e números com a unidade ("500 mil reais", "40%"), com a fonte
++   citada na própria fala ("segundo o IBGE").
++2. **Com a IA configurada (opcional)**: uma chamada curta lê só o texto dos cortes e devolve, por schema, o termo como
++   está na transcrição, o tipo e o nome certo. O termo tem de estar na fala.
++
++A fonte de pessoas, empresas e produtos vem do Wikidata (grátis, sem conta). Sem rede, ou com CLIPATOR_PESQUISA=0, o
++item fica sem fonte e o usuário pode escrever uma. Nada disso é obrigatório: sem checagem, o render sai como antes.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import re
++import threading
++import urllib.parse
++from datetime import datetime, timezone
++from pathlib import Path
++from typing import Any, Callable, Literal
++
++from pydantic import BaseModel, Field
++
++from .textutil import STOPWORDS, sem_acento
++
++Tipo = Literal["pessoa", "empresa", "organizacao", "produto", "lugar", "dado", "outro"]
++Status = Literal["pendente", "confirmado", "corrigido", "ignorado"]
++TIPOS: tuple[str, ...] = ("pessoa", "empresa", "organizacao", "produto", "lugar", "dado", "outro")
++REVISADOS = ("confirmado", "corrigido")
++MAX_POR_CORTE = 14
++MAX_ITENS = 60
++ARQUIVO = "checagem.json"
++
++Progresso = Callable[[float, str], None]
++
++
++class Fonte(BaseModel):
++    titulo: str = ""
++    url: str = ""
++    descricao: str = ""
++    origem: str = ""  # wikidata, natural-earth, fala, usuario ou vazio (sem fonte)
++    id: str = ""  # Q-id do Wikidata ou id da base cartográfica
++
++
++class Ocorrencia(BaseModel):
++    candidato: str
++    inicio: float = 0.0
++    trecho: str = ""
++
++
++class Item(BaseModel):
++    id: str
++    termo: str  # como está na transcrição
++    tipo: Tipo = "outro"
++    nome: str  # o que vai para o vídeo
++    fonte: Fonte = Field(default_factory=Fonte)
++    sugerido_nome: str = ""
++    sugerido_fonte: Fonte = Field(default_factory=Fonte)
++    ocorrencias: list[Ocorrencia] = Field(default_factory=list)
++    origem: str = "regras"  # regras ou ia
++    status: Status = "pendente"
++
++
++class Checagem(BaseModel):
++    candidatos: list[str] = Field(default_factory=list)
++    itens: list[Item] = Field(default_factory=list)
++    usou_ia: bool = False
++    avisos: list[str] = Field(default_factory=list)
++    atualizado_em: str = ""
++
++
++class ErroChecagem(ValueError):
++    pass
++
++
++# ---- arquivo --------------------------------------------------------------------------------------------------------
++def caminho(projeto: Any) -> Path:
++    return Path(projeto.analise_dir) / ARQUIVO
++
++
++def carregar(projeto: Any) -> Checagem:
++    arq = caminho(projeto)
++    if not arq.exists():
++        return Checagem()
++    try:
++        return Checagem.model_validate_json(arq.read_text(encoding="utf-8"))
++    except ValueError:
++        return Checagem()
++
++
++def salvar(projeto: Any, ch: Checagem) -> Checagem:
++    ch = ch.model_copy(update={"atualizado_em": datetime.now(timezone.utc).isoformat(timespec="seconds")})
++    arq = caminho(projeto)
++    arq.parent.mkdir(parents=True, exist_ok=True)
++    arq.write_text(ch.model_dump_json(indent=1), encoding="utf-8")
++    return ch
++
++
++def resumo(ch: Checagem) -> dict[str, int]:
++    n = {s: 0 for s in ("pendente", "confirmado", "corrigido", "ignorado")}
++    for i in ch.itens:
++        n[i.status] += 1
++    return {"total": len(ch.itens), **n}
++
++
++# ---- texto ----------------------------------------------------------------------------------------------------------
++def _chave(s: str) -> str:
++    return " ".join(re.sub(r"[^\w%$]+", " ", sem_acento(str(s)).lower()).split())
++
++
++def id_do_termo(termo: str) -> str:
++    return hashlib.sha1(_chave(termo).encode()).hexdigest()[:10]
++
++
++_PONT = " ,.;:!?\"'“”()[]…"
++
++
++def _limpa(w: str) -> str:
++    return str(w).strip().strip(_PONT)
++
++
++def palavras_do_corte(pals: list[dict], inicio: float, fim: float) -> list[dict]:
++    return [w for w in pals if w["fim"] > inicio + 0.02 and w["inicio"] < fim - 0.02]
++
++
++def _achar(termo: str, pals: list[dict]) -> int | None:
++    """Índice da primeira palavra em que o termo começa (sem caixa, acento nem pontuação)."""
++    alvo = _chave(termo).split()
++    ws = [_chave(w["texto"]) for w in pals]
++    for i in range(max(0, len(ws) - len(alvo) + 1)):
++        if alvo and ws[i:i + len(alvo)] == alvo:
++            return i
++    return None
++
++
++def _trecho(pals: list[dict], i: int, n: int = 1, lado: int = 6) -> str:
++    return " ".join(w["texto"].strip() for w in pals[max(0, i - lado):i + n + lado])
++
++
++# ---- camada 1: regras, sem IA e sem rede ----------------------------------------------------------------------------
++_NUM = re.compile(r"^(r\$|us\$|\$)?\d+([.,]\d+)*(%|º|ª)?$", re.IGNORECASE)
++_GRANDEZA = {"mil", "milhao", "milhoes", "bilhao", "bilhoes", "trilhao", "trilhoes", "%", "porcento", "reais", "real", "dolares",
++             "dolar", "euros", "euro", "pessoas", "anos", "vezes", "mortos", "casos", "habitantes", "km", "quilometros", "metros",
++             "toneladas", "quilos", "graus", "votos", "empregos", "usuarios", "seguidores", "inscritos"}
++_POR_CENTO = ("por", "cento")
++_CITA = re.compile(r"(?i:\b(segundo|conforme|de acordo com|dados d[oae]s?|pesquisa d[oae]s?|levantamento d[oae]s?|relat[oó]rio d[oae]s?|"
++                   r"estudo d[oae]s?|n[uú]meros d[oae]s?)\s+(?:(?:o|a|os|as)\s+)?)((?:[A-ZÀ-Ý][\wÀ-ÿ.&-]*\s*){1,4})")
++_SIGLA = re.compile(r"^[A-ZÀ-Ý]{2,6}$")
++_NAO_SIGLA = {"OK", "TV", "EU", "UM", "AI", "NE", "TA", "SO", "LA", "AH", "OH"}
++_NAO_NOME = set("a o as os um uma eu ele ela nos voce mas e entao ai depois quando todo toda agora isso esse essa este esta la aqui so "
++                "sim nao ne tipo cara mano gente deus senhor senhora".split())
++
++
++def _numeros(pals: list[dict]) -> list[tuple[int, int, str]]:
++    """(índice, nº de palavras, termo) de cada número dito com a grandeza colada ("500 mil reais", "40 por cento")."""
++    out = []
++    i = 0
++    while i < len(pals):
++        w = _limpa(pals[i]["texto"])
++        if not _NUM.match(w):
++            i += 1
++            continue
++        j = i + 1
++        while j < len(pals) and j <= i + 3:
++            t = _chave(pals[j]["texto"])
++            if t in _GRANDEZA or (t == "por" and j + 1 < len(pals) and _chave(pals[j + 1]["texto"]) == "cento"):
++                j += 2 if t == "por" else 1
++                continue
++            if t in ("de",) and j + 1 < len(pals) and _chave(pals[j + 1]["texto"]) in _GRANDEZA - {"mil", "milhao", "milhoes", "bilhao",
++                                                                                                    "bilhoes", "trilhao", "trilhoes"}:
++                j += 2  # "2 milhões de pessoas"
++                continue
++            break
++        termo = " ".join(_limpa(x["texto"]) for x in pals[i:j])
++        sozinho = j == i + 1
++        # número solto de um dígito ("2", "3") quase nunca é dado: só entra com grandeza
++        if not (sozinho and re.fullmatch(r"\d", w)):
++            out.append((i, j - i, termo))
++        i = j
++    return out
++
++
++def _fonte_citada(pals: list[dict], i: int) -> Fonte:
++    """A fonte que a própria fala cita perto do número ("segundo o IBGE", "dados da OMS")."""
++    a = i
++    while a > 0 and i - a < 20 and not pals[a - 1]["texto"].strip().endswith((".", "!", "?")):
++        a -= 1
++    b = i
++    while b < len(pals) - 1 and b - i < 20 and not pals[b]["texto"].strip().endswith((".", "!", "?")):
++        b += 1
++    texto = " ".join(w["texto"].strip() for w in pals[a:b + 1])  # só a frase do número
++    m = _CITA.search(texto)
++    if not m:
++        return Fonte()
++    nome = m.group(2).strip().strip(_PONT)
++    if not nome or _chave(nome) in _NAO_NOME:
++        return Fonte()
++    return Fonte(titulo=nome[:80], descricao="citada na própria fala", origem="fala")
++
++
++def _lugares(pals: list[dict]) -> list[tuple[int, int, str, Any]]:
++    """Lugares da base cartográfica local ditos com maiúscula (país, estado, continente)."""
++    try:
++        from .artes import geografia
++    except Exception:  # noqa: BLE001 - sem a base, os lugares ficam para a IA
++        return []
++    try:
++        nomes = geografia.nomes_falados()
++    except Exception:  # noqa: BLE001
++        return []
++    out = []
++    i = 0
++    while i < len(pals):
++        achou = False
++        for n in (4, 3, 2, 1):
++            janela = pals[i:i + n]
++            if len(janela) < n:
++                continue
++            ws = [_limpa(w["texto"]) for w in janela]
++            if not ws[0][:1].isupper():
++                continue
++            termo = " ".join(ws)
++            if geografia.normalizar(termo) not in nomes:
++                continue
++            try:
++                e = geografia.resolver(termo)
++            except geografia.LugarNaoResolvido as exc:
++                e = exc.opcoes[0] if exc.opcoes else None
++            if e is None:
++                continue
++            out.append((i, n, termo, e))
++            i += n
++            achou = True
++            break
++        if not achou:
++            i += 1
++    return out
++
++
++def por_regras(pals: list[dict], candidato: str) -> list[Item]:
++    """Os itens que dá para achar sem IA nem rede."""
++    from .artes import pesquisa
++
++    itens: dict[str, Item] = {}
++
++    def add(termo: str, tipo: str, nome: str, fonte: Fonte, i: int, n: int) -> None:
++        k = id_do_termo(termo)
++        if not _chave(termo) or k in itens:
++            return
++        oc = Ocorrencia(candidato=candidato, inicio=round(float(pals[i]["inicio"]), 2), trecho=_trecho(pals, i, n))
++        itens[k] = Item(id=k, termo=termo, tipo=tipo, nome=nome, fonte=fonte, sugerido_nome=nome, sugerido_fonte=fonte,
++                        ocorrencias=[oc], origem="regras")
++
++    lugares = _lugares(pals)
++    ocupado = {k for i, n, _, _ in lugares for k in range(i, i + n)}
++    for i, n, termo, e in lugares:
++        from .artes import geografia
++
++        add(termo, "lugar", e.nome, Fonte(titulo=e.nome, descricao=geografia.descricao(e), origem="natural-earth", id=f"{e.nivel}:{e.id}"), i, n)
++    for nome in pesquisa.termos(pals, maximo=MAX_POR_CORTE):
++        if not nome[:1].isupper() or _chave(nome) in _NAO_NOME or all(t in STOPWORDS for t in _chave(nome).split()):
++            continue
++        i = _achar(nome, pals)
++        if i is None or i in ocupado:
++            continue
++        add(nome, "outro", nome, Fonte(), i, len(nome.split()))
++    for i, w in enumerate(pals):  # siglas (IBGE, OMS, NASA): o nome próprio em caixa alta não passa nos nomes acima
++        x = _limpa(w["texto"])
++        if _SIGLA.match(x) and x not in _NAO_SIGLA and i not in ocupado:
++            add(x, "organizacao", x, Fonte(), i, 1)
++    for i, n, termo in _numeros(pals):
++        add(termo, "dado", termo, _fonte_citada(pals, i), i, n)
++    return list(itens.values())[:MAX_POR_CORTE * 2]
++
++
++# ---- camada 2: IA (opcional) ----------------------------------------------------------------------------------------
++def schema() -> dict[str, Any]:
++    return {"type": "object", "properties": {"itens": {"type": "array", "items": {"type": "object", "properties": {
++        "corte": {"type": "string"}, "termo": {"type": "string"}, "tipo": {"type": "string", "enum": list(TIPOS)},
++        "nome": {"type": "string"}, "fonte_citada": {"type": "string"}},
++        "required": ["corte", "termo", "tipo", "nome", "fonte_citada"], "additionalProperties": False}}},
++        "required": ["itens"], "additionalProperties": False}
++
++
++def prompt(cortes: list[tuple[str, list[dict]]]) -> str:
++    blocos = "\n\n".join(f"[corte {cid}]\n" + " ".join(w["texto"].strip() for w in pals)[:5000] for cid, pals in cortes)
++    return ("Você ajuda a checar fatos antes de montar cortes de vídeo. Liste o que estas falas citam e que pode sair errado na tela: "
++            "pessoas, empresas, organizações, produtos ou tecnologias e lugares (país, estado, continente) citados pelo nome, e dados "
++            "(números, porcentagens, valores, estatísticas) ditos como fato. Até 12 por corte, na ordem em que aparecem.\n"
++            "- 'corte': o id entre colchetes do corte em que aparece.\n"
++            "- 'termo': copiado da fala exatamente como está na transcrição, mesmo que escrito errado.\n"
++            "- 'nome': o nome certo e completo (\"Iliasat Skiver\" → \"Ilya Sutskever\", \"a Nvídia\" → \"Nvidia\"). Para dado, o "
++            "valor como deve aparecer na tela (\"quarenta por cento\" → \"40%\"), sem corrigir o valor que a pessoa disse.\n"
++            "- 'fonte_citada': só se a fala disser de onde vem (\"segundo o IBGE\" → \"IBGE\"); senão, vazio. Não invente fonte.\n"
++            "- Nada genérico (\"a IA\", \"o governo\", \"a empresa\"), nenhum pronome e nada que não foi dito.\n\n" + blocos)
++
++
++def de_resposta(resp: Any, cortes: dict[str, list[dict]]) -> list[Item]:
++    from .direcao import _na_fala
++
++    out: dict[str, Item] = {}
++    for e in ((resp or {}).get("itens") or []) if isinstance(resp, dict) else []:
++        if not isinstance(e, dict) or e.get("tipo") not in TIPOS:
++            continue
++        pals = cortes.get(str(e.get("corte") or ""))
++        termo = " ".join(str(e.get("termo") or "").split())[:80]
++        nome = " ".join(str(e.get("nome") or "").split())[:80] or termo
++        if pals is None or not termo or not _na_fala(termo, pals, 0.99):
++            continue
++        i = _achar(termo, pals)
++        k = id_do_termo(termo)
++        if i is None or k in out:
++            continue
++        cit = " ".join(str(e.get("fonte_citada") or "").split())[:80]
++        fonte = Fonte(titulo=cit, descricao="citada na própria fala", origem="fala") if cit else Fonte()
++        out[k] = Item(id=k, termo=termo, tipo=e["tipo"], nome=nome, fonte=fonte, sugerido_nome=nome, sugerido_fonte=fonte,
++                      ocorrencias=[Ocorrencia(candidato=str(e["corte"]), inicio=round(float(pals[i]["inicio"]), 2),
++                                              trecho=_trecho(pals, i, len(termo.split())))], origem="ia")
++    return list(out.values())
++
++
++# ---- fonte: Wikidata (grátis, sem conta) ----------------------------------------------------------------------------
++_EMPRESA = {"Q4830453", "Q891723", "Q6881511", "Q783794", "Q167037", "Q1058914", "Q210167", "Q18388277"}
++_ORGANIZACAO = {"Q43229", "Q163740", "Q484652", "Q7278", "Q327333", "Q2659904", "Q245065", "Q15911314", "Q3918", "Q875538"}
++_PRODUTO = {"Q2424752", "Q7397", "Q166142", "Q9135", "Q1172284", "Q17517", "Q7889", "Q11446", "Q3966", "Q431289"}
++_LUGAR = {"Q6256", "Q3624078", "Q5107", "Q35657", "Q107390", "Q515", "Q1549591"}
++
++
++def _tipo_wikidata(p31: set[str]) -> str:
++    if "Q5" in p31:
++        return "pessoa"
++    if p31 & _EMPRESA:
++        return "empresa"
++    if p31 & _LUGAR:
++        return "lugar"
++    if p31 & _PRODUTO:
++        return "produto"
++    if p31 & _ORGANIZACAO:
++        return "organizacao"
++    return "outro"
++
++
++def opcoes_wikidata(busca: str, abrir: Any = None, timeout: float = 8.0, limite: int = 5) -> list[dict[str, str]]:
++    """Os itens do Wikidata para a busca, com nome, descrição e link (para o usuário escolher a fonte)."""
++    from .artes import pesquisa
++
++    busca = " ".join(str(busca).split())[:80]
++    if not busca:
++        return []
++    abrir = abrir or pesquisa._abrir
++    q = {"action": "wbsearchentities", "search": busca, "language": "pt", "uselang": "pt", "format": "json",
++         "limit": str(limite), "type": "item"}
++    achados = json.loads(abrir(pesquisa.WIKIDATA + "?" + urllib.parse.urlencode(q), timeout)).get("search") or []
++    out = []
++    for a in achados[:limite]:
++        qid = str(a.get("id") or "")
++        if re.fullmatch(r"Q\d+", qid):
++            out.append({"id": qid, "titulo": str(a.get("label") or busca)[:80], "descricao": str(a.get("description") or "")[:140],
++                        "url": f"https://www.wikidata.org/wiki/{qid}", "origem": "wikidata"})
++    return out
++
++
++def _detalhe_wikidata(qid: str, abrir: Any, timeout: float) -> tuple[str, str, set[str]]:
++    """(nome em português, descrição em português, P31) do item."""
++    from .artes import pesquisa
++
++    e = json.loads(abrir(pesquisa.ENTIDADE.format(qid), timeout))["entities"][qid]
++    return pesquisa._lingua(e, "labels"), pesquisa._lingua(e, "descriptions"), pesquisa._ids(e.get("claims") or {}, "P31")
++
++
++def fonte_wikidata(nome: str, tipo: str, abrir: Any = None, timeout: float = 8.0) -> tuple[Fonte, str, str]:
++    """(fonte, tipo, nome) do primeiro item que combina com o tipo; Fonte() se nada combinar."""
++    from .artes import pesquisa
++
++    abrir = abrir or pesquisa._abrir
++    for op in opcoes_wikidata(nome, abrir, timeout, 4)[:3]:
++        try:
++            rotulo, desc, p31 = _detalhe_wikidata(op["id"], abrir, timeout)
++        except Exception:  # noqa: BLE001
++            continue
++        if p31 & {"Q4167410", "Q22808320"}:  # página de desambiguação
++            continue
++        achado = _tipo_wikidata(p31)
++        if tipo == "pessoa" and achado != "pessoa":
++            continue
++        if tipo in ("empresa", "organizacao", "produto") and achado == "pessoa":
++            continue
++        tipo_final = achado if tipo == "outro" else tipo
++        titulo = rotulo or op["titulo"]
++        return (Fonte(titulo=titulo, url=op["url"], descricao=desc or op["descricao"], origem="wikidata", id=op["id"]),
++                tipo_final, titulo)
++    return Fonte(), tipo, nome
++
++
++# ---- juntar tudo ----------------------------------------------------------------------------------------------------
++def _juntar(itens: list[Item]) -> list[Item]:
++    """O mesmo termo em vários cortes vira um item só, com todas as ocorrências."""
++    out: dict[str, Item] = {}
++    for it in itens:
++        if it.id in out:
++            ja = out[it.id]
++            vistos = {(o.candidato, o.inicio) for o in ja.ocorrencias}
++            ja.ocorrencias += [o for o in it.ocorrencias if (o.candidato, o.inicio) not in vistos]
++        else:
++            out[it.id] = it.model_copy(deep=True)
++    return list(out.values())
++
++
++def identificar(projeto: Any, candidatos: list[str], ad: Any = None, progresso: Progresso | None = None,
++                cancelar: threading.Event | None = None, abrir: Any = None, cache: Any = None) -> Checagem:
++    """Monta (ou refaz) a checagem dos cortes. O que o usuário já conferiu fica como ele deixou."""
++    from .artes import pesquisa
++    from .transcribe import palavras
++
++    prog = progresso or (lambda _f, _m: None)
++    trans = projeto.transcricao()
++    if not trans:
++        raise ErroChecagem("O vídeo ainda não tem transcrição. Rode a análise no passo 1.")
++    pals_all = palavras(trans)
++    todos = {c["id"]: c for c in projeto.candidatos()}
++    ids = [c for c in dict.fromkeys(candidatos) if c in todos]
++    if not ids:
++        raise ErroChecagem("Nenhum corte para checar. Escolha os cortes no passo 2.")
++    cortes = {cid: palavras_do_corte(pals_all, float(todos[cid]["inicio"]), float(todos[cid]["fim"])) for cid in ids}
++    avisos: list[str] = []
++
++    prog(0.05, "procurando nomes, lugares e números na fala")
++    regras: list[Item] = []
++    for cid, pals in cortes.items():
++        regras += por_regras(pals, cid)
++
++    ia: list[Item] = []
++    usou_ia = False
++    if ad is not None:
++        prog(0.2, f"perguntando ao {getattr(ad, 'nome', 'IA')} o que a fala cita")
++        try:
++            from .ai.adapter import chamar
++
++            ia = de_resposta(chamar(ad, prompt(list(cortes.items())), schema(), cache, cancelar), cortes)
++            usou_ia = True
++        except Exception as exc:  # noqa: BLE001 - sem a IA, valem as regras
++            avisos.append(f"A IA não respondeu ({exc}); a lista veio só das regras locais.")
++    # a IA manda no que ela achou; as regras completam (lugares e números que ela deixou passar)
++    da_ia = {i.id for i in ia}
++    tirados_pela_ia = {id_do_termo(p) for i in ia for p in i.termo.split()} if ia else set()
++    itens = _juntar(ia + [r for r in regras if r.id not in da_ia and not (r.tipo == "outro" and r.id in tirados_pela_ia)])
++    if usou_ia:  # nome solto que a IA viu e não listou costuma ser começo de frase ou palavra comum
++        itens = [i for i in itens if i.origem == "ia" or i.tipo != "outro"]
++
++    # a fonte: o que o usuário já conferiu fica; o resto busca no Wikidata
++    antigo = {i.id: i for i in carregar(projeto).itens}
++    a_buscar = [i for i in itens if i.tipo not in ("lugar", "dado") and not i.fonte.url
++                and not (i.id in antigo and antigo[i.id].status != "pendente")]
++    if a_buscar and pesquisa.ligada():
++        falhas = 0
++        for k, it in enumerate(a_buscar):
++            if cancelar is not None and cancelar.is_set():
++                break
++            prog(0.45 + 0.5 * k / max(1, len(a_buscar)), f"buscando a fonte de “{it.nome}”")
++            try:
++                fonte, tipo, nome = fonte_wikidata(it.nome, it.tipo, abrir)
++            except Exception:  # noqa: BLE001 - sem rede: o item fica sem fonte
++                falhas += 1
++                if falhas >= 2:
++                    avisos.append("Sem acesso ao Wikidata agora: os itens restantes ficaram sem fonte. Dá para escrever a fonte à mão.")
++                    break
++                continue
++            if fonte.url:
++                it.fonte, it.sugerido_fonte, it.tipo = fonte, fonte, tipo  # type: ignore[assignment]
++                if it.origem == "regras":  # sem IA, o nome do Wikidata é a melhor sugestão de grafia
++                    it.nome = it.sugerido_nome = nome
++    elif a_buscar:
++        avisos.append("Busca de fontes desligada (CLIPATOR_PESQUISA=0): os itens ficaram sem fonte.")
++
++    final: list[Item] = []
++    for it in itens:
++        velho = antigo.get(it.id)
++        if velho is not None and velho.status != "pendente":
++            final.append(velho.model_copy(update={"ocorrencias": it.ocorrencias}))
++        else:
++            final.append(it)
++    # itens conferidos de cortes que não estão nesta rodada continuam valendo para eles
++    final += [v for k, v in antigo.items() if k not in {i.id for i in final} and v.status != "pendente"
++              and any(o.candidato not in ids for o in v.ocorrencias)]
++    final.sort(key=lambda i: (ids.index(i.ocorrencias[0].candidato) if i.ocorrencias and i.ocorrencias[0].candidato in ids else 99,
++                              i.ocorrencias[0].inicio if i.ocorrencias else 0))
++    prog(1.0, f"{len(final)} item(ns) para checar")
++    ch = Checagem(candidatos=ids, itens=final[:MAX_ITENS], usou_ia=usou_ia, avisos=avisos)
++    return salvar(projeto, ch)
++
++
++def atualizar_item(projeto: Any, item_id: str, status: str | None = None, nome: str | None = None,
++                   fonte: dict | None = None, tipo: str | None = None) -> Item:
++    """Confirmar, corrigir (nome, fonte, tipo) ou ignorar um item. Mudar o nome ou a fonte marca como corrigido."""
++    ch = carregar(projeto)
++    it = next((i for i in ch.itens if i.id == item_id), None)
++    if it is None:
++        raise ErroChecagem("Item não encontrado. Rode a identificação de novo.")
++    upd: dict[str, Any] = {}
++    if nome is not None:
++        nome = " ".join(str(nome).split())[:80]
++        if not nome:
++            raise ErroChecagem("O nome não pode ficar vazio. Para não mexer no que foi dito, use Ignorar.")
++        upd["nome"] = nome
++    if fonte is not None:
++        f = Fonte.model_validate({**fonte})
++        if f.url and not re.match(r"^https?://", f.url):
++            raise ErroChecagem("O link da fonte tem de começar com http:// ou https://.")
++        upd["fonte"] = f.model_copy(update={"titulo": f.titulo[:120], "descricao": f.descricao[:200], "url": f.url[:400],
++                                            "origem": f.origem or "usuario"})
++    if tipo is not None:
++        if tipo not in TIPOS:
++            raise ErroChecagem(f"Tipo desconhecido: {tipo}.")
++        upd["tipo"] = tipo
++    novo = it.model_copy(update=upd)
++    if status is not None:
++        if status not in ("pendente", "confirmado", "corrigido", "ignorado"):
++            raise ErroChecagem(f"Situação desconhecida: {status}.")
++        novo.status = status  # type: ignore[assignment]
++    elif upd:
++        novo.status = "confirmado"  # type: ignore[assignment]
++    if novo.status in REVISADOS:  # corrigido é quando algo ficou diferente do sugerido
++        mudou = novo.nome != novo.sugerido_nome or novo.fonte != novo.sugerido_fonte or (tipo is not None and tipo != it.tipo)
++        novo.status = "corrigido" if mudou else "confirmado"  # type: ignore[assignment]
++    ch.itens = [novo if i.id == item_id else i for i in ch.itens]
++    salvar(projeto, ch)
++    return novo
++
++
++def confirmar_pendentes(projeto: Any) -> int:
++    ch = carregar(projeto)
++    n = 0
++    for i in ch.itens:
++        if i.status == "pendente":
++            i.status = "confirmado"
++            n += 1
++    salvar(projeto, ch)
++    return n
++
++
++# ---- na montagem ----------------------------------------------------------------------------------------------------
++def revisados(projeto: Any) -> list[Item]:
++    return [i for i in carregar(projeto).itens if i.status in REVISADOS]
++
++
++def _partes(p: str) -> tuple[str, str, str]:
++    m = re.match(r"^([\"'“(\[]*)(.*?)([\"'”)\].,;:!?…]*)$", p)
++    return (m.group(1), m.group(2), m.group(3)) if m else ("", p, "")
++
++
++def aplicar_nas_palavras(pals: list[dict], itens: list[Item]) -> tuple[list[dict], list[dict[str, Any]]]:
++    """Troca o termo dito pelo nome conferido. Devolve (palavras novas, trocas). As palavras de entrada não mudam.
++
++    Com o mesmo número de palavras, cada uma mantém o seu tempo; senão as palavras do nome dividem o tempo do termo
++    inteiro. A palavra original fica em "original"."""
++    out = [dict(w) for w in pals]
++    alvos = sorted(((_chave(i.termo).split(), i) for i in itens if _chave(i.termo) and i.nome.strip() and i.nome.strip() != i.termo.strip()),
++                   key=lambda x: -len(x[0]))
++    if not alvos:
++        return out, []
++    trocas: list[dict[str, Any]] = []
++    res: list[dict] = []
++    k = 0
++    chaves = [_chave(w["texto"]) for w in out]
++    while k < len(out):
++        feito = False
++        for alvo, it in alvos:
++            n = len(alvo)
++            if chaves[k:k + n] != alvo:
++                continue
++            janela = out[k:k + n]
++            de = " ".join(x["texto"].strip() for x in janela)
++            pre, _, _ = _partes(janela[0]["texto"].strip())
++            _, _, pos = _partes(janela[-1]["texto"].strip())
++            novas = it.nome.split()
++            espaco = " " if janela[0]["texto"].startswith(" ") else ""
++            if len(novas) == n:
++                for j, (w, nv) in enumerate(zip(janela, novas)):
++                    w.setdefault("original", w["texto"])
++                    w["texto"] = espaco * (j == 0) + (pre if j == 0 else "") + nv + (pos if j == n - 1 else "")
++                    res.append(w)
++            else:  # o nome ocupa o tempo do termo inteiro, dividido pelo tamanho de cada palavra
++                ini, fim = float(janela[0]["inicio"]), float(janela[-1]["fim"])
++                total = sum(len(x) for x in novas) or 1
++                t = ini
++                for j, nv in enumerate(novas):
++                    d = (fim - ini) * len(nv) / total
++                    res.append({**janela[0], "inicio": round(t, 3), "fim": round(t + d, 3), "original": de if j == 0 else "",
++                                "texto": espaco * (j == 0) + (pre if j == 0 else "") + nv + (pos if j == len(novas) - 1 else "")})
++                    t += d
++            trocas.append({"de": de, "para": it.nome, "inicio": janela[0]["inicio"], "tipo": it.tipo})
++            k += n
++            feito = True
++            break
++        if not feito:
++            res.append(out[k])
++            k += 1
++    return res, trocas
++
++
++def entidades_do_clip(projeto: Any, candidato: str | None, pals_clip: list[dict]) -> list[dict[str, str]] | None:
++    """As entidades para as imagens reais (referencias.py), pela checagem; None se o corte não foi checado.
++
++    Já com as palavras trocadas: o termo de cada item conferido é o nome conferido."""
++    from .artes.pesquisa import TIPOS_ENTIDADE
++
++    ch = carregar(projeto)
++    if not candidato or candidato not in ch.candidatos:
++        return None
++    out = []
++    for it in ch.itens:
++        if it.status == "ignorado" or not any(o.candidato == candidato for o in it.ocorrencias):
++            continue
++        tipo = it.tipo if it.tipo in TIPOS_ENTIDADE else ("empresa" if it.tipo == "outro" and it.fonte.origem == "wikidata" else None)
++        if tipo is None:
++            continue
++        termo = it.nome if it.status in REVISADOS else it.termo
++        if _achar(termo, pals_clip) is None:
++            continue
++        busca = it.fonte.titulo if it.fonte.origem == "wikidata" and it.fonte.titulo else it.nome
++        out.append({"termo": termo, "tipo": tipo, "busca": busca, "qid": it.fonte.id if it.fonte.origem == "wikidata" else ""})
++    return out
++
++
++def fontes_do_texto(projeto: Any, texto: str) -> str:
++    """O bloco "Fontes" da descrição: as fontes conferidas do que aparece no texto do clip."""
++    alvo = f" {_chave(texto)} "
++    linhas = []
++    for it in revisados(projeto):
++        f = it.fonte
++        if not (f.titulo or f.url):
++            continue
++        if f" {_chave(it.termo)} " not in alvo and f" {_chave(it.nome)} " not in alvo:
++            continue
++        linhas.append(f"- {it.nome}: {f.titulo or f.url}" + (f" ({f.url})" if f.url and f.titulo else ""))
++    return ("Fontes:\n" + "\n".join(dict.fromkeys(linhas))) if linhas else ""
+diff --git a/motor/tests/test_checagem.py b/motor/tests/test_checagem.py
+new file mode 100644
+index 0000000..221bb45
+--- /dev/null
++++ b/motor/tests/test_checagem.py
+@@ -0,0 +1,229 @@
++"""Checagem de fatos do passo 4: o que a fala cita, o nome conferido e a fonte, e o uso disso na montagem."""
++
++from __future__ import annotations
++
++import json
++
++import pytest
++
++from clipator import checagem as ch
++from clipator.models import Clip, Origem
++from clipator.transcribe import palavras
++from clipator.workspace import write_json
++
++from .conftest import transcricao_falsa
++
++FALA = ("Ontem eu li que o Iliasat Skiver saiu da OpenAI e foi morar no Brasil. Segundo o IBGE, 40% das pessoas ganham "
++        "500 mil reais por ano. A Nvidia vale 3 trilhões de dólares. Porque ninguém fala disso?")
++
++
++@pytest.fixture(autouse=True)
++def sem_rede(monkeypatch):
++    """Os testes nunca vão à internet: quem quiser o Wikidata passa um `abrir` falso."""
++    def recusa(url, timeout):
++        raise OSError("sem rede nos testes")
++
++    monkeypatch.setattr("clipator.artes.pesquisa._abrir", recusa)
++
++
++def _projeto(ws, texto: str = FALA):
++    c = ws.criar_canal("Teste")
++    p = c.criar_projeto("v", Origem(tipo="arquivo", valor="x.mp4"))
++    t = transcricao_falsa(texto, 20)
++    write_json(p.transcricao_path, t)
++    p.salvar_candidatos([{"id": "c1", "inicio": 0, "fim": 30, "duracao": 30, "nota": 80, "texto": texto}])
++    return p
++
++
++class IA:
++    nome = "falsa"
++
++    def __init__(self, resposta):
++        self.resposta, self.pedidos = resposta, []
++
++    def run_json(self, prompt, schema, cancelar=None):
++        self.pedidos.append(prompt)
++        return self.resposta
++
++
++def _wikidata(itens: dict[str, tuple[str, str, str]]):
++    """`abrir` falso: busca -> (qid, nome, descrição); o P31 é Q5 (gente) quando a descrição diz 'pessoa'."""
++    import urllib.parse
++
++    def abrir(url, timeout):
++        q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
++        if "search" in q:
++            achado = itens.get(q["search"][0])
++            return json.dumps({"search": [{"id": achado[0], "label": achado[1], "description": achado[2]}] if achado else []}).encode()
++        qid = url.rsplit("/", 1)[-1].removesuffix(".json")
++        nome, desc = next((n, d) for i, n, d in itens.values() if i == qid)
++        p31 = "Q5" if "pessoa" in desc else "Q4830453"
++        return json.dumps({"entities": {qid: {"labels": {"pt": {"value": nome}}, "descriptions": {"pt": {"value": desc}},
++                                              "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": p31}}}}]}}}}).encode()
++
++    return abrir
++
++
++# ---- sem IA nem rede ------------------------------------------------------------------------------------------------
++def test_regras_acham_nomes_lugares_siglas_e_numeros_com_a_fonte_citada():
++    itens = {i.termo: i for i in ch.por_regras(palavras(transcricao_falsa(FALA, 20)), "c1")}
++    assert itens["Brasil"].tipo == "lugar" and itens["Brasil"].fonte.origem == "natural-earth" and itens["Brasil"].fonte.descricao == "País"
++    assert {"Iliasat Skiver", "OpenAI", "Nvidia"} <= set(itens) and itens["Iliasat Skiver"].tipo == "outro"
++    assert itens["IBGE"].tipo == "organizacao"
++    assert itens["40%"].tipo == "dado" and itens["40%"].fonte.titulo == "IBGE" and itens["40%"].fonte.origem == "fala"
++    assert "500 mil reais" in itens and "3 trilhões de dólares" in itens
++    assert itens["3 trilhões de dólares"].fonte.titulo == ""  # outra frase: o IBGE não vale para ela
++    assert "Porque" not in itens and "Ontem" not in itens  # começo de frase não é nome
++    assert itens["40%"].ocorrencias[0].candidato == "c1" and "IBGE" in itens["40%"].ocorrencias[0].trecho
++
++
++def test_aplicar_troca_o_dito_pelo_conferido_mantendo_os_tempos():
++    pals = palavras(transcricao_falsa(FALA, 20))
++    itens = [ch.Item(id="a", termo="Iliasat Skiver", nome="Ilya Sutskever", status="corrigido"),
++             ch.Item(id="b", termo="40%", nome="45%", tipo="dado", status="corrigido")]
++    novas, trocas = ch.aplicar_nas_palavras(pals, itens)
++    assert " ".join(w["texto"] for w in novas).startswith("Ontem eu li que o Ilya Sutskever saiu") and "45% das" in " ".join(w["texto"] for w in novas)
++    assert [t["para"] for t in trocas] == ["Ilya Sutskever", "45%"] and trocas[0]["de"] == "Iliasat Skiver"
++    assert len(novas) == len(pals) and [w["inicio"] for w in novas] == [w["inicio"] for w in pals]
++    assert pals[5]["texto"] == "Iliasat"  # a lista de entrada não muda
++    # número de palavras diferente: o nome divide o tempo do termo, uma palavra por vez, com a pontuação
++    so = palavras(transcricao_falsa("Falei com o Skiver, ontem.", 4))
++    novas, _ = ch.aplicar_nas_palavras(so, [ch.Item(id="c", termo="Skiver", nome="Ilya Sutskever")])
++    assert [w["texto"] for w in novas] == ["Falei", "com", "o", "Ilya", "Sutskever,", "ontem."]
++    assert novas[3]["inicio"] == so[3]["inicio"] and novas[4]["fim"] == so[3]["fim"] and novas[3]["fim"] == novas[4]["inicio"]
++
++
++def test_identificar_sem_ia_e_sem_rede_salva_e_avisa(ws):
++    p = _projeto(ws)
++    r = ch.identificar(p, ["c1", "nao-existe"])
++    assert r.candidatos == ["c1"] and not r.usou_ia and ch.caminho(p).exists()
++    assert any("Wikidata" in a for a in r.avisos)
++    assert all(i.status == "pendente" for i in r.itens) and ch.carregar(p).itens == r.itens
++    with pytest.raises(ch.ErroChecagem):
++        ch.identificar(p, ["nao-existe"])
++
++
++def test_com_ia_e_wikidata_o_nome_e_a_fonte_vem_prontos(ws):
++    p = _projeto(ws)
++    ia = IA({"itens": [
++        {"corte": "c1", "termo": "Iliasat Skiver", "tipo": "pessoa", "nome": "Ilya Sutskever", "fonte_citada": ""},
++        {"corte": "c1", "termo": "OpenAI", "tipo": "empresa", "nome": "OpenAI", "fonte_citada": ""},
++        {"corte": "c1", "termo": "Elon Musk", "tipo": "pessoa", "nome": "Elon Musk", "fonte_citada": ""},  # não foi dito
++        {"corte": "c1", "termo": "40%", "tipo": "dado", "nome": "40%", "fonte_citada": "IBGE"}]})
++    abrir = _wikidata({"Ilya Sutskever": ("Q21708200", "Ilya Sutskever", "pessoa, cientista da computação"),
++                       "OpenAI": ("Q21708201", "OpenAI", "empresa de pesquisa em IA")})
++    r = ch.identificar(p, ["c1"], ia, abrir=abrir)
++    it = {i.termo: i for i in r.itens}
++    assert r.usou_ia and "Iliasat Skiver" in ia.pedidos[0] and "[corte c1]" in ia.pedidos[0]
++    assert it["Iliasat Skiver"].nome == "Ilya Sutskever" and it["Iliasat Skiver"].tipo == "pessoa"
++    assert it["Iliasat Skiver"].fonte.url == "https://www.wikidata.org/wiki/Q21708200" and it["Iliasat Skiver"].fonte.origem == "wikidata"
++    assert it["OpenAI"].fonte.descricao == "empresa de pesquisa em IA"
++    assert "Elon Musk" not in it and it["40%"].fonte.titulo == "IBGE"
++    assert "Brasil" in it and "Nvidia" not in it  # o lugar vem das regras; o nome solto que a IA não listou sai
++
++
++def test_o_que_o_usuario_conferiu_fica_ao_identificar_de_novo(ws):
++    p = _projeto(ws)
++    r = ch.identificar(p, ["c1"])
++    k = next(i.id for i in r.itens if i.termo == "Iliasat Skiver")
++    novo = ch.atualizar_item(p, k, nome="Ilya Sutskever", fonte={"titulo": "Wikipédia", "url": "https://pt.wikipedia.org/wiki/Ilya_Sutskever"})
++    assert novo.status == "corrigido" and novo.fonte.origem == "usuario" and novo.sugerido_nome == "Iliasat Skiver"
++    brasil = next(i.id for i in r.itens if i.termo == "Brasil")
++    assert ch.atualizar_item(p, brasil, status="confirmado").status == "confirmado"
++    nvidia = next(i.id for i in r.itens if i.termo == "Nvidia")
++    assert ch.atualizar_item(p, nvidia, status="ignorado").status == "ignorado"
++    with pytest.raises(ch.ErroChecagem):
++        ch.atualizar_item(p, k, nome="  ")
++    with pytest.raises(ch.ErroChecagem):
++        ch.atualizar_item(p, k, fonte={"url": "javascript:alert(1)"})
++    r2 = ch.identificar(p, ["c1"])
++    it = {i.termo: i for i in r2.itens}
++    assert it["Iliasat Skiver"].nome == "Ilya Sutskever" and it["Iliasat Skiver"].status == "corrigido"
++    assert it["Nvidia"].status == "ignorado"
++    assert ch.resumo(r2)["corrigido"] == 1 and ch.resumo(r2)["confirmado"] == 1
++    n = ch.confirmar_pendentes(p)
++    assert n == ch.resumo(r2)["pendente"] and ch.resumo(ch.carregar(p))["pendente"] == 0
++
++
++# ---- na montagem ----------------------------------------------------------------------------------------------------
++def test_entidades_e_fontes_do_clip_seguem_a_checagem(ws):
++    p = _projeto(ws)
++    r = ch.identificar(p, ["c1"])
++    k = next(i.id for i in r.itens if i.termo == "Iliasat Skiver")
++    ch.atualizar_item(p, k, nome="Ilya Sutskever", tipo="pessoa",
++                      fonte={"titulo": "Ilya Sutskever", "url": "https://www.wikidata.org/wiki/Q21708200", "origem": "wikidata", "id": "Q21708200"})
++    ch.atualizar_item(p, next(i.id for i in r.itens if i.termo == "IBGE"), status="ignorado")
++    pals, _ = ch.aplicar_nas_palavras(palavras(p.transcricao()), ch.revisados(p))
++    ents = ch.entidades_do_clip(p, "c1", pals)
++    assert ents == [{"termo": "Ilya Sutskever", "tipo": "pessoa", "busca": "Ilya Sutskever", "qid": "Q21708200"}]
++    assert ch.entidades_do_clip(p, "outro-corte", pals) is None  # corte não checado: a IA decide como antes
++    assert ch.fontes_do_texto(p, FALA) == "Fontes:\n- Ilya Sutskever: Ilya Sutskever (https://www.wikidata.org/wiki/Q21708200)"
++    assert ch.fontes_do_texto(p, "outro assunto") == ""
++
++
++def test_referencias_com_a_lista_conferida_nao_chamam_a_ia(tmp_path, monkeypatch):
++    from clipator import referencias as rf
++
++    pedidos = []
++    monkeypatch.setattr("clipator.artes.pesquisa.imagens_reais", lambda ents, pasta, cancelar=None: (pedidos.append(ents) or [], []))
++    pals = [{"texto": w, "inicio": i * 0.5, "fim": i * 0.5 + 0.4} for i, w in enumerate("o Ilya Sutskever saiu".split())]
++    conf = [{"termo": "Ilya Sutskever", "tipo": "pessoa", "busca": "Ilya Sutskever", "qid": "Q21708200"}]
++    assert rf.obter(tmp_path, pals, None, conferidas=conf) == []
++    assert pedidos == [conf]
++    assert rf.obter(tmp_path / "x", pals, None) == []  # sem IA e sem checagem: nada roda
++    assert len(pedidos) == 1
++
++
++def test_wikidata_usa_o_item_escolhido_sem_buscar():
++    from clipator.artes import pesquisa
++
++    urls = []
++
++    def abrir(url, timeout):
++        urls.append(url)
++        return json.dumps({"entities": {"Q1": {"labels": {"pt": {"value": "Fulano"}}, "descriptions": {"pt": {"value": "pessoa"}},
++                                               "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": "Q5"}}}}]}}}}).encode()
++
++    e = pesquisa._entidade("Fulano", "pessoa", abrir, 1, qid="Q1")
++    assert e["qid"] == "Q1" and e["nome"] == "Fulano" and not any("wbsearchentities" in u for u in urls)
++
++
++def test_descricao_da_postagem_leva_as_fontes(ws):
++    from clipator import postagem
++
++    p = _projeto(ws)
++    r = ch.identificar(p, ["c1"])
++    ch.atualizar_item(p, next(i.id for i in r.itens if i.termo == "40%"), status="confirmado")
++    p.salvar_clip(Clip(id="01-x", candidato="c1", inicio=0, fim=30, titulo="t", formato="9:16"))
++    _, pasta = p.clip("01-x")
++    base = postagem._base(p, p.clip("01-x")[0], pasta, FALA)
++    assert base["blocos"]["fontes"] == "Fontes:\n- 40%: IBGE"
++    assert "Fontes:\n- 40%: IBGE" in postagem._descricao({"titulo": None, "blocos": base["blocos"], "hashtags": []})
++
++
++def test_rotas_da_checagem(ws):
++    from fastapi.testclient import TestClient
++
++    from clipator.api import criar_app
++    from clipator.service import Servico
++
++    p = _projeto(ws)
++    srv = Servico(ws.root)
++    enviados = []
++    srv.fila.enviar = lambda tipo, dados: enviados.append((tipo, dados)) or "job1"
++    cl = TestClient(criar_app(srv, token="t"))
++    h = {"x-clipator-token": "t"}
++    base = f"/api/canais/{p.canal.slug}/projetos/{p.id}/checagem"
++    assert cl.get(base, headers=h).json()["resumo"]["total"] == 0
++    assert cl.post(base, json={"candidatos": []}, headers=h).status_code == 400
++    assert cl.post(base, json={"candidatos": ["c1"], "usar_ia": False}, headers=h).json() == {"job": "job1"}
++    assert enviados == [("checagem", {"canal": p.canal.slug, "projeto": p.id, "candidatos": ["c1"], "usar_ia": False})]
++    # o job, rodado aqui mesmo
++    srv._job_checagem(enviados[0][1], type("Ctx", (), {"progresso": lambda *a: None, "cancelar": None, "log": lambda *a: None})())
++    e = cl.get(base, headers=h).json()
++    item = next(i for i in e["itens"] if i["termo"] == "Nvidia")
++    r = cl.put(f"{base}/itens/{item['id']}", json={"nome": "NVIDIA", "fonte": {"titulo": "site da empresa", "url": "https://www.nvidia.com"}}, headers=h)
++    assert r.json()["status"] == "corrigido" and r.json()["fonte"]["url"] == "https://www.nvidia.com"
++    assert cl.put(f"{base}/itens/xyz", json={"status": "confirmado"}, headers=h).status_code == 400
++    assert cl.post(f"{base}/confirmar-pendentes", headers=h).json()["confirmados"] == e["resumo"]["pendente"] - 1
++    assert cl.get("/api/checagem/fontes", params={"busca": "Nvidia"}, headers=h).status_code == 502  # sem rede nos testes

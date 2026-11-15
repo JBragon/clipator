@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-tinta-em-etapas",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "objeto",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "começa",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "neste",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "estado.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "A",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "tinta",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "revela",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "a",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "próxima",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "etapa.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "O objeto começa neste estado.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "O objeto começa neste",
+      "descricao": "Mostrar o objeto no estado inicial; Passar a primeira faixa e marcar a etapa",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "cores_tinta": 2,
+        "passagem_s": 0.6,
+        "reticula_passo_px": 6,
+        "etapas": 3
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "A tinta revela a próxima etapa.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "A tinta revela a",
+      "descricao": "Revelar o resultado da segunda passagem; Apresentar o objeto final e a trilha completa",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "cores_tinta": 2,
+        "passagem_s": 0.6,
+        "reticula_passo_px": 6,
+        "etapas": 3
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

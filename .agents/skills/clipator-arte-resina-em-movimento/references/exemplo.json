@@ -1,0 +1,125 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-resina-em-movimento",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "O",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "toque",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "muda",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "esta",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "forma.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "Depois",
+      "inicio": 2.4,
+      "fim": 2.742
+    },
+    {
+      "texto": "ela",
+      "inicio": 2.78,
+      "fim": 3.122
+    },
+    {
+      "texto": "volta",
+      "inicio": 3.16,
+      "fim": 3.502
+    },
+    {
+      "texto": "ao",
+      "inicio": 3.54,
+      "fim": 3.882
+    },
+    {
+      "texto": "equilíbrio.",
+      "inicio": 3.92,
+      "fim": 4.262
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "O toque muda esta forma.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "O toque muda esta",
+      "descricao": "Apresentar a forma e o núcleo imóvel; Aplicar um toque e propagar a onda",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "amplitude_relativa": 0.1,
+        "amortecimento": 4.5,
+        "frequencia_hz": 3.0,
+        "transmissao": 0.65
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Depois ela volta ao equilíbrio.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Depois ela volta ao",
+      "descricao": "Acomodar e apontar o núcleo; Manter o resultado estável sem novo toque",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "amplitude_relativa": 0.1,
+        "amortecimento": 4.5,
+        "frequencia_hz": 3.0,
+        "transmissao": 0.65
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

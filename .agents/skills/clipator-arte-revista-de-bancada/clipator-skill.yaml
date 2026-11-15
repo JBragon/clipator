@@ -1,0 +1,9 @@
+id: clipator-arte-revista-de-bancada
+nome: "Revista de bancada — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de revista de bancada para perfil de pessoa, contextualização de assunto e explicação com fotografia, ou implementa esse estilo no Clipator quando solicitado."

@@ -1,0 +1,85 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-oficina-modular",
+  "nome": "Oficina modular",
+  "familia": "3D modular",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Um objeto é construído em uma bancada técnica por módulos grandes, com trilhos e encaixes visíveis.",
+  "usar_em": "partes de um sistema, produto, montagem ou sequência de dependências",
+  "composicao": "Bancada diagonal com uma bandeja lateral de módulos numerados; o objeto ocupa 62% da área útil. Uma régua de progresso tem somente a quantidade de etapas realmente mostradas.",
+  "material_e_luz": "Caixas chanfradas sem pinos, alumínio pintado fosco e juntas escuras. A luz principal vem da esquerda; sombra de contato suave distingue peça apoiada de peça em trânsito.",
+  "movimento": "Cada subconjunto percorre primeiro um trilho reto, levanta no máximo 0,3 da sua altura e encaixa com recuo de 3%. Monte de baixo para cima segundo um grafo de dependências. A câmera é ortográfica e permanece do mesmo lado.",
+  "construcao": "Modele 8 a 40 módulos com id, destino, origem e depende_de. Ordene topologicamente; distribua o atraso por ordem e use smoothstep para o percurso e uma senoide amortecida só no encaixe. Reutilize geometria e material. O texto fica em SVG fora do canvas.",
+  "cores": {
+    "fundo": "#142D33",
+    "superficie": "#25434A",
+    "texto": "#F5F1E8",
+    "texto_suave": "#A5BBC0",
+    "primaria": "#F0B44D",
+    "destaque": "#76D3C1"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "three",
+  "complexidade": "alta",
+  "alternativa_leve": "Isométrico SVG com seis módulos e a mesma ordem de montagem; manter as juntas e a bandeja.",
+  "parametros_visuais": {
+    "modulos": 18,
+    "elevacao_relativa": 0.25,
+    "recuo_relativo": 0.03,
+    "ordem": "dependencias"
+  },
+  "fases": [
+    "Revelar bancada e primeiro módulo",
+    "Deslizar os subconjuntos em ordem e iluminar a junta ativa",
+    "Segurar o objeto completo com uma etiqueta de função",
+    "Recolher a régua e devolver os módulos à bandeja se o modo laço estiver ativo"
+  ],
+  "criterios": [
+    "Nenhum módulo atravessa outro no caminho de entrada.",
+    "O objeto continua identificável em silhueta.",
+    "A etapa marcada corresponde ao subconjunto que encaixa."
+  ],
+  "evitar": "Enxame de milhares de tijolos, logotipos de brinquedos e contagem fictícia de peças.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "modulos": {
+      "tipo": "inteiro",
+      "minimo": 4,
+      "maximo": 80
+    },
+    "elevacao_relativa": {
+      "tipo": "numero",
+      "minimo": 0.05,
+      "maximo": 0.5
+    },
+    "recuo_relativo": {
+      "tipo": "numero",
+      "minimo": 0,
+      "maximo": 0.08
+    },
+    "ordem": {
+      "tipo": "texto",
+      "opcoes": [
+        "dependencias"
+      ]
+    }
+  }
+}

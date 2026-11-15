@@ -1,0 +1,130 @@
+{
+  "contrato": "clipator-arte/1",
+  "estilo": "clipator-arte-costura-viva",
+  "modo": "fala",
+  "semente": 42,
+  "duracao_s": 6,
+  "formato": {
+    "largura": 1080,
+    "altura": 1920,
+    "fps": 30
+  },
+  "layout": {
+    "tipo": "em-cima",
+    "proporcao": 0.5
+  },
+  "movimento_reduzido": false,
+  "palavras": [
+    {
+      "texto": "Vamos",
+      "inicio": 0.0,
+      "fim": 0.324
+    },
+    {
+      "texto": "olhar",
+      "inicio": 0.36,
+      "fim": 0.684
+    },
+    {
+      "texto": "com",
+      "inicio": 0.72,
+      "fim": 1.044
+    },
+    {
+      "texto": "mais",
+      "inicio": 1.08,
+      "fim": 1.404
+    },
+    {
+      "texto": "cuidado.",
+      "inicio": 1.44,
+      "fim": 1.764
+    },
+    {
+      "texto": "Um",
+      "inicio": 2.4,
+      "fim": 2.685
+    },
+    {
+      "texto": "pequeno",
+      "inicio": 2.7167,
+      "fim": 3.0017
+    },
+    {
+      "texto": "gesto",
+      "inicio": 3.0333,
+      "fim": 3.3183
+    },
+    {
+      "texto": "muda",
+      "inicio": 3.35,
+      "fim": 3.635
+    },
+    {
+      "texto": "a",
+      "inicio": 3.6667,
+      "fim": 3.9517
+    },
+    {
+      "texto": "resposta.",
+      "inicio": 3.9833,
+      "fim": 4.2683
+    }
+  ],
+  "cenas": [
+    {
+      "id": "cena-01",
+      "ancora": {
+        "texto": "Vamos olhar com mais cuidado.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 0,
+      "fim_s": 2.4,
+      "texto": "Vamos olhar com mais",
+      "descricao": "Mascote ergue a cabeça para ouvir; Braço indica o cartão que entra pela lateral",
+      "objetos": [
+        {
+          "id": "objeto-01",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata de uma etapa do processo"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "deformacao_maxima": 0.08,
+        "atraso_membros_s": 0.07,
+        "densidade_trama": 34,
+        "expressoes": 3
+      }
+    },
+    {
+      "id": "cena-02",
+      "ancora": {
+        "texto": "Um pequeno gesto muda a resposta.",
+        "ocorrencia": 1
+      },
+      "inicio_s": 2.4,
+      "fim_s": 6,
+      "texto": "Um pequeno gesto muda",
+      "descricao": "Corpo se inclina e confirma a ideia com um gesto; Personagem volta à pose neutra e o cartão fica legível",
+      "objetos": [
+        {
+          "id": "objeto-02",
+          "tipo": "forma-procedural",
+          "descricao": "Representação abstrata do resultado, sem números ou afirmações externas"
+        }
+      ],
+      "midias": [],
+      "parametros": {
+        "deformacao_maxima": 0.08,
+        "atraso_membros_s": 0.07,
+        "densidade_trama": 34,
+        "expressoes": 3
+      }
+    }
+  ],
+  "avisos": [
+    "Transcrição e objetos sintéticos: servem somente para testar a integração.",
+    "Se o estilo precisar de foto, mapa ou camadas, usar alternativa declarada até receber mídia local."
+  ]
+}

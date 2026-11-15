@@ -1,0 +1,84 @@
+{
+  "versao": "1.0.0",
+  "id": "clipator-arte-quadro-de-recortes",
+  "nome": "Quadro de recortes",
+  "familia": "Colagem didática",
+  "estado": "especificacao-para-implementar",
+  "proposta_contrato": "clipator-arte/1",
+  "conceito": "Recortes próprios se encaixam numa grade de quadro didático e deixam visível a relação entre as partes.",
+  "usar_em": "explicações com imagem, lista de componentes e antes/depois",
+  "composicao": "Grade de três colunas com uma peça principal e duas notas menores. Fotos, setas de papel e números se alinham pela grade mesmo com pequenas rotações.",
+  "material_e_luz": "Cartolina quente, fotografias locais com margem irregular estreita e etiquetas de papel reciclado escuro. Textura fica atrás do conteúdo, com borda cortada por polígonos de semente fixa.",
+  "movimento": "Uma mão não aparece: os recortes deslizam como movidos na mesa, assentam em dois passos e param. A seta dobra pela metade antes de se abrir entre as peças.",
+  "construcao": "Aplique offsets de stop-motion quantizados a 12 poses/s, calculados pelo tempo absoluto. Borda da mesma peça mantém a semente em toda a cena. Ordene z por papel, foto, seta, etiqueta e texto.",
+  "cores": {
+    "fundo": "#E9E0CC",
+    "superficie": "#D2C4A9",
+    "texto": "#333A34",
+    "texto_suave": "#717466",
+    "primaria": "#A95135",
+    "destaque": "#5C8A83"
+  },
+  "fontes": {
+    "titulo": "Bebas Neue",
+    "corpo": "Montserrat ExtraBold"
+  },
+  "layout_padrao": "em-cima",
+  "proporcao_animacao": 0.5,
+  "backend_sugerido": "svg",
+  "complexidade": "media",
+  "alternativa_leve": "Cartões retangulares com a mesma grade e setas, retirando textura e borda irregular.",
+  "parametros_visuais": {
+    "colunas": 3,
+    "fps_poses": 12,
+    "rotacao_maxima_graus": 3,
+    "margem_foto_relativa": 0.025
+  },
+  "fases": [
+    "Assentar a peça principal na grade",
+    "Adicionar dois recortes de contexto",
+    "Abrir a seta que mostra a relação",
+    "Imobilizar as peças e destacar a conclusão"
+  ],
+  "criterios": [
+    "A seta não toca uma peça diferente da pretendida.",
+    "As bordas não mudam de forma quadro a quadro.",
+    "Recortes não escondem palavras da fonte visual."
+  ],
+  "evitar": "Copiar revistas ou recortes do pacote original, sobrepor texturas ao rosto e tremor contínuo após assentar.",
+  "som": {
+    "entrada": "click",
+    "conclusao": "ding",
+    "volume_relativo": 0.2,
+    "musica": false
+  },
+  "amostra": {
+    "duracao_s": 6,
+    "fps": 30,
+    "largura": 1080,
+    "altura": 1920,
+    "semente": 42
+  },
+  "limites_parametros": {
+    "colunas": {
+      "tipo": "inteiro",
+      "minimo": 1,
+      "maximo": 3
+    },
+    "fps_poses": {
+      "tipo": "inteiro",
+      "minimo": 6,
+      "maximo": 15
+    },
+    "rotacao_maxima_graus": {
+      "tipo": "inteiro",
+      "minimo": 0,
+      "maximo": 3
+    },
+    "margem_foto_relativa": {
+      "tipo": "numero",
+      "minimo": 0.01,
+      "maximo": 0.05
+    }
+  }
+}

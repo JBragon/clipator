@@ -1,0 +1,9 @@
+id: clipator-arte-caderno-de-materiais
+nome: "Caderno de materiais — autoria"
+autor: Clipator
+versao: 1.0.0
+licenca: AGPL-3.0-or-later
+preco: gratis
+tipos: [fluxo]
+ativa_por_padrao: false
+descricao: "Cria cenas de caderno de materiais para processo criativo, produto, comparação de material e bastidores, ou implementa esse estilo no Clipator quando solicitado."
