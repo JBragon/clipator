@@ -127,7 +127,14 @@ def _regra_titulo(titulos_meta: dict, trava: bool) -> str:
     return r
 
 
-def prompt_ranking(cands: list[dict], contexto: str, regra_titulo: str, dur_max: float = 60, dur_ext: float = 90) -> str:
+AJUSTE_INICIO_MIN, AJUSTE_INICIO_MAX = -30.0, 5.0  # a IA pode antecipar até 30 s para pegar o contexto
+AJUSTE_FIM_MIN = -5.0
+CONTEXTO_ANTES, CONTEXTO_DEPOIS = 30.0, 30.0  # fala mostrada em volta de cada candidato para a IA estender
+
+
+def prompt_ranking(cands: list[dict], contexto: str, regra_titulo: str, dur_max: float = 60, dur_ext: float = 90,
+                   dur_min: float = 20, dur_alvo: float | None = None) -> str:
+    alvo = dur_alvo if dur_alvo is not None else dur_min + 0.75 * (dur_max - dur_min)
     linhas = [
         "Você é o editor de um canal de cortes. Avalie os trechos candidatos de um vídeo longo e",
         "responda só com o JSON do schema.",
@@ -136,11 +143,16 @@ def prompt_ranking(cands: list[dict], contexto: str, regra_titulo: str, dur_max:
         "",
         regra_titulo,
         "",
+        f"Duração: um bom Short deste canal tem perto de {alvo:.0f} s (de {dur_min:.0f} a {dur_max:.0f} s). Corte curto",
+        "demais deixa a história pela metade: se o candidato tem menos que isso, estenda até incluir o contexto",
+        "e a conclusão. Só encurte para tirar enrolação.",
         "ajuste_inicio e ajuste_fim: o corte precisa FECHAR O ASSUNTO. Comece no início de uma frase e inclua",
-        "a pergunta ou o contexto de que o trecho depende (ajuste_inicio de -15 a 5 s). Termine depois da",
-        "conclusão da ideia, nunca no meio de uma frase nem numa pergunta cuja resposta vem logo depois",
-        f"(ajuste_fim de -5 a {dur_ext - dur_max:.0f} s). Um Short tem até {dur_max:.0f} s; pode ir até {dur_ext:.0f} s",
+        f"a pergunta ou o contexto de que o trecho depende (ajuste_inicio de {AJUSTE_INICIO_MIN:.0f} a {AJUSTE_INICIO_MAX:.0f} s).",
+        "Termine depois da conclusão da ideia, nunca no meio de uma frase nem numa pergunta cuja resposta vem",
+        f"logo depois (ajuste_fim de {AJUSTE_FIM_MIN:.0f} s até o corte chegar a {dur_max:.0f} s). Pode ir até {dur_ext:.0f} s",
         "só se for para fechar o assunto. Use 0 se já estiver bom.",
+        "As linhas em “antes do corte” e “depois do corte” são a fala em volta do trecho, com os tempos do vídeo:",
+        "use-as para decidir os ajustes. A nota e os títulos valem para o trecho já ajustado.",
         "fecha_assunto: true se, com o ajuste, o trecho tem começo, meio e fim (a ideia se conclui).",
         "",
         contexto,
@@ -148,10 +160,22 @@ def prompt_ranking(cands: list[dict], contexto: str, regra_titulo: str, dur_max:
         "## Candidatos",
     ]
     for c in cands:
-        linhas.append(f"### {c['id']} ({c['duracao']:.0f} s, nota local {c['nota']:.0f})")
+        linhas.append(f"### {c['id']} ({c['duracao']:.0f} s, nota local {c['nota']:.0f}, de {c['inicio']:.1f} a {c['fim']:.1f})")
+        if c.get("contexto_antes"):
+            linhas += ["antes do corte:", c["contexto_antes"], "corte:"]
         linhas.append(c.get("texto_compacto") or c.get("texto", ""))
+        if c.get("contexto_depois"):
+            linhas += ["depois do corte:", c["contexto_depois"]]
         linhas.append("")
     return "\n".join(linhas)
+
+
+def _contexto_em_volta(pals: list[dict], c: dict) -> tuple[str, str]:
+    """A fala antes e depois do candidato, para a IA ver de onde vem e para onde vai a ideia."""
+    ini, fim = c["inicio"], c["fim"]
+    antes = pack.compactar([w for w in pals if w["inicio"] < ini - 0.01], ini - CONTEXTO_ANTES, ini)
+    depois = pack.compactar([w for w in pals if w["inicio"] >= fim - 0.01], fim, fim + CONTEXTO_DEPOIS)
+    return antes, depois
 
 
 def ranquear(cands: list[dict], transcricao: dict, adapter: AdapterIA, regras: Regras, canal_md: str = "",
@@ -165,9 +189,11 @@ def ranquear(cands: list[dict], transcricao: dict, adapter: AdapterIA, regras: R
     top = sorted(cands, key=lambda c: -c["nota"])[: regras.candidatos_para_ia]
     for c in top:
         c["texto_compacto"] = pack.compactar(pals, c["inicio"], c["fim"])
+        c["contexto_antes"], c["contexto_depois"] = _contexto_em_volta(pals, c)
     contexto = _contexto_canal(canal_md, regras_md, titulos_md, regras, titulos_meta)
-    dur_ext = max(regras.duracao_max, regras.duracao_max_fechamento)
-    prompt = prompt_ranking(top, contexto, _regra_titulo(titulos_meta, regras.trava_titulo), regras.duracao_max, dur_ext)
+    dur_ext = regras.teto_curto()
+    prompt = prompt_ranking(top, contexto, _regra_titulo(titulos_meta, regras.trava_titulo), regras.duracao_max, dur_ext,
+                            regras.duracao_min, regras.alvo_curto())
     frases = montar_frases(pals)
     resp = chamar(adapter, prompt, SCHEMA_RANKING, cache, cancelar)
     por_id = {r.get("id"): r for r in (resp or {}).get("candidatos", []) if isinstance(r, dict)}
@@ -175,18 +201,21 @@ def ranquear(cands: list[dict], transcricao: dict, adapter: AdapterIA, regras: R
     out = []
     for c in cands:
         c = dict(c)
-        c.pop("texto_compacto", None)
+        for k in ("texto_compacto", "contexto_antes", "contexto_depois"):
+            c.pop(k, None)
         r = por_id.get(c["id"])
         if r:
             longo = c.get("modo") == "longo"
             teto = regras.corte_longo_max if longo else dur_ext
-            ai = max(-15.0, min(5.0, float(r.get("ajuste_inicio") or 0)))
-            af = max(-5.0, min(max(0.0, teto - c["duracao"]), float(r.get("ajuste_fim") or 0)))
+            piso = regras.corte_longo_min if longo else regras.duracao_min
+            ai = max(AJUSTE_INICIO_MIN, min(AJUSTE_INICIO_MAX, _num(r.get("ajuste_inicio"))))
+            af = max(AJUSTE_FIM_MIN, min(max(0.0, teto - c["duracao"]), _num(r.get("ajuste_fim"))))
             if ai or af:
                 # o ajuste da IA vai para fronteiras de frase: começa numa frase e termina numa que fecha
-                ini, fim = ajustar_a_frases(c["inicio"] + ai, c["fim"] + af, frases, teto)
+                ini, fim = ajustar_a_frases(c["inicio"] + ai, c["fim"] + af, frases, teto, max(5.0, piso - 3))
                 ini, fim = snap_to_words(ini, fim, pals, duracao)
-                if 5 <= fim - ini <= teto + 1:
+                # a IA não deixa o corte mais curto que a duração mínima do canal
+                if max(5.0, min(piso - 3, c["duracao"])) <= fim - ini <= teto + 1:
                     c["ajuste_ia"] = {"inicio": round(ini - c["inicio"], 2), "fim": round(fim - c["fim"], 2)}
                     c["inicio"], c["fim"], c["duracao"] = ini, fim, round(fim - ini, 2)
                     c["texto"] = texto_do_trecho(transcricao, ini, fim)
@@ -196,12 +225,56 @@ def ranquear(cands: list[dict], transcricao: dict, adapter: AdapterIA, regras: R
                        "destaques": r.get("destaques", []), "fecha_assunto": bool(r.get("fecha_assunto", True))}
             if r.get("fecha_assunto") is False:  # a própria IA diz que a ideia ficou aberta
                 c["nota"] = max(0.0, c["nota"] - 8)
-            if r.get("titulos"):
-                c["titulos"] = [t for t in r["titulos"] if isinstance(t, str) and t.strip()][:5]
+            tits = _titulos_da_ia(r.get("titulos"), c.get("texto", ""), regras.trava_titulo,
+                                  int(titulos_meta.get("max_caracteres", 70) or 70))
+            if tits:
+                c["titulos"] = tits
             c["fonte"] = "local+ia"
         out.append(c)
     out.sort(key=lambda c: -c["nota"])
+    _sem_titulo_repetido(out)
     return out
+
+
+def _titulos_da_ia(titulos: Any, texto: str, trava: bool, max_chars: int) -> list[str]:
+    """Os títulos da IA limpos: sem vazio, sem repetição, cortados no limite de caracteres e, com a trava
+    ligada, os que prometem algo que aparece no clip vêm primeiro."""
+    from ..titles import respeita_trava
+
+    out: list[str] = []
+    for t in titulos if isinstance(titulos, list) else []:
+        if not isinstance(t, str) or not t.strip():
+            continue
+        t = " ".join(t.split()).strip("\"'")
+        if len(t) > max_chars + 10:  # a IA passou muito do limite: corta na palavra
+            t = t[: max_chars - 1].rsplit(" ", 1)[0] + "…"
+        if t.lower() not in {x.lower() for x in out}:
+            out.append(t)
+    if trava and texto:
+        out.sort(key=lambda t: not respeita_trava(t, texto))
+    return out[:5]
+
+
+def _sem_titulo_repetido(cands: list[dict]) -> None:
+    """Dois cortes não abrem com o mesmo título: o de nota menor passa a usar uma opção que ninguém usou."""
+    usados: set[str] = set()
+    for c in cands:
+        tits = c.get("titulos") or []
+        if not tits:
+            continue
+        novo = next((t for t in tits if t.lower() not in usados), None)
+        if novo and novo != tits[0]:
+            tits.remove(novo)
+            tits.insert(0, novo)
+        usados.add(tits[0].lower())
+
+
+def _num(v: Any) -> float:
+    try:
+        x = float(v or 0)
+    except (TypeError, ValueError):
+        return 0.0
+    return x if x == x else 0.0  # NaN vira 0
 
 
 def completo(transcricao: dict, cands_locais: list[dict], adapter: AdapterIA, regras: Regras, canal_md: str = "",
@@ -216,7 +289,7 @@ def completo(transcricao: dict, cands_locais: list[dict], adapter: AdapterIA, re
     contexto = _contexto_canal(canal_md, regras_md, titulos_md, regras, titulos_meta)
     regra_t = _regra_titulo(titulos_meta, regras.trava_titulo)
     frases = montar_frases(pals)
-    dur_ext = max(regras.duracao_max, regras.duracao_max_fechamento)
+    dur_ext = regras.teto_curto()
     novos: list[dict] = []
     bl = pack.blocos(duracao)
     for n, (a, b) in enumerate(bl):
@@ -224,7 +297,8 @@ def completo(transcricao: dict, cands_locais: list[dict], adapter: AdapterIA, re
             progresso(n / len(bl), f"IA lendo bloco {n + 1} de {len(bl)}")
         prompt = "\n".join([
             "Você é o editor de um canal de cortes. Leia este trecho da transcrição e proponha os melhores",
-            f"momentos para clips de {regras.duracao_min:.0f} a {regras.duracao_max:.0f} s. Use os tempos [início-fim]",
+            f"momentos para clips de {regras.duracao_min:.0f} a {regras.duracao_max:.0f} s, de preferência perto de "
+            f"{regras.alvo_curto():.0f} s (corte curto demais deixa a história pela metade). Use os tempos [início-fim]",
             "das linhas; cada clip começa e termina em frase completa e FECHA O ASSUNTO: inclui a pergunta ou o",
             "contexto de que depende e termina depois da conclusão, nunca numa pergunta sem a resposta. Pode",
             f"passar de {regras.duracao_max:.0f} s até {dur_ext:.0f} s só para fechar a ideia. Responda só com o JSON do schema.",

@@ -21,6 +21,18 @@ O que você escreve nestes arquivos vale por cima da base. Deixe em branco o que
 | `thumb.md` | Cores, fonte e layouts da thumbnail, e como escrever a frase-gancho. |
 | `referencias.md` | Os títulos dos seus cortes que deram certo. A IA usa o tom, não copia. |
 
+## Guia dos parâmetros em cada arquivo
+
+No fim de cada arquivo há um comentário chamado "GUIA DOS PARÂMETROS". Ele explica cada chave do
+cabeçalho: o que é, quais valores aceita, um exemplo de como mudar e o que acontece no Clipator
+quando você muda. Os comentários são só para você: o Clipator tira esse trecho antes de mandar o
+texto para a IA, então o guia não gasta o pedido nem muda os cortes. Pode apagá-lo se quiser.
+
+Em resumo, cada arquivo tem duas partes:
+
+- **Cabeçalho** (entre as linhas `---`): chaves que o motor aplica direto, com ou sem IA.
+- **Texto livre** (depois do cabeçalho): vai só para a IA, quando ela está ligada.
+
 ## Temperatura do título
 
 Em `titulos.md`, a chave `temperatura` muda o quanto o título provoca:
@@ -42,7 +54,7 @@ O Clipator troca:
 - `{tema}`: o assunto do trecho (a palavra mais específica da fala).
 - `{nome}`: um nome próprio citado no trecho (a fórmula é pulada se não houver).
 - `{numero}`: um número ou valor dito (a fórmula é pulada se não houver).
-- `{verbo}`: um verbo de fala em caixa alta.
+- `{verbo}`: um verbo de fala em caixa alta (hoje, sempre FALA).
 
 ## Como melhorar com o tempo
 

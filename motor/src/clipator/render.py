@@ -742,6 +742,10 @@ def renderizar_clip(
         except Exception as exc:  # noqa: BLE001 - checagem com problema não derruba o render
             if log:
                 log(f"checagem de fatos ficou de fora: {exc}")
+    if pals:  # legenda corrigida à mão no passo 5 (legenda_editada.py) vale sobre a transcrição
+        from . import legenda_editada
+
+        pals = legenda_editada.aplicar_no_render(projeto, clip, pals, tl, log)
     if estilo.legenda.destacar_chave and pals:  # sem IA: as palavras do assunto saem destacadas
         destaques_ia = list(destaques_ia or []) + subtitles.palavras_chave(subtitles.palavras_do_clip(pals, tl))
     base_hf =0.3 if layout in ("seguir-rosto", "dividido") else 0.0

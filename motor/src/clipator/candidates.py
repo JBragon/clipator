@@ -216,7 +216,9 @@ def ajustar_a_frases(ini: float, fim: float, frases: list[Frase], dur_max: float
     if frases[k_fim].texto.rstrip().endswith("?") and depois:
         j = depois[0]
     else:
-        j = min(finais, key=lambda k: abs(frases[k].fim - fim))
+        # a frase que fecha mais perto do fim proposto; voltar custa mais que avançar, para o ajuste
+        # não comer a conclusão que a IA quis incluir
+        j = min(finais, key=lambda k: (fim - frases[k].fim) * 1.5 if frases[k].fim < fim else frases[k].fim - fim)
     a, b = frases[i].inicio, frases[j].fim
     if not (dur_min <= b - a <= dur_max):
         return ini, fim
@@ -412,12 +414,15 @@ def _pontuar(ctx: Contexto, i: int, j: int, modo: str, fechamento: float | None 
     nota = 100 * sum(pesos[k] * v for k, v in sinais.items()) / total_peso
     nota_sinais = nota
 
-    # leve preferência pela duração do meio da faixa
-    lo, hi = (ctx.regras.duracao_min, ctx.regras.duracao_max) if modo == "curto" else (ctx.regras.corte_longo_min, ctx.regras.corte_longo_max)
-    meio = (lo + hi) / 2
-    nota *= 1 - 0.1 * min(1.0, abs(min(dur, hi) - meio) / max(1.0, (hi - lo) / 2))
+    # preferência pela duração-alvo: abaixo dela o corte perde mais (ideia pela metade) do que acima
+    if modo == "curto":
+        lo, hi, alvo = ctx.regras.duracao_min, ctx.regras.duracao_max, ctx.regras.alvo_curto()
+    else:
+        lo, hi = ctx.regras.corte_longo_min, ctx.regras.corte_longo_max
+        alvo = (lo + hi) / 2
+    nota *= fator_duracao(dur, lo, hi, alvo)
     if modo == "curto" and dur > hi:  # passou do máximo para fechar o assunto: vale, mas custa um pouco
-        ext = max(hi + 1, ctx.regras.duracao_max_fechamento)
+        ext = max(hi + 1, ctx.regras.teto_curto())
         nota *= 1 - 0.12 * min(1.0, (dur - hi) / (ext - hi))
 
     contrib = sorted(((pesos[k] * v, k) for k, v in sinais.items() if v > 0.3), reverse=True)
@@ -449,6 +454,23 @@ def _pontuar(ctx: Contexto, i: int, j: int, modo: str, fechamento: float | None 
         "fator_duracao": round(nota / nota_sinais, 3) if nota_sinais else 1.0,
         "fechamento": por_que_fecha,
     }
+
+
+PENALIDADE_CURTO = 0.3  # um corte na duração mínima perde 30% da nota; na duração-alvo, nada
+PENALIDADE_LONGO = 0.05  # entre o alvo e a máxima, só 5%
+
+
+def fator_duracao(dur: float, lo: float, hi: float, alvo: float) -> float:
+    """Multiplicador da nota pela duração (1 no alvo).
+
+    Antes a nota preferia o meio da faixa com só 10% de diferença, e os sinais médios (energia, densidade
+    de palavras-chave) sobem em janelas curtas: o corte de 20 a 30 s ganhava do corte que contava a
+    história inteira. Agora o curto perde até 30% e o longo, até a máxima, quase nada.
+    """
+    alvo = max(lo, min(hi, alvo))
+    if dur < alvo:
+        return 1 - PENALIDADE_CURTO * min(1.0, (alvo - dur) / max(1.0, alvo - lo))
+    return 1 - PENALIDADE_LONGO * min(1.0, (min(dur, hi) - alvo) / max(1.0, hi - alvo))
 
 
 def _sobreposicao(a: dict, b: dict) -> float:
@@ -496,7 +518,7 @@ def snap_to_words(inicio: float, fim: float, palavras: list[dict], duracao: floa
 
 def _janelas_curtas(ctx: Contexto) -> list[dict]:
     lo, hi = ctx.regras.duracao_min, ctx.regras.duracao_max
-    ext = max(hi, ctx.regras.duracao_max_fechamento)
+    ext = ctx.regras.teto_curto()
     fr = ctx.frases
     out = []
     for i in range(len(fr)):

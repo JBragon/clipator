@@ -856,7 +856,7 @@ def test_cancelar_ffmpeg(video_teste, tmp_path):
 def _projeto_com_video(ws, video_teste):
     c = ws.criar_canal("Teste", palavras_chave=["dinheiro"])
     md_regras = c.arquivo("regras.md")
-    md_regras.write_text(md_regras.read_text().replace("duracao_min: 20", "duracao_min: 5").replace("duracao_max: 60", "duracao_max: 12"))
+    md_regras.write_text(md_regras.read_text().replace("duracao_min: 40", "duracao_min: 5").replace("duracao_max: 180", "duracao_max: 12"))
     p = c.criar_projeto("v", Origem(tipo="arquivo", valor=str(video_teste)))
     return c, p
 

@@ -9,8 +9,10 @@ OpenShorts. Ver THIRD_PARTY_NOTICES.md.
 
 from __future__ import annotations
 
+import functools
 import re
 from pathlib import Path
+from typing import Any
 
 from .models import Cartela, Legenda
 from .plataformas import Zona
@@ -63,6 +65,10 @@ def escape_ass(texto: str) -> str:
     return str(texto).replace("\\", "/").replace("{", "(").replace("}", ")").replace("\n", " ")
 
 
+SEGURA_ENTRE_BLOCOS = 0.4  # pausa menor que isso: o bloco espera o próximo, sem a tela piscar vazia
+RESPIRO_FIM_BLOCO = 0.25  # pausa maior: o bloco fica mais este tanto depois da última palavra
+
+
 def blocos_de_palavras(palavras: list[dict], max_palavras: int, max_duracao: float = 2.6,
                        pausa_quebra: float = 0.6) -> list[list[dict]]:
     """Agrupa palavras (já em tempo do clip) em blocos que cabem na tela."""
@@ -82,6 +88,28 @@ def blocos_de_palavras(palavras: list[dict], max_palavras: int, max_duracao: flo
     return blocos
 
 
+MAX_DURACAO_PALAVRA = 1.2  # o Whisper estica a última palavra antes de uma pausa por segundos
+MIN_DURACAO_PALAVRA = 0.06
+
+
+def ajustar_tempos(palavras: list[dict]) -> list[dict]:
+    """Tempos por palavra que a legenda consegue seguir: em ordem, sem uma palavra cobrir a seguinte,
+    sem palavra de 0 s (que nunca acendia) e sem palavra presa na tela durante uma pausa."""
+    pals = sorted((dict(w) for w in palavras if str(w.get("texto", "")).strip()), key=lambda w: (w["inicio"], w["fim"]))
+    for k, w in enumerate(pals):
+        prox = pals[k + 1]["inicio"] if k + 1 < len(pals) else None
+        fim = min(float(w["fim"]), float(w["inicio"]) + MAX_DURACAO_PALAVRA)
+        if prox is not None:
+            fim = min(fim, max(float(w["inicio"]), prox))
+        if fim - w["inicio"] < MIN_DURACAO_PALAVRA:
+            fim = w["inicio"] + MIN_DURACAO_PALAVRA
+            if prox is not None and fim > prox:  # duas palavras no mesmo instante: a de trás anda um pouco
+                pals[k + 1]["inicio"] = round(fim, 3)
+                pals[k + 1]["fim"] = max(pals[k + 1]["fim"], pals[k + 1]["inicio"] + MIN_DURACAO_PALAVRA)
+        w["fim"] = round(fim, 3)
+    return pals
+
+
 def palavras_do_clip(palavras: list[dict], tl: Timeline) -> list[dict]:
     """Converte palavras do original para o tempo do clip, descartando as cortadas."""
     out = []
@@ -92,7 +120,115 @@ def palavras_do_clip(palavras: list[dict], tl: Timeline) -> list[dict]:
         if iv is None or iv[1] - iv[0] < 0.02:
             continue
         out.append({**w, "inicio": iv[0], "fim": iv[1]})
-    return out
+    return ajustar_tempos(out)
+
+
+# fora da tela: vírgula, ponto, dois-pontos e ponto e vírgula no fim da palavra (? e ! ficam)
+_PONTUACAO_FINAL = re.compile(r"[.,;:…]+$")
+
+
+def sem_pontuacao(texto: str) -> str:
+    t = _PONTUACAO_FINAL.sub("", texto.strip())
+    return t or texto
+
+
+@functools.lru_cache(maxsize=1)
+def _arquivos_de_fonte() -> dict[str, str]:
+    """Nome da família (e família + estilo) -> arquivo, das fontes que vêm com o Clipator e das baixadas."""
+    from PIL import ImageFont
+
+    from .workspace import fontes_dir
+
+    pastas = [fontes_dir()]
+    try:
+        from . import fontes
+
+        pastas.append(fontes.pasta())
+    except Exception:  # noqa: BLE001 - sem a pasta das baixadas, fica só a embutida
+        pass
+    mapa: dict[str, str] = {}
+    for pasta in pastas:
+        if not pasta.is_dir():
+            continue
+        for arq in sorted(pasta.rglob("*")):
+            if arq.suffix.lower() not in (".ttf", ".otf"):
+                continue
+            try:
+                familia, estilo = ImageFont.truetype(str(arq), 40).getname()
+            except OSError:
+                continue
+            for chave in (f"{familia} {estilo}", familia, arq.stem.replace("-", " ")):
+                mapa.setdefault(chave.lower(), str(arq))
+    return mapa
+
+
+@functools.lru_cache(maxsize=32)
+def _fonte_medida(nome: str) -> tuple[Any, float] | None:
+    """A fonte da legenda carregada em tamanho 100 e o fator de pixels: no ASS o tamanho é a altura da
+    linha (ascendente + descendente), não o em."""
+    from PIL import ImageFont
+
+    arq = _arquivos_de_fonte().get((nome or "").strip().lower())
+    if not arq:
+        return None
+    try:
+        f = ImageFont.truetype(arq, 100)
+        altura = _altura_win(arq)  # o libass usa a altura do Windows (usWinAscent + usWinDescent) em em
+        if altura is None:
+            a, d = f.getmetrics()
+            return f, 1.0 / max(1, a + d)
+        return f, 1.0 / (100 * altura)
+    except OSError:
+        return None
+
+
+def _altura_win(arq: str) -> float | None:
+    """(usWinAscent + usWinDescent) / unitsPerEm, lidos das tabelas OS/2 e head do arquivo da fonte."""
+    import struct
+
+    try:
+        dados = Path(arq).read_bytes()
+        n = struct.unpack(">H", dados[4:6])[0]
+        tabelas = {dados[12 + 16 * k: 16 + 16 * k]: struct.unpack(">I", dados[20 + 16 * k: 24 + 16 * k])[0] for k in range(n)}
+        upm = struct.unpack(">H", dados[tabelas[b"head"] + 18: tabelas[b"head"] + 20])[0]
+        asc, desc = struct.unpack(">HH", dados[tabelas[b"OS/2"] + 74: tabelas[b"OS/2"] + 78])
+        return (asc + desc) / upm if upm and asc + desc else None
+    except (OSError, KeyError, struct.error):
+        return None
+
+
+def largura_estimada(texto: str, fs: float, caixa_alta: bool = False, fonte: str | None = None) -> float:
+    """Largura do texto na legenda, em pixels.
+
+    Com a fonte do estilo entre as do Clipator, mede com ela (Pillow); senão estima pela média de uma sans
+    negrito, entre 0,5 e 0,7 da altura por caractere, mais larga em caixa alta.
+    """
+    medida = _fonte_medida(fonte) if fonte else None
+    if medida is not None:
+        f, fator = medida
+        return f.getlength(texto) * fator * fs * 1.03  # 3%: negrito sintético e arredondamento do libass
+    estreitas = sum(texto.count(c) for c in "iljtfrI.,;:!' ")
+    fator = 0.72 if caixa_alta or texto.isupper() else 0.6
+    return fs * (fator * (len(texto) - estreitas) + 0.32 * estreitas)
+
+
+def quebrar_em_linhas(textos: list[str], pesos: list[float], max_por_linha: int, largura_util: float,
+                      fs: float, caixa_alta: bool, fonte: str | None = None) -> list[list[int]]:
+    """Índices das palavras de cada linha: até `max_por_linha` palavras e sem passar da largura útil."""
+    linhas: list[list[int]] = []
+    atual: list[int] = []
+    larg = 0.0
+    espaco = largura_estimada(" ", fs, caixa_alta, fonte)
+    for j, t in enumerate(textos):
+        w = largura_estimada(t, fs, caixa_alta, fonte) * pesos[j]
+        if atual and (len(atual) >= max_por_linha or larg + espaco + w > largura_util):
+            linhas.append(atual)
+            atual, larg = [], 0.0
+        larg += (espaco if atual else 0.0) + w
+        atual.append(j)
+    if atual:
+        linhas.append(atual)
+    return linhas
 
 
 def palavras_chave(pals_clip: list[dict], top: int = 8) -> list[str]:
@@ -210,17 +346,40 @@ def gerar_ass(
     destaque_re = regex_destaque(legenda, destaques_extra)
 
     def fmt(texto: str) -> str:
-        t = escape_ass(texto)
+        t = escape_ass(sem_pontuacao(texto) if legenda.remover_pontuacao else texto)
         return t.upper() if legenda.caixa_alta else t
+
+    # largura útil: a tela menos as margens e a faixa que a plataforma cobre dos lados
+    livre = 1.0 - ((zona.esquerda + zona.direita) if zona is not None else 0.0)
+    largura_util = max(fs * 4, largura * livre - 2 * max(40, int(largura * 0.06)) - 2 * outline_w)
+    folga_ativo = 1.1 if anim == "pop" else 1.0  # a palavra ativa cresce no pop
 
     eventos: list[str] = []
     pals = palavras_do_clip(palavras, tl)
     if legenda.modo != "nenhuma" and pals:
         max_pal = 1 if legenda.modo == "uma-palavra" else legenda.max_palavras_por_linha * legenda.linhas
-        for bloco in blocos_de_palavras(pals, max_pal):
+        por_linha = 1 if legenda.modo == "uma-palavra" else legenda.max_palavras_por_linha
+        blocos: list[tuple[list[dict], list[list[int]]]] = []
+        for bruto in blocos_de_palavras(pals, max_pal):
+            # palavras longas não cabem em N por linha: o bloco vira mais de um, sem passar de `linhas` linhas
+            textos_b = [fmt(w["texto"]) for w in bruto]
+            pesos_b = [(esc_d if destaque_re and destaque_re.match(w["texto"]) else 1.0) * folga_ativo for w in bruto]
+            linhas_b = quebrar_em_linhas(textos_b, pesos_b, por_linha, largura_util, fs, legenda.caixa_alta, legenda.fonte)
+            for k in range(0, len(linhas_b), legenda.linhas):
+                grupo = linhas_b[k:k + legenda.linhas]
+                i0 = grupo[0][0]
+                blocos.append((bruto[i0:grupo[-1][-1] + 1], [[j - i0 for j in ln] for ln in grupo]))
+
+        for n_bloco, (bloco, linhas_idx) in enumerate(blocos):
             textos = [fmt(w["texto"]) for w in bloco]
             fixos = [bool(destaque_re and destaque_re.match(w["texto"])) for w in bloco]
-            # quebra em linhas
+            fim_linha = {ln[-1] for ln in linhas_idx[:-1]}
+            # uma palavra que sozinha não cabe na largura: a fonte do bloco encolhe
+            espaco = largura_estimada(" ", fs, legenda.caixa_alta, legenda.fonte)
+            maior = max(sum(largura_estimada(textos[j], fs, legenda.caixa_alta, legenda.fonte) * (esc_d if fixos[j] else 1.0)
+                            * folga_ativo for j in ln) + espaco * (len(ln) - 1) for ln in linhas_idx)
+            reduz = f"\\fs{max(10, int(fs * largura_util / maior))}" if maior > largura_util else ""
+
             def montar(i_ativo: int | None) -> str:
                 partes = []
                 for j, t in enumerate(textos):
@@ -228,26 +387,36 @@ def gerar_ass(
                     esc = f"\\fscx{100 * esc_d:.0f}\\fscy{100 * esc_d:.0f}" if grande else ""
                     if i_ativo is not None and j == i_ativo:
                         tag = (ativo_grande or f"{{{esc}}}{ativo}") if grande else ativo
-                        partes.append(f"{tag}{t}{{\\r}}")
+                        partes.append(f"{tag}{t}{{\\r{reduz}}}" if reduz else f"{tag}{t}{{\\r}}")
                     elif anim == "revelar" and i_ativo is not None and j > i_ativo:
-                        partes.append(f"{{\\alpha&HFF&}}{t}{{\\r}}")
+                        partes.append(f"{{\\alpha&HFF&}}{t}{{\\r{reduz}}}" if reduz else f"{{\\alpha&HFF&}}{t}{{\\r}}")
                     elif fixos[j]:
-                        partes.append(f"{{\\c{hl}{esc}}}{t}{{\\r}}")
+                        partes.append(f"{{\\c{hl}{esc}}}{t}{{\\r{reduz}}}" if reduz else f"{{\\c{hl}{esc}}}{t}{{\\r}}")
                     else:
                         partes.append(t)
-                    if legenda.linhas > 1 and (j + 1) % legenda.max_palavras_por_linha == 0 and j + 1 < len(textos):
+                    if j in fim_linha:
                         partes.append("\\N")
                 return " ".join(partes).replace(" \\N ", "\\N")
 
+            # o bloco fica na tela até o próximo começar quando a pausa é curta (sem piscar entre blocos),
+            # e um pouco depois da última palavra quando a pausa é longa, para dar tempo de ler
+            prox = blocos[n_bloco + 1][0][0]["inicio"] if n_bloco + 1 < len(blocos) else None
+            fim_bloco = bloco[-1]["fim"]
+            if prox is not None and prox - fim_bloco <= SEGURA_ENTRE_BLOCOS:
+                fim_bloco = prox
+            else:
+                fim_bloco = min(fim_bloco + RESPIRO_FIM_BLOCO, prox if prox is not None else tl.duracao)
+            fim_bloco = max(fim_bloco, bloco[-1]["fim"])
+            abre = f"{{{pos}{reduz}}}"
             if legenda.modo == "frase":
-                eventos.append(f"Dialogue: 0,{ass_time(bloco[0]['inicio'])},{ass_time(bloco[-1]['fim'])},Default,,0,0,0,,{{{pos}}}{montar(None)}")
+                eventos.append(f"Dialogue: 0,{ass_time(bloco[0]['inicio'])},{ass_time(fim_bloco)},Default,,0,0,0,,{abre}{montar(None)}")
                 continue
             for i, w in enumerate(bloco):
                 ini = bloco[0]["inicio"] if i == 0 else w["inicio"]
-                fim = bloco[i + 1]["inicio"] if i + 1 < len(bloco) else bloco[-1]["fim"]
+                fim = bloco[i + 1]["inicio"] if i + 1 < len(bloco) else fim_bloco
                 if fim - ini < 0.01:
                     continue
-                eventos.append(f"Dialogue: 0,{ass_time(ini)},{ass_time(fim)},Default,,0,0,0,,{{{pos}}}{montar(i)}")
+                eventos.append(f"Dialogue: 0,{ass_time(ini)},{ass_time(fim)},Default,,0,0,0,,{abre}{montar(i)}")
 
     if usar_cartela and titulo and cartela is not None:
         cfs = max(10, int(cartela.tamanho * escala))

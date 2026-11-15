@@ -7,6 +7,7 @@ ligada.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -71,6 +72,17 @@ def write(path: str | Path, meta: dict[str, Any], body: str = "") -> None:
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(dumps(meta, body), encoding="utf-8")
+
+
+_COMENTARIO = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def sem_comentarios(texto: str) -> str:
+    """O corpo sem os comentários <!-- ... --> (como o guia dos parâmetros dos arquivos do canal),
+    que são só para quem edita o arquivo e não vão para a IA."""
+    if "<!--" not in texto:
+        return texto
+    return re.sub(r"\n{3,}", "\n\n", _COMENTARIO.sub("", texto)).strip("\n") + "\n"
 
 
 def deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

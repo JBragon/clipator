@@ -278,6 +278,7 @@ def _transcrever_com(model, entrada, lang, nome, dev, progresso, cancelar, hotwo
         segs.append({"inicio": round(float(seg.start), 3), "fim": round(float(seg.end), 3), "texto": texto, "palavras": palavras})
         if progresso and duracao:
             progresso(min(0.99, float(seg.end) / duracao), f"transcrevendo {_hms(float(seg.end))} de {_hms(duracao)}")
+    segs = limpar_alucinacoes(segs)
     return {
         "idioma": getattr(info, "language", lang) or lang,
         "duracao": round(duracao, 3),
@@ -285,6 +286,69 @@ def _transcrever_com(model, entrada, lang, nome, dev, progresso, cancelar, hotwo
         "dispositivo": dev,
         "segmentos": segs,
     }
+
+
+# Frases que o Whisper inventa em silêncio ou música (vêm das legendas com que foi treinado)
+ALUCINACOES_SEMPRE = re.compile(
+    r"amara\.?org|legendas? (pela|por|da) comunidade|legendado por|legendagem por|subt[ií]tulos? (realizados|por)|"
+    r"transcri[cç][aã]o (e legendas|por)|subtitles by|captions by",
+    re.IGNORECASE)
+# ...e as que alguém pode dizer de verdade: só saem quando o Whisper estava inseguro
+ALUCINACOES_DUVIDOSAS = re.compile(
+    r"^\W*(obrigad[oa] por (assistir|ver)|inscreva-se( no canal)?|thanks? (you )?for watching|tchau,? tchau)\W*$",
+    re.IGNORECASE)
+PROB_DUVIDOSA = 0.5
+
+
+def _norm(t: str) -> str:
+    return re.sub(r"[^\w]", "", t.lower())
+
+
+def _sem_loops(palavras: list[dict]) -> list[dict]:
+    """Corta os loops do Whisper ("não não não não não", a mesma frase 5 vezes): de um trecho de 1 a 6
+    palavras repetido em seguida (4+ vezes uma palavra, 3+ vezes uma frase), fica uma cópia só."""
+    out: list[dict] = []
+    i = 0
+    norm = [_norm(w["texto"]) for w in palavras]
+    while i < len(palavras):
+        pulou = False
+        for n in range(6, 0, -1):
+            alvo = norm[i:i + n]
+            if len(alvo) < n or not any(alvo):
+                continue
+            k = 1
+            while norm[i + k * n:i + (k + 1) * n] == alvo:
+                k += 1
+            if k >= (4 if n == 1 else 3):
+                out.extend(palavras[i:i + n])
+                i += k * n
+                pulou = True
+                break
+        if not pulou:
+            out.append(palavras[i])
+            i += 1
+    return out
+
+
+def limpar_alucinacoes(segmentos: list[dict]) -> list[dict]:
+    """Tira da transcrição o que o Whisper inventa: créditos de legenda, "obrigado por assistir" dito com
+    pouca certeza e loops de repetição. Sem isso, essas frases viravam legenda e entravam nos candidatos."""
+    out = []
+    for seg in segmentos:
+        texto = seg.get("texto", "")
+        pals = seg.get("palavras") or []
+        if ALUCINACOES_SEMPRE.search(texto):
+            continue
+        prob = sum(w.get("prob", 1.0) for w in pals) / len(pals) if pals else 1.0
+        if prob < PROB_DUVIDOSA and ALUCINACOES_DUVIDOSAS.search(texto):
+            continue
+        if pals:
+            limpas = _sem_loops(pals)
+            if len(limpas) != len(pals):
+                seg = {**seg, "palavras": limpas, "texto": " ".join(w["texto"] for w in limpas),
+                       "inicio": limpas[0]["inicio"], "fim": limpas[-1]["fim"]}
+        out.append(seg)
+    return out
 
 
 def _hms(s: float) -> str:

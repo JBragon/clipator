@@ -42,7 +42,7 @@ def test_workspace_canal_projeto(ws):
     info, _ = c.info()
     assert info.palavras_chave == ["dinheiro"]
     regras, _ = c.regras()
-    assert regras.duracao_max == 60 and regras.trava_titulo is True and regras.censor_leetspeak is False
+    assert regras.duracao_max == 180 and regras.trava_titulo is True and regras.censor_leetspeak is False
     p = c.criar_projeto("Ep 12")
     assert p.meta().etapas["transcricao"].status == "pendente"
     p2 = c.criar_projeto("Ep 12")

@@ -21,6 +21,7 @@ import { abrirConversa, PainelConversa, type PedidoConversa } from './ConversaIA
 import { EditorVideo } from './EditorVideo'
 import { EditarDuracao, type AlvoDuracao } from './EditarDuracao'
 import { Acabamento } from './Acabamento'
+import { EditarLegenda } from './EditarLegenda'
 import { Checagem, type ResumoChecagem } from './Checagem'
 
 type Detalhe = {
@@ -717,6 +718,7 @@ function EditorClip(props: {
               <span className="dica">{msg}</span>
             </div>
           </div>
+          <EditarLegenda api={api} base={base} clip={clip} video={saida} aoMudar={aoMudar} />
           <Acabamento api={api} base={base} clip={clip} jobs={jobs} aoMudar={aoMudar} />
           <Thumbs api={api} base={base} clipId={c.id} jobs={jobs} raiz={raiz} />
           <section className="edicao-com-ia">

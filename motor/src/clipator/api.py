@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from . import __version__, acabamento, checagem, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
+from . import __version__, acabamento, checagem, legenda_editada, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
 from .ai import detectar_agentes
 from .ai.adapter import ErroIA, abrir_login
 from .models import Clip, ConfigApp, PedidoIA
@@ -1071,6 +1071,54 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
             raise erro(exc) from exc
         return {"job": srv.fila.enviar("acabamento", {"canal": canal, "projeto": projeto, "clip": clip_id,
                                                       "ajustes": dados.model_dump(mode="json")})}
+
+    # ---- legenda editada à mão depois do render (passo 5) ----
+    @app.get("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/legenda", dependencies=dep)
+    def ver_legenda(canal: str, projeto: str, clip_id: str) -> dict:
+        try:
+            return legenda_editada.estado(proj(canal, projeto), clip_id)
+        except legenda_editada.ErroLegenda as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.put("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/legenda", dependencies=dep)
+    def salvar_legenda(canal: str, projeto: str, clip_id: str, dados: legenda_editada.LegendaEditada) -> dict:
+        p = proj(canal, projeto)
+        try:
+            legenda_editada.salvar(p, clip_id, dados)
+            return legenda_editada.estado(p, clip_id)
+        except legenda_editada.ErroLegenda as exc:
+            raise HTTPException(400, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.delete("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/legenda", dependencies=dep)
+    def descartar_legenda(canal: str, projeto: str, clip_id: str) -> dict:
+        p = proj(canal, projeto)
+        try:
+            legenda_editada.descartar(p, clip_id)
+            return legenda_editada.estado(p, clip_id)
+        except legenda_editada.ErroLegenda as exc:
+            raise HTTPException(409, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.post("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/legenda/renderizar", dependencies=dep)
+    def renderizar_legenda(canal: str, projeto: str, clip_id: str, dados: legenda_editada.LegendaEditada | None = None) -> dict:
+        """Salva a legenda (se veio no corpo) e gera o clip de novo com ela."""
+        p = proj(canal, projeto)
+        try:
+            if dados is not None and dados.frases:
+                legenda_editada.salvar(p, clip_id, dados)
+            else:
+                p.clip(clip_id)
+        except legenda_editada.ErroLegenda as exc:
+            raise HTTPException(400, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+        return {"job": srv.fila.enviar("renderizar", {"canal": canal, "projeto": projeto, "clips": [clip_id],
+                                                      "legenda_editada": True})}
 
     @app.get("/api/canais/{canal}/musicas", dependencies=dep)
     def listar_musicas(canal: str) -> list[dict]:

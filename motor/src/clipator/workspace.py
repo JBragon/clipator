@@ -306,14 +306,14 @@ class CanalWS:
         doc = md.read(self.path / "canal.md")
         meta = dict(doc.meta)
         meta.setdefault("nome", self.slug)
-        return Canal.model_validate(meta), doc.body
+        return Canal.model_validate(meta), md.sem_comentarios(doc.body)
 
     def regras(self) -> tuple[Regras, str]:
         global_doc = md.read(self.ws.root / "regras.md") if (self.ws.root / "regras.md").exists() else md.MarkdownDoc()
         p = self._ler("regras.md")
         doc = md.read(p) if p else md.MarkdownDoc()
         meta = md.deep_merge(global_doc.meta, doc.meta)
-        body = "\n\n".join(b for b in (global_doc.body.strip(), doc.body.strip()) if b)
+        body = "\n\n".join(b for b in (md.sem_comentarios(global_doc.body).strip(), md.sem_comentarios(doc.body).strip()) if b)
         return Regras.model_validate(meta), body
 
     def titulos(self) -> tuple[dict[str, Any], str]:
@@ -321,19 +321,19 @@ class CanalWS:
         if p is None:
             return {"formulas": FORMULAS_PADRAO}, ""
         doc = md.read(p)
-        return doc.meta, doc.body
+        return doc.meta, md.sem_comentarios(doc.body)
 
     def thumb(self) -> tuple[Thumb, str]:
         p = self._ler("thumb.md")
         if p is None:
             return Thumb(), THUMB_MD
         doc = md.read(p)
-        return Thumb.model_validate(doc.meta), doc.body
+        return Thumb.model_validate(doc.meta), md.sem_comentarios(doc.body)
 
     def referencias(self) -> str:
         """referencias.md: os cortes do próprio canal que deram certo (régua de tom para a IA)."""
         p = self._ler("referencias.md")
-        return md.read(p).body if p else ""
+        return md.sem_comentarios(md.read(p).body) if p else ""
 
     @property
     def projetos_dir(self) -> Path:

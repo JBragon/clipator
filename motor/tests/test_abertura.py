@@ -91,7 +91,7 @@ def test_render_com_abertura_em_preto_e_branco(ws, video_teste, monkeypatch):
     monkeypatch.setattr(transcribe, "carregar_modelo", lambda *a, **k: WhisperFalso(transcricao_falsa(duracao=12)))
     c = ws.criar_canal("Teste", palavras_chave=["dinheiro"])
     md = c.arquivo("regras.md")
-    md.write_text(md.read_text().replace("duracao_min: 20", "duracao_min: 5").replace("duracao_max: 60", "duracao_max: 13"))
+    md.write_text(md.read_text().replace("duracao_min: 40", "duracao_min: 5").replace("duracao_max: 180", "duracao_max: 13"))
     from clipator.models import Origem
 
     p = c.criar_projeto("v", Origem(tipo="arquivo", valor=str(video_teste)))

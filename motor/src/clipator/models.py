@@ -46,11 +46,15 @@ class Pesos(_Base):
 class Regras(_Base):
     """regras.md: como escolher os cortes."""
 
-    duracao_min: float = Field(20, ge=5, le=600)
-    duracao_max: float = Field(60, ge=10, le=1200, description="Duração máxima dos Shorts (padrão 60 s)")
-    duracao_max_fechamento: float = Field(
-        90, ge=10, le=1500,
+    # o YouTube aceita Shorts de até 3 min (desde out/2024): o padrão usa a faixa inteira
+    duracao_min: float = Field(40, ge=5, le=600)
+    duracao_max: float = Field(180, ge=10, le=1200, description="Duração máxima dos Shorts (padrão 180 s, o limite do YouTube)")
+    duracao_max_fechamento: float | None = Field(
+        None, ge=10, le=1500,
         description="Até quanto um Short pode passar da duração máxima, só quando é para fechar o assunto")
+    duracao_ideal: float | None = Field(
+        90, ge=5, le=1200,
+        description="Duração que os cortes buscam (vazio = 75% do caminho entre a mínima e a máxima)")
     corte_longo_min: float = Field(480, ge=120)
     corte_longo_max: float = Field(1200, le=3600)
     quantidade: int = Field(8, ge=1, le=50)
@@ -72,6 +76,19 @@ class Regras(_Base):
         if v < lo + 5:
             raise ValueError("duracao_max precisa ser pelo menos 5 s maior que duracao_min")
         return v
+
+    def teto_curto(self) -> float:
+        """Até onde um Short pode ir para fechar o assunto (vazio = a própria duração máxima)."""
+        return max(self.duracao_max, self.duracao_max_fechamento or self.duracao_max)
+
+    def alvo_curto(self) -> float:
+        """A duração que um Short busca: a ideal do canal (90 s no padrão), ou, se vazia, 75% do caminho
+        entre a mínima e a máxima. Mirar no meio da faixa deixava os cortes curtos, com a ideia pela metade.
+        """
+        lo, hi = self.duracao_min, self.duracao_max
+        if self.duracao_ideal is not None:
+            return max(lo, min(hi, self.duracao_ideal))
+        return lo + 0.75 * (hi - lo)
 
 
 class Canal(_Base):
@@ -116,6 +133,7 @@ class Legenda(_Base):
     destacar_chave: bool = Field(False, description="Destaca sem IA as palavras que se repetem e marcam o assunto do corte")
     escala_destaque: float = Field(1.0, ge=1.0, le=1.8, description="Palavra destacada sai maior (1 = mesmo tamanho)")
     cores_falantes: list[str] = Field(default_factory=list)
+    remover_pontuacao: bool = Field(True, description="Tira vírgula, ponto e dois-pontos do fim das palavras na tela (? e ! ficam)")
 
 
 class Cartela(_Base):

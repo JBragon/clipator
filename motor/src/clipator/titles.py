@@ -85,7 +85,47 @@ def tema_do_trecho(texto: str, extras: list[str] | None = None, df: Mapping[str,
         return _grafia(texto, max(presentes, key=lambda e: texto_n.count(normalizar(e)) * idf(e.lower())))
     if not cont:
         return "isso"
-    return _grafia(texto, max(cont, key=lambda t: cont[t] * idf(t)))
+    melhor = max(cont, key=lambda t: cont[t] * idf(t))
+    return _expressao(texto, melhor, evitar_n) or _grafia(texto, melhor)
+
+
+_LIGA = {"de", "do", "da", "dos", "das", "of"}
+_PONTUACAO = ".,!?;:\"'()[]…-–—"
+
+
+def _expressao(texto: str, termo: str, evitar_n: Collection[str] = ()) -> str | None:
+    """O termo dentro da expressão em que ele aparece de novo e de novo ("mercado financeiro",
+    "Copa do Mundo"): um título sobre "mercado" diz menos que um sobre "mercado financeiro".
+
+    Vale a expressão de duas palavras de conteúdo (com "de/do/da" no meio ou não) que se repete pelo
+    menos duas vezes no trecho, sem pontuação entre elas.
+    """
+    alvo = normalizar(termo)
+    palavras = texto.split()
+
+    def conteudo(p: str) -> bool:
+        n = normalizar(p)
+        return len(n) > 3 and n not in STOPWORDS and n not in evitar_n and not n.isdigit()
+
+    cont: Counter[tuple[str, ...]] = Counter()
+    grafia: dict[tuple[str, ...], str] = {}
+    for i in range(len(palavras) - 1):
+        for tam in (2, 3):
+            pedaco = palavras[i:i + tam]
+            if len(pedaco) < tam or any(p[-1:] in _PONTUACAO for p in pedaco[:-1]):
+                continue
+            if tam == 3 and normalizar(pedaco[1]) not in _LIGA:
+                continue
+            a, b = pedaco[0], pedaco[-1]
+            if not (conteudo(a) and conteudo(b)) or alvo not in (normalizar(a), normalizar(b)):
+                continue
+            chave = tuple(normalizar(p) for p in pedaco)
+            cont[chave] += 1
+            grafia.setdefault(chave, " ".join(p.strip(_PONTUACAO) for p in pedaco))
+    if not cont:
+        return None
+    chave, n = cont.most_common(1)[0]
+    return grafia[chave] if n >= 2 else None
 
 
 def termos_comuns(textos: list[str], fracao: float = 0.5) -> set[str]:

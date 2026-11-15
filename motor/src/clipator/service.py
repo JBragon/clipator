@@ -119,6 +119,14 @@ class Servico:
                     ctx.log(f"• {m}")
                 ctx.progresso((n + f) / len(ids), f"{cid}: {m}", cid, f)
 
+            if p.get("legenda_editada"):  # passo 5: gerar de novo com a legenda corrigida (e refazer o acabamento)
+                from . import legenda_editada
+
+                res = legenda_editada.renderizar(proj, cid, prog, ctx.cancelar, ctx.log)
+                if res.get("aviso"):
+                    ctx.log(res["aviso"])
+                saidas.append(res["saida"])
+                continue
             r = pipeline.renderizar(proj, cid, bool(p.get("preview")), prog, ctx.cancelar, p.get("versao"), ctx.log)
             if r.aviso:
                 ctx.log(r.aviso)

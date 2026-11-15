@@ -20,7 +20,7 @@ O pipeline tem oito etapas, e só a entrada e a seleção dependem do usuário; 
 2. **Ingestão:** yt-dlp baixa o vídeo (e metadados como capítulos); FFmpeg extrai o áudio em WAV 16 kHz mono.
 3. **Transcrição:** faster-whisper gera texto com timestamp por palavra; opcionalmente identifica quem fala (diarização).
 4. **Sinais locais:** em paralelo, calcula energia do áudio, silêncios, velocidade de fala, cortes de cena e posição dos rostos.
-5. **Candidatos:** heurísticas montam janelas de 15 a 90 s que começam e terminam em frase completa, e dão uma nota a cada uma.
+5. **Candidatos:** heurísticas montam janelas entre a duração mínima e a máxima do canal (40 s a 3 min no padrão, o limite do YouTube Shorts) que começam e terminam em frase completa, e dão uma nota a cada uma, preferindo cortes perto da duração-alvo (90 s no padrão).
 6. **Ranking por IA (opcional):** só o texto dos melhores candidatos vai para o Claude ou Codex, que devolve nota, título, gancho e ajuste fino de início e fim.
 7. **Seleção pelo usuário:** lista de candidatos com nota, prévia e transcrição; o usuário marca os que quer, ajusta início e fim na timeline e escolhe formato (short 9:16, quadrado ou 16:9) e estilo. Para cada corte marcado, a IA sugere de 3 a 5 títulos sensacionalistas para escolher ou editar.
 8. **Renderização:** FFmpeg corta, reenquadra seguindo o rosto, aplica zooms, legendas animadas, sons e marca d'água conforme o estilo .md; o usuário revisa a prévia e pode re-renderizar.
@@ -95,7 +95,9 @@ A detecção é feita em duas camadas: heurísticas locais encontram e pontuam c
 | Palavras-chave do canal | Termos do `canal.md` e TF-IDF da transcrição | Assunto que o público do canal procura |
 | Sinais da plataforma | Capítulos e, se o yt-dlp expuser, o mapa de "mais repetidos" do YouTube | Mostra onde a audiência real voltou para assistir |
 
-**Camada 2, IA opcional.** Uma única chamada recebe os candidatos (texto, duração, notas locais e o corpo do `regras.md`) e devolve JSON validado por schema: nota, título sugerido, frase de gancho, ajuste de início e fim em segundos e o motivo. O usuário escolhe um de três modos:
+**Duração-alvo.** A nota de cada janela é multiplicada por um fator de duração que vale 1 na duração-alvo (`duracao_ideal` no `regras.md`, 90 s no padrão; vazio, 75% do caminho entre a mínima e a máxima) e cai até 30% na duração mínima, mas só 5% até a máxima. Sem isso, os sinais que são médias (energia, densidade de palavras-chave) favoreciam janelas curtas e o corte saía com a história pela metade. Desde outubro de 2024 o YouTube aceita Shorts de até 3 min; acima disso, o vídeo vira vídeo comum.
+
+**Camada 2, IA opcional.** Uma única chamada recebe os candidatos (texto, duração, notas locais, os 30 s de fala antes e depois de cada um e o corpo do `regras.md`) e devolve JSON validado por schema: nota, título sugerido, frase de gancho, ajuste de início e fim em segundos e o motivo. O usuário escolhe um de três modos:
 
 - **Sem IA:** só a camada 1. Custo zero.
 - **Econômico (padrão):** IA só nos candidatos, cerca de 5 a 8 mil tokens de entrada por vídeo, independente da duração.
@@ -492,7 +494,7 @@ Os quatro workers são independentes e retomáveis: se a transcrição já exist
 2. Importar vídeo de até 4 horas por link do YouTube ou da Twitch (yt-dlp) ou por upload, em português ou inglês.
 3. Transcrever com timestamp por palavra e permitir corrigir o texto; rodar em CPU com aviso de tempo, e usar GPU quando houver.
 4. Gerar e pontuar candidatos com heurísticas locais; ranking por IA opcional nos três modos.
-5. Mostrar candidatos com prévia, nota, motivo e transcrição; selecionar e ajustar início e fim. A duração máxima dos Shorts vem das regras do canal (padrão 60 s).
+5. Mostrar candidatos com prévia, nota, motivo e transcrição; selecionar e ajustar início e fim. A duração máxima dos Shorts vem das regras do canal (padrão 3 min, o limite do YouTube; antes era 60 s).
 6. Renderizar em 9:16, 1:1, 4:5 ou 16:9, em lote, com os 16 estilos do MVP, incluindo o corte longo 16:9 de 8 a 20 min. A cartela de título nos 3 s iniciais é ligada ou desligada pelo usuário em cada clip.
 7. Editor manual completo: cortes internos, mover legenda, zooms e efeitos à mão.
 8. Mostrar progresso e logs de cada job; permitir cancelar e refazer etapas.
@@ -539,7 +541,7 @@ Todas as perguntas em aberto foram respondidas por Jordan em 01/11/2026. Estas d
 | 19 | Thumb com imagem de referência | Só com ChatGPT conectado (Plus ou superior) |
 | 20 | Revisão cruzada entre IAs | Desligada; o usuário liga por canal ou por clip |
 | 21 | Trilhas e efeitos sonoros | Download opcional oferecido pelo assistente na primeira abertura |
-| 22 | Duração máxima dos Shorts | Cada canal define nas regras (padrão 60 s) |
+| 22 | Duração máxima dos Shorts | Cada canal define nas regras (padrão 3 min, o limite do YouTube Shorts; era 60 s até 15/11/2026) |
 | 23 | Distribuição | GitHub Releases (instaladores) + PyPI (motor, CLI e MCP) |
 | 24 | Pasta SKILLS/ | Versionada como está no repo público, por decisão do Jordan |
 

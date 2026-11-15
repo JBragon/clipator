@@ -104,7 +104,7 @@ def test_migracao_nao_sobrescreve_o_que_ja_esta_na_pasta(ws):
     (c.path / "regras.md").write_text("---\nduracao_max: 30\n---\n", encoding="utf-8")
     c2 = ws.canal("dois")
     assert (c2.path / "regras.md").exists()  # ficou onde estava
-    assert c2.regras()[0].duracao_max == 60  # vale o da pasta nova
+    assert c2.regras()[0].duracao_max == 180  # vale o da pasta nova
 
 
 def test_temperatura_ordena_as_formulas():
