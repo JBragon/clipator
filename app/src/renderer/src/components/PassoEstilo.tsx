@@ -11,9 +11,25 @@ const semVazios = (a: AjustesEstilo): AjustesEstilo => Object.fromEntries(Object
   .map(([k, v]) => [k, v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined && x !== '')) : v])
   .filter(([, v]) => v !== undefined && (typeof v !== 'object' || Object.keys(v as object).length))) as AjustesEstilo
 export const escolhaInicial = (): EscolhaEstilo => ({ estilo: '', ajustes: {}, formato: '', cartela: true, pedidoIA: null })
+const temAjustesEm = (a: AjustesEstilo): boolean => Object.values(a).some((v) => v !== undefined && (typeof v !== 'object' || Object.keys(v).length))
+
+// cria os clips dos cortes escolhidos com o estilo do passo 3 (e manda renderizar); usado nos passos 3 e 4
+export async function criarClips(api: Api, base: string, escolhidos: Candidato[], escolha: EscolhaEstilo, renderizar: boolean): Promise<number> {
+  const pedido = escolha.pedidoIA?.texto.trim() ? { ...escolha.pedidoIA, texto: escolha.pedidoIA.texto.trim() } : null
+  const clips = await api.post<{ id: string }[]>(`${base}/selecionar`, {
+    ids: escolhidos.map((c) => c.id),
+    formato: escolha.formato || null,
+    estilo: escolha.estilo || null,
+    cartela: escolha.cartela,
+    pedido_ia: pedido,
+    ajustes: temAjustesEm(escolha.ajustes) ? semVazios(escolha.ajustes) : null
+  })
+  if (renderizar) await api.post(`${base}/renderizar`, { clips: clips.map((c) => c.id) })
+  return clips.length
+}
 
 // Passo 3: o estilo de animação e edição dos cortes escolhidos no passo 2, com a amostra de cada estilo.
-// Daqui saem os clips (criar ou criar e renderizar).
+// Daqui o usuário segue para a checagem de fatos (passo 4) ou já cria os clips.
 export function PassoEstilo(props: {
   api: Api
   base: string
@@ -25,9 +41,10 @@ export function PassoEstilo(props: {
   escolha: EscolhaEstilo
   setEscolha(e: EscolhaEstilo): void
   voltarCortes(): void
+  checarFatos(): void
   aposCriar(n: number): void
 }): React.JSX.Element {
-  const { api, base, canal, cands, selecionados, setSelecionados, jobs, escolha, setEscolha, voltarCortes, aposCriar } = props
+  const { api, base, canal, cands, selecionados, setSelecionados, jobs, escolha, setEscolha, voltarCortes, checarFatos, aposCriar } = props
   const t = useT()
   const g = t.gal
   const [msg, setMsg] = useState('')
@@ -45,25 +62,16 @@ export function PassoEstilo(props: {
     return () => { vivo = false }
   }, [api, base, primeiro])
   const melhor = sugestao[0]
-  const temAjustes = Object.values(escolha.ajustes).some((v) => v !== undefined && (typeof v !== 'object' || Object.keys(v).length))
+  const temAjustes = temAjustesEm(escolha.ajustes)
 
-  const criar = async (renderizar: boolean): Promise<void> => {
+  const criar = async (): Promise<void> => {
     setEnviando(true)
     try {
-      const pedido = escolha.pedidoIA?.texto.trim() ? { ...escolha.pedidoIA, texto: escolha.pedidoIA.texto.trim() } : null
-      const clips = await api.post<{ id: string }[]>(`${base}/selecionar`, {
-        ids: escolhidos.map((c) => c.id),
-        formato: escolha.formato || null,
-        estilo: escolha.estilo || null,
-        cartela: escolha.cartela,
-        pedido_ia: pedido,
-        ajustes: temAjustes ? semVazios(escolha.ajustes) : null
-      })
-      if (renderizar) await api.post(`${base}/renderizar`, { clips: clips.map((c) => c.id) })
+      const n = await criarClips(api, base, escolhidos, escolha, false)
       setMsg('')
       setSelecionados(new Set())
       setEscolha({ ...escolha, pedidoIA: null })
-      aposCriar(clips.length)
+      aposCriar(n)
     } catch (e) {
       setMsg(e instanceof Error ? e.message : String(e))
     }
@@ -92,9 +100,9 @@ export function PassoEstilo(props: {
         <label className="linha">
           <input type="checkbox" checked={escolha.cartela} onChange={(e) => mudar({ cartela: e.target.checked })} /> {t.cartela}
         </label>
-        <button disabled={!escolhidos.length || enviando} onClick={() => void criar(false)}>{t.criarClips}</button>
-        <button className="primario" disabled={!escolhidos.length || enviando} onClick={() => void criar(true)}>
-          {g.renderizarN(escolhidos.length)}
+        <button disabled={!escolhidos.length || enviando} onClick={() => void criar()}>{t.criarClips}</button>
+        <button className="primario" disabled={!escolhidos.length || enviando} onClick={checarFatos}>
+          {t.fatos.irPara} →
         </button>
       </div>
       {!escolhidos.length && (

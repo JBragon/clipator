@@ -530,5 +530,5 @@ def pedido_para_conversa(projeto: ProjetoWS, clip_id: str) -> str:
             "## Mudar a edição\n"
             f"Use as ferramentas MCP do Clipator: `ler_edicao` (canal {projeto.canal.slug}, projeto {projeto.id}, clip {clip_id}) para ver "
             "a edição atual e `aplicar_edicao` para mudar (cada mudança vira uma versão nova, que o usuário pode comparar e desfazer "
-            "no passo 4). Cenas da direção de arte são itens do tipo `cena` com `params.cena`, `params.ancora` (o trecho da fala que "
+            "no passo 5). Cenas da direção de arte são itens do tipo `cena` com `params.cena`, `params.ancora` (o trecho da fala que "
             "a cena ilustra) e os textos. Use as suas skills de edição, se tiver, mas só com o que foi dito no clip.\n")

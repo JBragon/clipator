@@ -112,14 +112,18 @@ def _tempo(termo: str, pals: list[dict]) -> float | None:
 
 
 def obter(pasta: Path, pals: list[dict], ad: Any, titulo: str = "", cancelar: threading.Event | None = None,
-          passo: Any = None, cache: Any = None) -> list[dict[str, Any]]:
-    """As imagens reais do clip, cada uma com `t` (segundo do clip em que o nome é dito). Guardadas em referencias.json."""
+          passo: Any = None, cache: Any = None, conferidas: list[dict] | None = None) -> list[dict[str, Any]]:
+    """As imagens reais do clip, cada uma com `t` (segundo do clip em que o nome é dito). Guardadas em referencias.json.
+
+    `conferidas`: a lista da checagem de fatos (checagem.entidades_do_clip). Com ela a IA não é chamada: valem os nomes
+    e as fontes que o usuário conferiu."""
     from .artes import pesquisa
 
     passo = passo or (lambda _t: None)
-    if ad is None or not pals or not pesquisa.ligada():
+    if (ad is None and conferidas is None) or not pals or not pesquisa.ligada():
         return []
-    chave = hashlib.sha1(" ".join(f"{w['inicio']:.2f}{w['texto']}" for w in pals).encode()).hexdigest()[:16]
+    chave = hashlib.sha1(" ".join(f"{w['inicio']:.2f}{w['texto']}" for w in pals).encode()
+                         + (json.dumps(conferidas, sort_keys=True, ensure_ascii=False).encode() if conferidas is not None else b"")).hexdigest()[:16]
     arq = pasta / "referencias.json"
     try:
         salvo = json.loads(arq.read_text(encoding="utf-8")) if arq.exists() else {}
@@ -128,13 +132,18 @@ def obter(pasta: Path, pals: list[dict], ad: Any, titulo: str = "", cancelar: th
     if salvo.get("chave") == chave:
         refs = salvo.get("referencias") or []
     else:
-        from .ai.adapter import chamar
+        if conferidas is not None:
+            ents = conferidas[:MAX_REFS]
+            if ents:
+                passo("imagens reais: pela checagem de fatos, sem perguntar à IA")
+        else:
+            from .ai.adapter import chamar
 
-        try:
-            ents = de_resposta(chamar(ad, prompt(pals, titulo), schema(), cache, cancelar), pals)
-        except Exception as exc:  # noqa: BLE001 - sem a lista, o clip sai sem imagens reais
-            passo(f"imagens reais: a IA não listou os nomes citados ({exc})")
-            ents = []
+            try:
+                ents = de_resposta(chamar(ad, prompt(pals, titulo), schema(), cache, cancelar), pals)
+            except Exception as exc:  # noqa: BLE001 - sem a lista, o clip sai sem imagens reais
+                passo(f"imagens reais: a IA não listou os nomes citados ({exc})")
+                ents = []
         refs = []
         if ents:
             passo("imagens reais: " + ", ".join(f"{e['busca']} ({e['tipo']})" for e in ents))

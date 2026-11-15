@@ -1,4 +1,4 @@
-"""Revisão antes de publicar: uma nota de 0 a 100 e a lista do que corrigir, por clip (passo 5).
+"""Revisão antes de publicar: uma nota de 0 a 100 e a lista do que corrigir, por clip (passo 6).
 
 Sem IA, por regras que o motor sabe medir: gancho (quanto demora a primeira palavra), fechamento (a
 última frase termina?), pausas mortas, duração para a plataforma, título, chamada para seguir e números

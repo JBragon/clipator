@@ -30,4 +30,4 @@ A IA faz três etapas antes do render: analisa o corte (tema e ideias com tempo)
 escreve o roteiro do desenho (uma cena a cada poucos segundos, presa à fala) e
 compõe cada cena com as peças da biblioteca do Clipator (bonequinhos, objetos,
 setas, check e X), balões e dados grandes (número, quadradinhos, barras). Depois
-do render, a direção de arte do clip aparece no passo 4 para ajustar e refazer.
+do render, a direção de arte do clip aparece no passo 5 para ajustar e refazer.

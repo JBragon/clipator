@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { Api } from '../api'
 import { useT } from '../i18n'
 import { ponte } from '../ponte'
+import { confirmar } from './Confirmar'
 
 type Ativacao = { skill: string; escopo: 'global' | 'canal' | 'projeto'; canal?: string; projeto?: string }
 type Skill = {
@@ -65,7 +66,7 @@ export function Skills({ api, aoMudar }: { api: Api; aoMudar(): void }): React.J
         await api.post('/api/skills/importar', { origem })
       } catch (e) {
         const m = e instanceof Error ? e.message : String(e)
-        if (m.includes('já está instalada') && confirm(t.skillSubstituir)) await api.post('/api/skills/importar', { origem, substituir: true })
+        if (m.includes('já está instalada') && (await confirmar({ titulo: t.skillSubstituir, ok: t.substituir, cancelar: t.cancelar }))) await api.post('/api/skills/importar', { origem, substituir: true })
         else throw e
       }
     }, t.skillImportada)
@@ -163,7 +164,8 @@ function CartaoSkill(props: { s: Skill; canais: Canal[]; api: Api; rodar(f: () =
           {t.exportarZip}
         </button>
         {s.origem === 'instalada' && (
-          <button onClick={() => confirm(t.confirmarRemoverSkill) && void rodar(() => api.del(url, { confirmar: 'true' }))}>{t.remover}</button>
+          <button onClick={() => void confirmar({ titulo: t.confirmarRemoverSkill, ok: t.remover, cancelar: t.cancelar, perigo: true })
+            .then((sim) => { if (sim) void rodar(() => api.del(url, { confirmar: 'true' })) })}>{t.remover}</button>
         )}
       </div>
     </div>

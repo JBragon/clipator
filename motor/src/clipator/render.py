@@ -261,12 +261,15 @@ def _camada_referencias(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Time
             from .melhorar import ia_do_workspace
 
             ad = ia_do_workspace(projeto.ws)
-        if ad is None or hyperframes.comando() is None:
-            return None
+        from . import checagem
         from .ai.adapter import CacheIA
 
         pals_clip = subtitles.palavras_do_clip(pals, tl) if pals else []
-        refs = referencias.obter(pasta, pals_clip, ad, clip.titulo, cancelar, rel.passo, CacheIA(projeto.analise_dir / "cache_ia"))
+        conferidas = checagem.entidades_do_clip(projeto, clip.candidato, pals_clip)  # None: o corte não passou pela checagem
+        if (ad is None and conferidas is None) or hyperframes.comando() is None:
+            return None
+        refs = referencias.obter(pasta, pals_clip, ad, clip.titulo, cancelar, rel.passo, CacheIA(projeto.analise_dir / "cache_ia"),
+                                 conferidas)
         if not refs:
             return None
         pasta_r = pasta / "referencias-camada"
@@ -726,6 +729,19 @@ def renderizar_clip(
     from .transcribe import palavras as _palavras
 
     pals = _palavras(trans) if trans else []
+    if pals:  # checagem de fatos (passo 4): o nome e o dado conferidos entram no lugar do que foi dito
+        from . import checagem
+
+        try:
+            fatos = checagem.revisados(projeto)
+            if fatos:
+                pals, trocas = checagem.aplicar_nas_palavras(pals, fatos)
+                no_clip = [x for x in trocas if tl.inicio <= x["inicio"] < tl.fim]
+                if no_clip and log:
+                    log("checagem de fatos: " + "; ".join(f"“{x['de']}” → “{x['para']}”" for x in no_clip[:8]))
+        except Exception as exc:  # noqa: BLE001 - checagem com problema não derruba o render
+            if log:
+                log(f"checagem de fatos ficou de fora: {exc}")
     if estilo.legenda.destacar_chave and pals:  # sem IA: as palavras do assunto saem destacadas
         destaques_ia = list(destaques_ia or []) + subtitles.palavras_chave(subtitles.palavras_do_clip(pals, tl))
     base_hf =0.3 if layout in ("seguir-rosto", "dividido") else 0.0

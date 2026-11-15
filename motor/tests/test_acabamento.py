@@ -1,4 +1,4 @@
-"""Acabamento do passo 4: música de fundo e ajustes de imagem no clip já gerado."""
+"""Acabamento do passo 5: música de fundo e ajustes de imagem no clip já gerado."""
 
 from __future__ import annotations
 

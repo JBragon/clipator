@@ -130,6 +130,9 @@ label { color: var(--texto-2); }
 .passos-projeto .passo.feito .num { background: var(--ok); color: #000; }
 .passos-projeto .passo.andamento .num { background: var(--acento); color: var(--acento-texto); }
 .passos-projeto .passo.erro .num { background: var(--erro); color: #fff; }
+.passos-projeto .passo.travado { opacity: .5; cursor: not-allowed; }
+.passos-projeto .passo.travado:hover { border-color: var(--borda); }
+.passos-projeto .passo.travado .num { font-size: 11px; }
 .passos-projeto .textos { display: flex; flex-direction: column; line-height: 1.2; }
 .passos-projeto .nome { font-weight: 600; font-size: 13px; }
 .passos-projeto .detalhe { font-size: 11px; color: var(--texto-2); }
@@ -300,8 +303,19 @@ label { color: var(--texto-2); }
 .tabela-sinais .barra-sinal { width: 70px; }
 .tabela-sinais .barra-sinal span { display: block; height: 6px; border-radius: 3px; background: var(--acento); }
 .chip-nota { border: none; border-radius: 10px; padding: 1px 8px; font-weight: 700; font-size: 11px; color: #000; cursor: pointer; }
-.clip-editor .apagar-clip { font-size: 15px; color: var(--texto-2); }
-.clip-editor .apagar-clip:hover { color: var(--erro); }
+/* ação destrutiva: contorno vermelho discreto, que enche de vermelho no hover */
+button.perigo-contorno { color: var(--erro); border-color: color-mix(in srgb, var(--erro) 45%, transparent); background: transparent; }
+button.perigo-contorno:hover:not(:disabled) { background: var(--erro); border-color: var(--erro); color: #fff; }
+button.perigo-cheio { background: var(--erro); border-color: var(--erro); color: #fff; font-weight: 600; }
+button.perigo-cheio:hover:not(:disabled) { border-color: var(--erro); filter: brightness(1.1); }
+button.perigo-contorno:focus-visible, button.perigo-cheio:focus-visible { outline: 2px solid var(--erro); outline-offset: 2px; }
+.clip-editor .apagar-clip { padding: 2px 10px; display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; }
+.clip-editor .abrir-editor.travado { cursor: not-allowed; }
+.modal.confirmar { width: min(460px, 92vw); }
+.modal.confirmar.perigo { border-top: 3px solid var(--erro); }
+.modal.confirmar h3 { display: flex; align-items: center; gap: 8px; }
+.modal.confirmar .mensagem { display: grid; gap: 8px; color: var(--texto-2); }
+.modal.confirmar .botoes { margin-top: 4px; }
 
 /* glossário, postagem e sons */
 .glossario { margin-top: 6px; }
@@ -502,7 +516,7 @@ label { color: var(--texto-2); }
 .render-andamento { display: grid; gap: 4px; padding: 8px 10px; border-top: 1px solid var(--borda); }
 .barra-render { height: 8px; border-radius: 4px; background: var(--fundo-3); overflow: hidden; }
 .barra-render span { display: block; height: 100%; background: var(--acento); transition: width .4s; }
-/* passo 4: publicação */
+/* passo 6: publicação */
 .passo-publicacao { padding: 10px 14px; display: grid; gap: 12px; }
 .pub-lista { display: flex; flex-wrap: wrap; gap: 6px; }
 .pub-clip { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 14px; border: 1px solid var(--borda); border-radius: 10px; padding: 10px; background: var(--fundo-2); }
@@ -587,7 +601,7 @@ label { color: var(--texto-2); }
 .cena-previa .tipo { font-weight: 700; font-size: 11px; opacity: .9; }
 .cena-previa .txt { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Melhorar com IA (passo 4) e a etiqueta "Usa IA" */
+/* Melhorar com IA (passo 5) e a etiqueta "Usa IA" */
 .chip.usa-ia { background: #7c3aed; border-color: #7c3aed; color: #fff; }
 .cartao-estilo.sem-ia .amostra { opacity: .45; filter: grayscale(.6); }
 .melhorar-ia { border: 1px solid var(--borda); border-radius: 8px; padding: 6px 10px; display: grid; gap: 6px; background: var(--fundo-2); }
@@ -627,7 +641,7 @@ label { color: var(--texto-2); }
 .modal.detalhe-estilo { position: relative; }
 .fechar-modal { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; padding: 0; border-radius: 50%; z-index: 2;
   display: grid; place-items: center; font-size: 15px; }
-/* passo 4 depois de gerado: a edição com IA numa área só */
+/* passo 5 depois de gerado: a edição com IA numa área só */
 .acabamento { border: 1px solid var(--borda); border-radius: 8px; padding: 8px 10px; display: grid; gap: 8px; }
 .acab-corpo { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; align-items: start; }
 .acab-previa { display: grid; gap: 4px; position: sticky; top: 0; }
@@ -641,7 +655,7 @@ label { color: var(--texto-2); }
 .acab-deslizante input[type=range] { grid-column: 1 / -1; width: 100%; padding: 0; border: none; background: none; accent-color: var(--acento); }
 .acab-check { display: flex; gap: 6px; align-items: center; }
 .edicao-com-ia { border: 1px solid var(--borda); border-radius: 8px; padding: 8px 10px; display: grid; gap: 8px; }
-/* direção de arte do clip (passo 4, depois do render) */
+/* direção de arte do clip (passo 5, depois do render) */
 .direcao-do-clip { display: grid; gap: 8px; }
 .direcao-do-clip > summary { cursor: pointer; font-weight: 600; }
 .direcao-do-clip section { display: grid; gap: 6px; }
@@ -708,3 +722,38 @@ label { color: var(--texto-2); }
 @media (max-width: 640px) {
   .ed-dur-campos { grid-template-columns: 1fr; }
 }
+
+/* passo 4: checagem de fatos */
+.passo-checagem { display: flex; flex-direction: column; min-height: 0; overflow: auto; }
+.checagem-corpo { display: grid; gap: 10px; padding: 10px 12px 16px; align-content: start; }
+.checagem-corpo > .dica { margin: 0; max-width: 900px; }
+.checagem-rodando { display: flex; align-items: center; gap: 10px; }
+.checagem-rodando .barra { flex: 0 1 260px; height: 6px; border-radius: 3px; background: var(--fundo-3); overflow: hidden; }
+.checagem-rodando .barra > span { display: block; height: 100%; background: var(--acento); transition: width .3s; }
+.checagem-avisos { margin: 0; padding-left: 4px; list-style: none; display: grid; gap: 2px; }
+.checagem-resumo { flex-wrap: wrap; gap: 6px; }
+.checagem-resumo .espaco { flex: 1; }
+.checagem-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 10px; }
+.cartao-fato { border: 1px solid var(--borda); border-left: 4px solid var(--aviso); border-radius: var(--raio); padding: 8px 10px; display: grid; gap: 8px; background: var(--fundo); }
+.cartao-fato.confirmado { border-left-color: var(--ok); }
+.cartao-fato.corrigido { border-left-color: var(--acento); }
+.cartao-fato.ignorado { border-left-color: var(--borda); opacity: .7; }
+.cabeca-fato { gap: 6px; }
+.cabeca-fato .espaco { flex: 1; }
+.cabeca-fato select { font-size: 12px; }
+.chip.status-fato.pendente { background: color-mix(in srgb, var(--aviso) 18%, transparent); color: var(--aviso); }
+.chip.status-fato.confirmado { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.chip.status-fato.corrigido { background: color-mix(in srgb, var(--acento) 18%, transparent); color: var(--acento); }
+.campo-fato { display: grid; gap: 3px; }
+.campo-fato .rotulo { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--texto-2); }
+.campo-fato input { width: 100%; box-sizing: border-box; }
+.campo-fato .link { justify-self: start; font-size: 12px; }
+.trecho-fato { font-style: italic; }
+.fonte-fato { display: grid; gap: 4px; }
+.fonte-fato .linha { gap: 6px; }
+.campos-fonte { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.campos-fonte input { min-width: 0; }
+.fonte-fato .chip { margin-left: 6px; }
+.aviso-txt { color: var(--aviso); font-size: 12px; }
+.opcoes-fonte { margin: 0; padding: 6px 8px; list-style: none; display: grid; gap: 4px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--fundo-2); }
+.acoes-fato { gap: 8px; }

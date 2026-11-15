@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Api, Clip, Job } from '../api'
 import { useT } from '../i18n'
 
-// Acabamento do passo 4: música de fundo e ajustes de imagem em cima do clip já gerado.
+// Acabamento do passo 5: música de fundo e ajustes de imagem em cima do clip já gerado.
 // O motor aplica tudo com FFmpeg numa versão nova do clip (edicoes/<data>-acabamento/); a prévia aqui é
 // feita no navegador (filtros CSS e um <audio> sincronizado com o vídeo) e por isso é aproximada.
 

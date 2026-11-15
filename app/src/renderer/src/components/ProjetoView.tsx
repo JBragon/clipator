@@ -12,7 +12,8 @@ import { MelhorarIA } from './MelhorarIA'
 import { RelatoJob } from './RelatoJob'
 import { DirecaoDoClip } from './DirecaoDoClip'
 import { PassoEstilo, escolhaInicial, type EscolhaEstilo } from './PassoEstilo'
-import { PASSO_CLIPS, PASSO_ESTILO, PASSO_PUBLICACAO, chavePasso, lerPasso, passoPadrao, type Passo } from '../passos'
+import { PASSO_CHECAGEM, PASSO_CLIPS, PASSO_ESTILO, PASSO_PUBLICACAO, chavePasso, lerPasso, passoLiberado, passoPadrao, passoPermitido, type EstadoPassos, type Passo } from '../passos'
+import { confirmar } from './Confirmar'
 import { SonsPrevia } from './SonsPrevia'
 import { EditarComIA } from './EditarComIA'
 import { AvisoCookies, ehErroDeCookies } from './AvisoCookies'
@@ -20,6 +21,7 @@ import { abrirConversa, PainelConversa, type PedidoConversa } from './ConversaIA
 import { EditorVideo } from './EditorVideo'
 import { EditarDuracao, type AlvoDuracao } from './EditarDuracao'
 import { Acabamento } from './Acabamento'
+import { Checagem, type ResumoChecagem } from './Checagem'
 
 type Detalhe = {
   meta: { titulo: string; etapas: Record<string, { status: string; erro?: string }>; origem?: { tipo: string; valor: string } }
@@ -72,7 +74,8 @@ export function ProjetoView(props: Props): React.JSX.Element {
   const [raiz, setRaiz] = useState('')
   const [temHF, setTemHF] = useState(true)
   const [focado, setFocado] = useState<string | null>(null)
-  // passo da tela: 1 vídeo e status, 2 cortes sugeridos, 3 estilo, 4 clips gerados, 5 publicação (lembrado por projeto)
+  // passo da tela: 1 vídeo e status, 2 cortes sugeridos, 3 estilo, 4 checagem de fatos, 5 clips gerados, 6 publicação
+  // (lembrado por projeto)
   const [passo, setPassoEstado] = useState<Passo | null>(() => {
     try {
       return lerPasso(localStorage, canal, projeto)
@@ -83,6 +86,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
   const [escolha, setEscolha] = useState<EscolhaEstilo>(escolhaInicial)
   const [avisoClips, setAvisoClips] = useState(0)
   const [filtroClips, setFiltroClips] = useState<'todos' | 'shorts' | 'outros'>('todos')
+  const [resumoFatos, setResumoFatos] = useState<{ resumo: ResumoChecagem; candidatos: string[] } | null>(null)
   const video = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -92,12 +96,16 @@ export function ProjetoView(props: Props): React.JSX.Element {
     }, () => undefined)
   }, [api])
 
+  const carregarFatos = (): void => {
+    api.get<{ resumo: ResumoChecagem; candidatos: string[] }>(`${base}/checagem`).then(setResumoFatos, () => setResumoFatos(null))
+  }
   const carregar = useCallback(() => {
     api.get<Detalhe>(base).then(setDet, (e) => setErro((e instanceof Error ? e.message : String(e))))
     api.get<Transcricao>(`${base}/transcricao`).then(setTrans, () => setTrans(null))
     api.get<Sinais>(`${base}/sinais`).then((s) => setSinais(s.energia_db ? s : null), () => setSinais(null))
     api.get<Candidato[]>(`${base}/candidatos`).then(setCands, () => setCands([]))
-  }, [api, base])
+    carregarFatos()
+  }, [api, base]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(carregar, [carregar, versao])
   useEffect(() => {
@@ -147,7 +155,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
     else v.addEventListener('loadedmetadata', tocar, { once: true })
   }, [passo, det?.video])
 
-  // abre a conversa com a IA no painel do passo 4 (ou num terminal externo, fora do Electron)
+  // abre a conversa com a IA no painel do passo 5 (ou num terminal externo, fora do Electron)
   const conversar = async (p: PedidoConversa): Promise<string> => {
     const s = await abrirConversa(api, base, canal, projeto, p, det?.clips ?? [], { cols: 100, rows: 30 })
     if (!s) return t.conversaExterna
@@ -206,8 +214,18 @@ export function ProjetoView(props: Props): React.JSX.Element {
   const analisando = jobAtivo?.tipo === 'analisar'
   const longos = cands.filter((c) => c.modo === 'longo').length
   const shorts = cands.length - longos
-  // passo padrão: 1 sem análise, 2 com cortes e sem clips, 4 com clips
-  const passoAtual: Passo = passo ?? passoPadrao(analiseFeita && !analisando, det.clips.length > 0, cands.length > 0)
+  // cada passo só abre com o anterior concluído (a checagem de fatos é opcional); um passo guardado que ainda
+  // não abriu mostra o último liberado antes dele, e volta sozinho quando a condição se cumprir
+  const estadoPassos: EstadoPassos = {
+    analiseFeita: analiseFeita && !analisando,
+    temCortes: cands.length > 0,
+    temSelecao: selecionados.size > 0,
+    temClips: det.clips.length > 0,
+    temVideoGerado: det.clips.some((c) => !!c.saida)
+  }
+  const liberado = (p: Passo): boolean => passoLiberado(p, estadoPassos)
+  // passo padrão: 1 sem análise, 2 com cortes e sem clips, 5 com clips
+  const passoAtual: Passo = passoPermitido(passo ?? passoPadrao(analiseFeita && !analisando, det.clips.length > 0, cands.length > 0), estadoPassos)
   const estadoPasso = (p: Passo): 'feito' | 'andamento' | 'vazio' | 'erro' => {
     if (p === 1) {
       if (analisando) return 'andamento'
@@ -216,6 +234,10 @@ export function ProjetoView(props: Props): React.JSX.Element {
     }
     if (p === 2) return cands.length ? 'feito' : analisando ? 'andamento' : 'vazio'
     if (p === PASSO_ESTILO) return det.clips.length ? 'feito' : 'vazio'
+    if (p === PASSO_CHECAGEM) {
+      if (jobsDoProjeto.some((j) => j.tipo === 'checagem' && (j.status === 'rodando' || j.status === 'na_fila'))) return 'andamento'
+      return resumoFatos && resumoFatos.candidatos.length && !resumoFatos.resumo.pendente ? 'feito' : 'vazio'
+    }
     if (p === PASSO_PUBLICACAO) return jobsDoProjeto.some((j) => j.tipo === 'postagem' && (j.status === 'rodando' || j.status === 'na_fila')) ? 'andamento' : 'vazio'
     const renderizando = jobsDoProjeto.some((j) => j.tipo === 'renderizar' && (j.status === 'rodando' || j.status === 'na_fila'))
     return renderizando ? 'andamento' : det.clips.length ? 'feito' : 'vazio'
@@ -224,6 +246,8 @@ export function ProjetoView(props: Props): React.JSX.Element {
     { n: 1, nome: t.passoVideo, detalhe: analisando ? `${Math.round((jobAtivo?.progresso ?? 0) * 100)}%` : analiseFeita ? t.analiseFeita : t.analisePendente },
     { n: 2, nome: t.passoCortes, detalhe: t.contagemCortes(shorts, longos) },
     { n: PASSO_ESTILO, nome: t.passoEstilo, detalhe: escolha.estilo || (selecionados.size ? t.selecionados(selecionados.size) : t.gal.escolher) },
+    { n: PASSO_CHECAGEM, nome: t.passoChecagem, detalhe: !resumoFatos?.candidatos.length ? t.fatos.naoChecado
+      : resumoFatos.resumo.pendente ? t.fatos.paraConferir(resumoFatos.resumo.pendente) : t.fatos.conferidos(resumoFatos.resumo.total) },
     { n: PASSO_CLIPS, nome: t.passoClips, detalhe: t.contagemClips(det.clips.length) },
     { n: PASSO_PUBLICACAO, nome: t.passoPublicacao, detalhe: t.contagemProntos(det.clips.filter((c) => c.saida).length) }
   ]
@@ -244,16 +268,21 @@ export function ProjetoView(props: Props): React.JSX.Element {
   return (
     <div className="projeto">
       <nav className="passos-projeto" aria-label={t.passosProjeto}>
-        {passos.map((p) => (
-          <button key={p.n} className={`passo ${estadoPasso(p.n)} ${passoAtual === p.n ? 'ativo' : ''}`} onClick={() => setPasso(p.n)}
+        {passos.map((p) => {
+          // travado: continua focável e com a dica no mouse (um botão disabled some do teclado e não explica o porquê)
+          const travado = !liberado(p.n)
+          return (
+          <button key={p.n} className={`passo ${travado ? 'travado' : estadoPasso(p.n)} ${passoAtual === p.n ? 'ativo' : ''}`}
+            onClick={() => !travado && setPasso(p.n)} aria-disabled={travado || undefined} title={travado ? t.passoTravado[p.n] : undefined}
             aria-current={passoAtual === p.n ? 'step' : undefined}>
-            <span className="num">{estadoPasso(p.n) === 'feito' ? '✓' : estadoPasso(p.n) === 'erro' ? '!' : p.n}</span>
+            <span className="num">{travado ? '🔒' : estadoPasso(p.n) === 'feito' ? '✓' : estadoPasso(p.n) === 'erro' ? '!' : p.n}</span>
             <span className="textos">
               <span className="nome">{p.nome}</span>
-              <span className="detalhe">{p.detalhe}</span>
+              <span className="detalhe">{travado ? t.passoTravadoCurto : p.detalhe}</span>
             </span>
           </button>
-        ))}
+          )
+        })}
         {avisoConversa && (
           <span className="aviso-conversa">
             <button className="link" onClick={() => {
@@ -369,12 +398,26 @@ export function ProjetoView(props: Props): React.JSX.Element {
           )}
           <PassoEstilo api={api} base={base} canal={canal} cands={cands} selecionados={selecionados} setSelecionados={setSelecionados}
             jobs={jobs} escolha={escolha} setEscolha={setEscolha} voltarCortes={() => setPasso(2)}
+            checarFatos={() => setPasso(PASSO_CHECAGEM)}
             aposCriar={(n) => {
               aposCriar()
               setPasso(PASSO_CLIPS)
               setAvisoClips(n)
             }} />
         </>
+      )}
+
+      {passoAtual === PASSO_CHECAGEM && (
+        <Checagem api={api} base={base} canal={canal} projeto={projeto} cands={cands} jobs={jobs}
+          idsCortes={selecionados.size ? [...selecionados] : [...new Set(det.clips.map((c) => c.candidato).filter((x): x is string => !!x))]}
+          deClipsExistentes={!selecionados.size}
+          escolha={escolha} setEscolha={setEscolha} setSelecionados={setSelecionados}
+          voltarEstilo={() => setPasso(PASSO_ESTILO)} irParaClips={() => setPasso(PASSO_CLIPS)} aoMudar={carregarFatos}
+          aposCriar={(n) => {
+            aposCriar()
+            setPasso(PASSO_CLIPS)
+            setAvisoClips(n)
+          }} />
       )}
 
       {passoAtual === PASSO_CLIPS && (
@@ -390,7 +433,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
                   carregar()
                 }} />
             </div>
-          ) : editando && det.clips.some((c) => c.id === editando) ? (
+          ) : editando && det.clips.some((c) => c.id === editando && c.status === 'renderizado') ? (
             <div className="clips-coluna editor-coluna">
               <EditorVideo key={editando} api={api} base={base} clip={det.clips.find((c) => c.id === editando)!} video={det.video}
                 trans={trans} sinais={sinais} jobs={jobs} voltar={() => setEditando(null)} aoMudar={carregar}
@@ -575,7 +618,19 @@ function EditorClip(props: {
   // apagar: tira o player da tela antes (no Windows o vídeo aberto segura a pasta) e mostra o erro do motor
   const [apagando, setApagando] = useState(false)
   const apagar = async (): Promise<void> => {
-    if (!confirm(t.confirmarApagarClip(c.titulo || c.id))) return
+    const sim = await confirmar({
+      titulo: t.apagarClipPergunta(c.titulo || c.id),
+      mensagem: (
+        <>
+          <p style={{ margin: 0 }}>{t.apagarClipItens}</p>
+          <p className="erro-txt" style={{ margin: 0 }}>{t.apagarClipDeVez}</p>
+        </>
+      ),
+      ok: t.apagarClip,
+      cancelar: t.cancelar,
+      perigo: true
+    })
+    if (!sim) return
     setApagando(true)
     await new Promise((ok) => setTimeout(ok, 300))
     try {
@@ -613,9 +668,15 @@ function EditorClip(props: {
         <span className="espaco" style={{ flex: 1 }} />
         <button className="abrir-duracao" disabled={!!renderizando} title={t.dur.abrirDica}
           onClick={(ev) => (ev.stopPropagation(), editarDuracao())}>✂ {t.dur.abrir}</button>
-        {!gerado && <button className="primario abrir-editor" onClick={(ev) => (ev.stopPropagation(), abrirEditor())}>🎬 {t.ed.abrirEditor}</button>}
-        <button className="link apagar-clip" title={t.apagarClip} aria-label={t.apagarClip} disabled={apagando}
-          onClick={(e) => (e.stopPropagation(), void apagar())}>🗑</button>
+        {/* o editor de vídeo trabalha em cima do vídeo gerado: fica travado até o clip ser renderizado */}
+        <button className={`abrir-editor ${gerado ? 'primario' : 'travado'}`} disabled={!gerado || !!renderizando}
+          title={gerado ? t.ed.abrirEditorDica : t.ed.editorTravado}
+          onClick={(ev) => (ev.stopPropagation(), abrirEditor())}>{gerado ? '🎬' : '🔒'} {t.ed.abrirEditor}</button>
+        <button className="perigo-contorno apagar-clip" disabled={apagando || !!renderizando}
+          title={renderizando ? t.apagarClipRenderizando : t.apagarClip} aria-label={t.apagarClip}
+          onClick={(e) => (e.stopPropagation(), void apagar())}>
+          <span aria-hidden>🗑</span> {apagando ? t.apagando : t.apagarClipCurto}
+        </button>
       </div>
       {renderizando && (
         <div className="render-andamento">
@@ -723,7 +784,6 @@ function EditorClip(props: {
             <button disabled={!sujo} onClick={() => void salvar()}>{t.salvar}</button>
             <button disabled={!!renderizando} onClick={() => void renderizar(true)}>{t.previa}</button>
             <button className="primario" disabled={!!renderizando} onClick={() => void renderizar(false)}>{t.renderizar}</button>
-            <button onClick={() => void apagar()}>{t.apagar}</button>
             <span className="dica">{msg}</span>
           </div>
           <SonsPrevia api={api} />

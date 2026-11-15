@@ -102,7 +102,7 @@ def _descricao(p: dict[str, Any]) -> str:
     partes = []
     if p.get("titulo") is None and blocos.get("titulo"):
         partes.append(blocos["titulo"])
-    for k in ("resumo", "contexto", "link", "creditos"):
+    for k in ("resumo", "contexto", "fontes", "link", "creditos"):
         if blocos.get(k):
             partes.append(blocos[k])
     if p.get("hashtags"):
@@ -129,10 +129,16 @@ def _base(projeto: ProjetoWS, clip: Clip, pasta: Path, texto: str) -> dict[str, 
 
     refs = [i.params.get("ref", "") for i in edicao.carregar(pasta).itens if i.tipo == "sticker"]
     creditos = stickers.creditos_do_clip(refs, projeto.canal.path) if refs else ""
+    from . import checagem  # as fontes conferidas no passo 4
+
+    try:
+        fontes = checagem.fontes_do_texto(projeto, texto) if texto else ""
+    except Exception:  # noqa: BLE001
+        fontes = ""
     return {
         "titulo": clip.titulo or "",
         "blocos": {"titulo": clip.titulo or "", "resumo": resumo, "contexto": contexto, "link": link,
-                   **({"creditos": creditos} if creditos else {})},
+                   **({"fontes": fontes} if fontes else {}), **({"creditos": creditos} if creditos else {})},
         "hashtags": hashtags,
         "tags": tags,
         "legenda": "legenda.srt" if (pasta / "legenda.srt").exists() else None,

@@ -52,6 +52,7 @@ class Servico:
         self.fila.registrar("firefox_youtube", self._job_firefox_youtube)
         self.fila.registrar("thumbnail_ia", self._job_thumbnail_ia)
         self.fila.registrar("acabamento", self._job_acabamento)
+        self.fila.registrar("checagem", self._job_checagem)
 
     def projeto(self, canal: str, projeto: str) -> ProjetoWS:
         return self.ws.canal(canal).projeto(projeto)
@@ -181,6 +182,20 @@ class Servico:
         ac = acabamento.Acabamento.model_validate(p.get("ajustes") or {})
         ctx.progresso(0.02, "aplicando o acabamento")
         return acabamento.aplicar(self.projeto(p["canal"], p["projeto"]), p["clip"], ac, ctx.progresso, ctx.cancelar)
+
+    def _job_checagem(self, p: dict, ctx: ContextoJob) -> Any:
+        """Checagem de fatos (passo 4): o que os cortes citam e a fonte de cada um. A IA é opcional."""
+        from . import checagem
+        from .ai.adapter import CacheIA
+        from .melhorar import ia_do_workspace
+
+        proj = self.projeto(p["canal"], p["projeto"])
+        ad = ia_do_workspace(self.ws, self._esperar_login(ctx)) if p.get("usar_ia", True) else None
+        ch = checagem.identificar(proj, list(p.get("candidatos") or []), ad, ctx.progresso, ctx.cancelar,
+                                  cache=CacheIA(proj.analise_dir / "cache_ia"))
+        for a in ch.avisos:
+            ctx.log(a)
+        return checagem.resumo(ch)
 
     def _job_revisao(self, p: dict, ctx: ContextoJob) -> Any:
         """Revisão antes de publicar (nota e o que corrigir); sem IA, pelas regras."""

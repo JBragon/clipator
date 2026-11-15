@@ -5,7 +5,7 @@ import {
   arrastar, arrastarEncaixado, bordasDasPalavras, janelaDePerto, lerTempo, marcas, mmss, type Modo, type Trecho
 } from '../trecho'
 
-// Tela "Editar duração" de um corte sugerido (passo 2) ou de um clip (passo 4), short ou longo: o vídeo pai em cima, tocando só o
+// Tela "Editar duração" de um corte sugerido (passo 2) ou de um clip (passo 5), short ou longo: o vídeo pai em cima, tocando só o
 // trecho escolhido, e embaixo a trilha do vídeo pai inteiro e a trilha de perto, com a faixa do corte.
 // Arrastar as alças muda o início ou o fim; arrastar a faixa move o corte inteiro. Salvar grava o trecho
 // no motor (PUT .../trecho). No clip, o motor leva junto os itens do editor e renderiza de novo se já tinha vídeo.

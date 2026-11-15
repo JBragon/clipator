@@ -3,6 +3,7 @@ import type { Api, Clip } from '../api'
 import { useT } from '../i18n'
 import { ponte } from '../ponte'
 import type { PedidoConversa } from './ConversaIA'
+import { confirmar } from './Confirmar'
 
 type InfoAgente = { nome: string; instalado: boolean; mcp: boolean | null }
 type Versao = { id: string; videos: string[]; notas: string; pedido: boolean; escolhido: string | null }
@@ -76,7 +77,7 @@ export function EditarComIA(props: { api: Api; base: string; clip: Clip; aoMudar
   }
 
   const apagar = async (v: Versao): Promise<void> => {
-    if (!confirm(t.confirmarApagarVersao(v.id))) return
+    if (!(await confirmar({ titulo: t.confirmarApagarVersao(v.id), ok: t.apagar, cancelar: t.cancelar, perigo: true }))) return
     await api.del(`${url}/versoes/${encodeURIComponent(v.id)}`, { confirmar: 'true' })
     carregarVersoes()
     aoMudar()

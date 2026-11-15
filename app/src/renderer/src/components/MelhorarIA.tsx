@@ -10,7 +10,7 @@ type Lado = { n: number; resumo: string[]; feedback: string; origem: string; ite
 // pede para abrir as Configurações (o App escuta)
 export const abrirConfiguracoes = (): void => { window.dispatchEvent(new CustomEvent('clipator:abrir-configuracoes')) }
 
-// Passo 4: "Melhorar com IA" e o histórico de versões da edição de um clip. Cada rodada da IA, cada edição à
+// Passo 5: "Melhorar com IA" e o histórico de versões da edição de um clip. Cada rodada da IA, cada edição à
 // mão e cada mudança pelo MCP vira uma versão (v1, v2…) que dá para ver, comparar e pôr de volta em uso.
 export function MelhorarIA(props: { api: Api; base: string; clip: string; jobs: Record<string, Job>; aoMudar(): void }): React.JSX.Element {
   const { api, base, clip, jobs, aoMudar } = props

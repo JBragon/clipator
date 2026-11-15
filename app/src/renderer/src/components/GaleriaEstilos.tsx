@@ -48,6 +48,9 @@ export function GaleriaEstilos(props: {
   const [raiz, setRaiz] = useState('')
   const [amostras, setAmostras] = useState<Record<string, string>>(() => amostrasDe(ultimaLista.get(canal ?? '') ?? []))
   const [jobAmostras, setJobAmostras] = useState<string | null>(null)
+  // as que o motor não conseguiu gerar: não pede de novo a cada volta (senão fica "gerando amostra…" para sempre)
+  const [falhas, setFalhas] = useState<Record<string, string>>({})
+  const pedidas = useRef<string[]>([])
   const [aberto, setAberto] = useState<string | null>(null)
   const [n, setN] = useState(0)
   const { agentes } = useAgentesIA(api, true)
@@ -65,8 +68,9 @@ export function GaleriaEstilos(props: {
   // pede as amostras que faltam (o motor gera uma por vez, num job, e guarda em cache)
   useEffect(() => {
     if (!estilos.length || jobAmostras) return
-    const faltam = estilos.filter((e) => !e.erro && !amostras[e.id]).map((e) => e.id)
+    const faltam = estilos.filter((e) => !e.erro && !amostras[e.id] && !falhas[e.id]).map((e) => e.id)
     if (!faltam.length) return
+    pedidas.current = faltam
     api.post<{ prontas: Record<string, string>; job: string | null }>('/api/estilos/amostras', { canal: canal ?? null, estilos: faltam })
       .then((r) => {
         setAmostras((a) => ({ ...a, ...r.prontas }))
@@ -76,9 +80,12 @@ export function GaleriaEstilos(props: {
   const job = jobAmostras ? jobs[jobAmostras] : undefined
   useEffect(() => {
     if (!job) return
-    const r = job.resultado as { prontas?: Record<string, string> } | null | undefined
+    const r = job.resultado as { prontas?: Record<string, string>; erros?: Record<string, string> } | null | undefined
     if (job.status === 'ok' || job.status === 'erro' || job.status === 'cancelado') {
       if (r?.prontas) setAmostras((a) => ({ ...a, ...r.prontas }))
+      const novas: Record<string, string> = { ...(r?.erros ?? {}) }
+      if (job.status !== 'ok') for (const id of pedidas.current) if (!r?.prontas?.[id] && !novas[id]) novas[id] = job.erro ?? t.status.erro
+      if (Object.keys(novas).length) setFalhas((f) => ({ ...f, ...novas }))
       setJobAmostras(null)
       setN((x) => x + 1)
     }
@@ -128,7 +135,7 @@ export function GaleriaEstilos(props: {
           <CardEstilo key={e.id} e={e} amostra={amostras[e.id] ? urlAmostra(amostras[e.id]) : null}
             capa={amostras[e.id] ? urlAmostra(amostras[e.id].replace(/\.mp4$/, '.jpg')) : null}
             escolhido={escolhido === e.id} abrirDetalhes={() => setAberto(e.id)} semIA={!!e.requer_ia && !temIA}
-            escolher={aoEscolher ? () => aoEscolher(e.id) : undefined} />
+            falha={amostras[e.id] ? undefined : falhas[e.id]} escolher={aoEscolher ? () => aoEscolher(e.id) : undefined} />
         ))}
       </div>
       {est && (
@@ -163,8 +170,8 @@ function Etiquetas({ e }: { e: Estilo }): React.JSX.Element {
   )
 }
 
-function CardEstilo(props: { e: Estilo; amostra: string | null; capa: string | null; escolhido: boolean; abrirDetalhes(): void; escolher?(): void; semIA?: boolean }): React.JSX.Element {
-  const { e, amostra, capa, escolhido, abrirDetalhes, escolher, semIA } = props
+function CardEstilo(props: { e: Estilo; amostra: string | null; capa: string | null; escolhido: boolean; abrirDetalhes(): void; escolher?(): void; semIA?: boolean; falha?: string }): React.JSX.Element {
+  const { e, amostra, capa, escolhido, abrirDetalhes, escolher, semIA, falha } = props
   const t = useT()
   const g = t.gal
   const v = useRef<HTMLVideoElement>(null)
@@ -175,7 +182,7 @@ function CardEstilo(props: { e: Estilo; amostra: string | null; capa: string | n
       <button className="amostra" onClick={abrirDetalhes} title={g.verDetalhes}
         style={{ aspectRatio: (e.formato ?? '9:16').replace(':', ' / ') }}>
         {amostra ? <video ref={v} src={amostra} poster={capa ?? undefined} muted loop playsInline preload="none" />
-          : <span className="dica">{e.erro ? '⚠' : g.gerando}</span>}
+          : <span className="dica" title={falha}>{e.erro ? '⚠' : falha ? `⚠ ${g.semAmostra}` : g.gerando}</span>}
         {e.padrao && <span className="selo-padrao">{g.padraoCanal}</span>}
         {escolhido && <span className="selo-escolhido">✓</span>}
       </button>

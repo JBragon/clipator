@@ -1,4 +1,4 @@
-"""Acabamento do passo 4: música de fundo e ajustes de imagem em cima do clip já gerado.
+"""Acabamento do passo 5: música de fundo e ajustes de imagem em cima do clip já gerado.
 
 O clip gerado não muda (formato, estilo e edição ficam como estão). O acabamento é uma passada a mais
 do FFmpeg sobre o vídeo pronto e vira uma versão do clip, igual às edições com IA:

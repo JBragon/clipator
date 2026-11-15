@@ -25,7 +25,7 @@ const CORES = ['fundo', 'texto', 'primaria', 'destaque', 'bom', 'ruim'] as const
 const CANTOS = ['inferior-direito', 'inferior-esquerdo', 'superior-direito', 'superior-esquerdo'] as const
 const opcaoDe = (c: Composicao): string => (c.layout === 'janela' ? (c.janela_canto ?? 'inferior-direito') : c.layout)
 
-// Passo 4, depois do render: a direção de arte que a IA fez para o clip (análise, roteiro cena a cena, peças e
+// Passo 5, depois do render: a direção de arte que a IA fez para o clip (análise, roteiro cena a cena, peças e
 // cores). O usuário ajusta o roteiro ou as cores e pede "Refazer com esta direção", que vira uma versão nova.
 export function DirecaoDoClip(props: { api: Api; base: string; clip: string; jobs: Record<string, Job>; aoMudar(): void }): React.JSX.Element | null {
   const { api, base, clip, jobs, aoMudar } = props

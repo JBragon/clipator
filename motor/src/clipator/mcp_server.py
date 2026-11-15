@@ -237,7 +237,7 @@ def criar_servidor(servico: Servico | None = None) -> MCPServer:
 
         melhorar.garantir_inicial(p, clip)
         ed = edicao.salvar(pasta, atual.model_copy(update={"itens": itens + novos}), edicao.duracao_do_clip(p, clip))
-        n = melhorar.registrar(p, clip, "mcp")  # o usuário compara e desfaz no passo 4
+        n = melhorar.registrar(p, clip, "mcp")  # o usuário compara e desfaz no passo 5
         return {"revisao": ed.revisao, "itens": len(ed.itens), "versao": n}
 
     @mcp.tool()

@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from . import __version__, acabamento, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
+from . import __version__, acabamento, checagem, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
 from .ai import detectar_agentes
 from .ai.adapter import ErroIA, abrir_login
 from .models import Clip, ConfigApp, PedidoIA
@@ -79,6 +79,18 @@ class Trecho(BaseModel):
     inicio: float
     fim: float
     renderizar: bool = True  # já tinha vídeo: gera de novo com o trecho novo
+
+
+class PedidoChecagem(BaseModel):
+    candidatos: list[str]
+    usar_ia: bool = True
+
+
+class MudancaItemChecagem(BaseModel):
+    status: str | None = None
+    nome: str | None = None
+    tipo: str | None = None
+    fonte: dict | None = None
 
 
 class PedidoRender(BaseModel):
@@ -1000,7 +1012,43 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
             raise HTTPException(404, str(exc)) from exc
         return {"ok": True}
 
-    # ---- acabamento do passo 4 (música de fundo e ajustes de imagem no clip gerado) ----
+    # ---- checagem de fatos do passo 4 (o que a fala cita, o nome certo e a fonte) ----
+    @app.get("/api/canais/{canal}/projetos/{projeto}/checagem", dependencies=dep)
+    def ver_checagem(canal: str, projeto: str) -> dict:
+        ch = checagem.carregar(proj(canal, projeto))
+        return {**ch.model_dump(mode="json"), "resumo": checagem.resumo(ch)}
+
+    @app.post("/api/canais/{canal}/projetos/{projeto}/checagem", dependencies=dep)
+    def identificar_checagem(canal: str, projeto: str, dados: PedidoChecagem) -> dict:
+        p = proj(canal, projeto)
+        if not p.transcricao():
+            raise HTTPException(409, "O vídeo ainda não tem transcrição. Rode a análise no passo 1.")
+        if not dados.candidatos:
+            raise HTTPException(400, "Nenhum corte para checar. Escolha os cortes no passo 2.")
+        return {"job": srv.fila.enviar("checagem", {"canal": canal, "projeto": projeto, "candidatos": dados.candidatos,
+                                                    "usar_ia": dados.usar_ia})}
+
+    @app.put("/api/canais/{canal}/projetos/{projeto}/checagem/itens/{item_id}", dependencies=dep)
+    def mudar_item_checagem(canal: str, projeto: str, item_id: str, dados: MudancaItemChecagem) -> dict:
+        try:
+            return checagem.atualizar_item(proj(canal, projeto), item_id, dados.status, dados.nome, dados.fonte,
+                                           dados.tipo).model_dump(mode="json")
+        except checagem.ErroChecagem as exc:
+            raise HTTPException(400, str(exc)) from exc
+
+    @app.post("/api/canais/{canal}/projetos/{projeto}/checagem/confirmar-pendentes", dependencies=dep)
+    def confirmar_checagem(canal: str, projeto: str) -> dict:
+        return {"confirmados": checagem.confirmar_pendentes(proj(canal, projeto))}
+
+    @app.get("/api/checagem/fontes", dependencies=dep)
+    def buscar_fontes(busca: str) -> list[dict]:
+        """Outras fontes no Wikidata para o usuário escolher (precisa de rede)."""
+        try:
+            return checagem.opcoes_wikidata(busca)
+        except Exception as exc:
+            raise HTTPException(502, f"Não consegui buscar no Wikidata agora ({exc}). Escreva a fonte à mão.") from exc
+
+    # ---- acabamento do passo 5 (música de fundo e ajustes de imagem no clip gerado) ----
     @app.get("/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/acabamento", dependencies=dep)
     def ver_acabamento(canal: str, projeto: str, clip_id: str) -> dict:
         try:

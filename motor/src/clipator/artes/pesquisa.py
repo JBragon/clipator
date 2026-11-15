@@ -302,13 +302,18 @@ def _arquivo_commons(nome: str, abrir: Abrir, timeout: float, largura: int = 720
             "autor": _sem_html((meta.get("Artist") or {}).get("value"), 120)}
 
 
-def _entidade(busca: str, tipo: str, abrir: Abrir, timeout: float) -> dict[str, Any]:
-    """O item do Wikidata para a busca: nome, contexto e o arquivo de imagem (logo para empresa e produto, foto para pessoa)."""
-    q = {"action": "wbsearchentities", "search": busca, "language": "pt", "uselang": "pt", "format": "json", "limit": "5", "type": "item"}
-    try:
-        achados = json.loads(abrir(WIKIDATA + "?" + urllib.parse.urlencode(q), timeout)).get("search") or []
-    except Exception:  # noqa: BLE001
-        return {}
+def _entidade(busca: str, tipo: str, abrir: Abrir, timeout: float, qid: str = "") -> dict[str, Any]:
+    """O item do Wikidata para a busca: nome, contexto e o arquivo de imagem (logo para empresa e produto, foto para pessoa).
+
+    `qid`: o item já escolhido pelo usuário na checagem de fatos (checagem.py); aí não há busca."""
+    if re.fullmatch(r"Q\d+", qid or ""):
+        achados = [{"id": qid, "label": busca}]
+    else:
+        q = {"action": "wbsearchentities", "search": busca, "language": "pt", "uselang": "pt", "format": "json", "limit": "5", "type": "item"}
+        try:
+            achados = json.loads(abrir(WIKIDATA + "?" + urllib.parse.urlencode(q), timeout)).get("search") or []
+        except Exception:  # noqa: BLE001
+            return {}
     for a in achados[:3]:
         qid = str(a.get("id") or "")
         if not re.fullmatch(r"Q\d+", qid):
@@ -348,7 +353,8 @@ def imagens_reais(entidades: list[dict], pasta: Path, abrir: Abrir | None = None
         tipo = ent.get("tipo") if ent.get("tipo") in TIPOS_ENTIDADE else "empresa"
         if not busca:
             continue
-        chave = hashlib.sha1(f"{tipo}|{busca.lower()}".encode()).hexdigest()[:16]
+        qid = str(ent.get("qid") or "")
+        chave = hashlib.sha1(f"{tipo}|{busca.lower()}".encode() + (f"|{qid}".encode() if qid else b"")).hexdigest()[:16]
         meta = dest / f"{chave}.json"
         r: dict[str, Any] | None = None
         if meta.exists():
@@ -358,7 +364,7 @@ def imagens_reais(entidades: list[dict], pasta: Path, abrir: Abrir | None = None
                 r = None
         if r is None:
             r = {}
-            e = _entidade(busca, tipo, abrir, timeout)
+            e = _entidade(busca, tipo, abrir, timeout, qid)
             img = _arquivo_commons(e["arquivo"], abrir, timeout) if e.get("arquivo") else {}
             if not img and tipo in ("produto", "tecnologia"):  # produto sem imagem no Wikidata: a foto livre mais citada no Commons
                 fotos = _commons(busca, abrir, timeout, 1)
