@@ -236,15 +236,22 @@ function Instalar-App {
   return $true
 }
 
+$Releases = "https://github.com/$Repo/releases"
+$AppOk = $false
 if (-not $SemApp) {
   Passo 'App de desktop'
-  if (-not (Instalar-App)) {
-    Info "Ainda não há um app publicado para baixar. Por enquanto, use o comando 'clipator' ou rode o app pelo código (veja o README)."
+  $AppOk = try { [bool](Instalar-App) } catch { $false }
+  if (-not $AppOk) {
+    Aviso "não consegui baixar o app de desktop. O motor foi instalado e o comando 'clipator' já funciona. Baixe o app em $Releases ou rode este instalador de novo mais tarde."
   }
 }
 
 Passo 'Pronto'
 & clipator doctor
+if (-not $SemApp -and -not $AppOk) {
+  Write-Host ''
+  Aviso "o app de desktop NÃO foi instalado. Baixe em $Releases"
+}
 Write-Host @'
 
     Para começar, abra o app ou use o canal de exemplo:

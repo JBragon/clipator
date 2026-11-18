@@ -246,13 +246,21 @@ EOF
   fi
 }
 
+RELEASES="https://github.com/$REPO/releases"
+APP_OK=0
 if [ "$APP" = 1 ]; then
   passo "App de desktop"
-  instalar_app || info "Ainda não há um app publicado para baixar. Por enquanto, use o comando 'clipator' ou rode o app pelo código (veja o README)."
+  if instalar_app; then APP_OK=1
+  else aviso "não consegui baixar o app de desktop. O motor foi instalado e o comando 'clipator' já funciona. Baixe o app em $RELEASES ou rode este instalador de novo mais tarde."
+  fi
 fi
 
 passo "Pronto"
 clipator doctor || true
+if [ "$APP" = 1 ] && [ "$APP_OK" = 0 ]; then
+  printf '\n'
+  aviso "o app de desktop NÃO foi instalado. Baixe em $RELEASES"
+fi
 cat <<EOF
 
     Para começar, abra o app ou use o canal de exemplo:
