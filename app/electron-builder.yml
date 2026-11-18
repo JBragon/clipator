@@ -22,6 +22,14 @@ extraResources:
     filter: ["pyproject.toml", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "src/**"]
 win:
   target: nsis
+# Instala só para o usuário, sem pedir admin. Os atalhos saem também no modo silencioso
+# (/S) que o install.ps1 usa, e voltam a cada atualização.
+nsis:
+  oneClick: true
+  perMachine: false
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: Clipator
 mac:
   target: dmg
   category: public.app-category.video

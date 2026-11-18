@@ -21,25 +21,64 @@ App local, open-source e gratuito que transforma um vídeo longo (link ou upload
 
 ## Instalar
 
-Um comando instala tudo: o motor, as dependências, os modelos e o app de desktop (a janela do Clipator). Abra o PowerShell no Windows, ou o Terminal no Mac e no Linux, cole a linha do seu sistema e aperte Enter:
+Um comando instala tudo: o motor, as dependências, os modelos e o app de desktop (a janela do Clipator). Não precisa saber programar, é só seguir os passos do seu sistema.
 
-```powershell
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/JBragon/clipator/main/install.ps1 | iex
-```
+Antes de começar, confira se você tem uns 5 GB livres e uma internet razoável: o instalador baixa uns 3 GB e pode levar vários minutos.
 
-```bash
-# macOS e Linux
-curl -fsSL https://raw.githubusercontent.com/JBragon/clipator/main/install.sh | bash
-```
+### Windows 10 ou 11
 
-Pode levar vários minutos, porque baixa uns 3 GB. No fim, procure "Clipator" no menu Iniciar (Windows), em `~/Applications` (Mac) ou no menu de aplicativos (Linux). Se o comando `clipator` não for encontrado, feche e abra o terminal de novo. No Mac, instale antes o [Homebrew](https://brew.sh); no Linux, o script pede a senha do `sudo` para o FFmpeg.
+1. Abra o menu Iniciar, digite `PowerShell` e abra o **Windows PowerShell**. Não precisa ser como administrador.
+2. Copie a linha abaixo, cole no PowerShell (clique com o botão direito) e aperte Enter:
 
-Se o app não foi instalado, o fim da instalação avisa em amarelo. Nesse caso, baixe o instalador do app na página de [Releases](https://github.com/JBragon/clipator/releases) e abra. O motor já fica pronto, então não precisa rodar o comando de novo.
+   ```powershell
+   irm https://raw.githubusercontent.com/JBragon/clipator/main/install.ps1 | iex
+   ```
 
-Em detalhes, o script instala o uv, o FFmpeg, o Deno, o Node.js, o motor, o HyperFrames e os modelos de transcrição e de rosto, cria o workspace em `~/Clipator`, registra o MCP no Claude Code e no Codex e baixa o app de desktop da última [release](https://github.com/JBragon/clipator/releases), quando houver uma. Rodar de novo atualiza tudo. De dentro de uma cópia do repositório, `./install.sh` ou `.\install.ps1` instalam o motor dessa cópia, o que serve para redes que bloqueiam o GitHub. Opções (`--sem-app`, `--sem-ia`, `--sem-modelos` e outras), manutenção e desinstalação estão em [docs/instalacao.md](docs/instalacao.md).
+3. Espere até aparecer **Pronto**. Se o instalador perguntar alguma coisa, responda com Enter para aceitar.
+4. Abra o app pelo menu Iniciar (procure **Clipator**) ou pelo atalho na área de trabalho.
 
-Quem só quer o app pode baixar o instalador na página de [Releases](https://github.com/JBragon/clipator/releases): `.exe` para Windows, `.dmg` para Mac (Intel e Apple Silicon) e `.AppImage` para Linux. O app precisa do motor, então o caminho recomendado continua sendo o script acima. Os pacotes ainda não são assinados: no Windows, o SmartScreen pode pedir "Executar assim mesmo"; no Mac, abra o `.dmg` baixado pelo navegador com clique direito e Abrir na primeira vez.
+O FFmpeg, o Deno e o Node.js vêm pelo winget, que já vem no Windows 10 e 11 (é o "Instalador de Aplicativo" da Microsoft Store). Se o comando `clipator` não for encontrado depois, feche o PowerShell e abra outro.
+
+### Mac
+
+1. Instale o [Homebrew](https://brew.sh), se ainda não tiver: abra o site, copie o comando que aparece lá e rode no Terminal.
+2. Abra o **Terminal** (procure "Terminal" no Spotlight, com Cmd+Espaço).
+3. Copie a linha abaixo, cole no Terminal e aperte Enter:
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/JBragon/clipator/main/install.sh | bash
+   ```
+
+4. Espere até aparecer **Pronto**.
+5. Abra o app pelo Launchpad ou pelo Spotlight (procure **Clipator**). Ele fica na pasta Aplicativos.
+
+### Linux
+
+1. Abra o terminal.
+2. Copie a linha abaixo, cole no terminal e aperte Enter:
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/JBragon/clipator/main/install.sh | bash
+   ```
+
+3. Digite a sua senha quando o instalador pedir. Ele usa o `sudo` só para instalar o FFmpeg.
+4. Espere até aparecer **Pronto**.
+5. Abra o app pelo menu de aplicativos (procure **Clipator**) ou rode `clipator-app` no terminal.
+
+O app do Linux é um AppImage. No Ubuntu 22.04 ou mais novo, se ele não abrir, instale o FUSE com `sudo apt install libfuse2`.
+
+### Se algo der errado
+
+- **O app não foi instalado.** O fim da instalação avisa em amarelo. Baixe o instalador do app na página de [Releases](https://github.com/JBragon/clipator/releases) (`.exe` no Windows, `.dmg` no Mac, `.AppImage` no Linux) e abra. O motor já fica pronto, então não precisa rodar o comando de novo.
+- **Alerta de segurança ao abrir o app baixado pelo navegador.** Os pacotes ainda não são assinados. No Windows, o SmartScreen mostra "O Windows protegeu o computador": clique em **Mais informações** e depois em **Executar assim mesmo**. No Mac, clique com o botão direito no app, escolha **Abrir** e confirme. Isso só acontece na primeira vez. Pelo comando de instalação, esses alertas normalmente não aparecem.
+- **Algo parece faltando.** Rode `clipator doctor` no terminal. Ele diz o que falta e como resolver.
+- **O comando `clipator` não é encontrado.** Feche o terminal e abra outro.
+
+### Atualizar e outras opções
+
+Para atualizar, rode o mesmo comando de novo. Ele atualiza o motor e as dependências, e só baixa o app de novo quando sai uma versão nova (`--reinstalar-app` força o download).
+
+Em detalhes, o script instala o uv, o FFmpeg, o Deno, o Node.js, o motor, o HyperFrames e os modelos de transcrição e de rosto, cria o workspace em `~/Clipator`, registra o MCP no Claude Code e no Codex e baixa o app de desktop da última [release](https://github.com/JBragon/clipator/releases). De dentro de uma cópia do repositório, `./install.sh` ou `.\install.ps1` instalam o motor dessa cópia, o que serve para redes que bloqueiam o GitHub. Opções (`--sem-app`, `--sem-ia`, `--sem-modelos` e outras), manutenção e desinstalação estão em [docs/instalacao.md](docs/instalacao.md).
 
 ## Como funciona
 

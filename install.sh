@@ -4,7 +4,7 @@
 #   curl -fsSL https://raw.githubusercontent.com/JBragon/clipator/main/install.sh | bash
 #   ./install.sh                      (de dentro de uma cópia do repositório: instala o motor dela)
 #
-# Opções: --sim (não pergunta nada e não instala Claude Code nem Codex), --sem-app, --sem-hyperframes, --sem-modelos, --sem-ia
+# Opções: --sim (não pergunta nada e não instala Claude Code nem Codex), --sem-app, --reinstalar-app, --sem-hyperframes, --sem-modelos, --sem-ia
 # Variáveis: CLIPATOR_FONTE (de onde instalar o motor), CLIPATOR_WORKSPACE.
 #
 # Instala só para o seu usuário: uv, Python 3.12 isolado, o comando `clipator`,
@@ -16,11 +16,12 @@ HF_VERSAO="0.8.229"
 NODE_MIN=22
 BASE="$HOME/.clipator"
 
-SIM=0; APP=1; HF=1; MODELOS=1; IA=1
+SIM=0; APP=1; REINSTALAR_APP=0; HF=1; MODELOS=1; IA=1
 for a in "$@"; do
   case "$a" in
     --sim|-y) SIM=1 ;;
     --sem-app) APP=0 ;;
+    --reinstalar-app) REINSTALAR_APP=1 ;;
     --sem-hyperframes) HF=0 ;;
     --sem-modelos) MODELOS=0 ;;
     --sem-ia) IA=0 ;;
@@ -29,6 +30,7 @@ for a in "$@"; do
   esac
 done
 [ "${CLIPATOR_SIM:-}" = "1" ] && SIM=1
+[ "${CLIPATOR_REINSTALAR_APP:-}" = "1" ] && REINSTALAR_APP=1
 
 passo() { printf '\n\033[1;35m==>\033[0m \033[1m%s\033[0m\n' "$*"; }
 info()  { printf '    %s\n' "$*"; }
@@ -218,33 +220,62 @@ asset() {  # asset JSON EXTENSAO
   esac
 }
 
+# A versão instalada fica em ~/.clipator/app-versao ("v0.1.0 /caminho/do/app"). Se a release
+# mais recente for a mesma e o app ainda estiver lá, o download é pulado.
+VERSAO_APP="$BASE/app-versao"
+APP_LOCAL=""
 instalar_app() {
-  local api="https://api.github.com/repos/$REPO/releases/latest" json url tmp
+  local api="https://api.github.com/repos/$REPO/releases/latest" json url tmp tag antes="" destino=""
   json="$(curl -fsSL "$api" 2>/dev/null)" || return 1
+  tag="$(printf '%s' "$json" | grep -o '"tag_name": *"[^"]*"' | head -1 | cut -d'"' -f4)"
+  if [ "$REINSTALAR_APP" = 0 ] && [ -n "$tag" ] && [ -f "$VERSAO_APP" ]; then
+    read -r antes destino < "$VERSAO_APP" || true
+    if [ "$antes" = "$tag" ] && [ -n "$destino" ] && [ -e "$destino" ]; then
+      APP_LOCAL="$destino"
+      info "O app já está na versão mais recente ($tag). Para baixar de novo: --reinstalar-app"
+      return 0
+    fi
+  fi
   if [ "$SO" = mac ]; then
     url="$(asset "$json" dmg)"; [ -n "$url" ] || return 1
-    tmp="$(mktemp -d)"; baixar "$url" "$tmp/Clipator.dmg"
+    # /Applications é a pasta que o Finder mostra; sem permissão, fica em ~/Applications.
+    if [ -w /Applications ]; then destino="/Applications/Clipator.app"
+    else mkdir -p "$HOME/Applications"; destino="$HOME/Applications/Clipator.app"
+    fi
+    info "Baixando o app $tag…"
+    tmp="$(mktemp -d)"; baixar "$url" "$tmp/Clipator.dmg" || return 1
     local vol; vol="$(hdiutil attach -nobrowse -quiet "$tmp/Clipator.dmg" | awk -F'\t' 'END {print $NF}')"
-    mkdir -p "$HOME/Applications"; rm -rf "$HOME/Applications/Clipator.app"
-    cp -R "$vol/Clipator.app" "$HOME/Applications/"
+    rm -rf "/Applications/Clipator.app" "$HOME/Applications/Clipator.app" 2>/dev/null || true
+    cp -R "$vol/Clipator.app" "$destino" || return 1
     hdiutil detach -quiet "$vol"; rm -rf "$tmp"
-    info "App instalado em ~/Applications/Clipator.app"
   else
     url="$(asset "$json" AppImage)"; [ -n "$url" ] || return 1
-    baixar "$url" "$HOME/.local/bin/clipator-app"; chmod +x "$HOME/.local/bin/clipator-app"
-    mkdir -p "$HOME/.local/share/applications"
+    destino="$HOME/.local/bin/clipator-app"
+    info "Baixando o app $tag…"
+    baixar "$url" "$destino" || return 1; chmod +x "$destino"
+    local icone="$HOME/.local/share/icons/clipator.png"
+    mkdir -p "$(dirname "$icone")" "$HOME/.local/share/applications"
+    baixar "https://raw.githubusercontent.com/$REPO/${tag:-main}/app/resources/icon.png" "$icone" 2>/dev/null \
+      || rm -f "$icone"
     cat > "$HOME/.local/share/applications/clipator.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Clipator
 Comment=Clips curtos de vídeos longos
-Exec=$HOME/.local/bin/clipator-app
+Exec=$destino
+Icon=$icone
 Terminal=false
 Categories=AudioVideo;Video;
 EOF
-    info "App instalado: procure 'Clipator' no menu, ou rode clipator-app."
+    if command -v update-desktop-database >/dev/null 2>&1; then
+      update-desktop-database -q "$HOME/.local/share/applications" 2>/dev/null || true
+    fi
   fi
+  if [ -n "$tag" ]; then printf '%s %s\n' "$tag" "$destino" > "$VERSAO_APP"; fi
+  APP_LOCAL="$destino"
+  info "App $tag instalado."
 }
+
 
 RELEASES="https://github.com/$REPO/releases"
 APP_OK=0
@@ -260,6 +291,13 @@ clipator doctor || true
 if [ "$APP" = 1 ] && [ "$APP_OK" = 0 ]; then
   printf '\n'
   aviso "o app de desktop NÃO foi instalado. Baixe em $RELEASES"
+elif [ "$APP_OK" = 1 ]; then
+  printf '\n'
+  if [ "$SO" = mac ]; then
+    info "Para abrir o app: procure \"Clipator\" no Launchpad ou no Spotlight (Cmd+Espaço). Ele fica em $APP_LOCAL"
+  else
+    info "Para abrir o app: procure \"Clipator\" no menu de aplicativos, ou rode clipator-app no terminal."
+  fi
 fi
 cat <<EOF
 
