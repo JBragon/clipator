@@ -21,7 +21,7 @@ App local, open-source e gratuito que transforma um vídeo longo (link ou upload
 
 ## Instalar
 
-Um comando instala o motor, as dependências, os modelos e o app de desktop:
+Um comando instala tudo: o motor, as dependências, os modelos e o app de desktop (a janela do Clipator). Abra o PowerShell no Windows, ou o Terminal no Mac e no Linux, cole a linha do seu sistema e aperte Enter:
 
 ```powershell
 # Windows (PowerShell)
@@ -33,7 +33,11 @@ irm https://raw.githubusercontent.com/JBragon/clipator/main/install.ps1 | iex
 curl -fsSL https://raw.githubusercontent.com/JBragon/clipator/main/install.sh | bash
 ```
 
-O script instala o uv, o FFmpeg, o Deno, o Node.js, o motor, o HyperFrames e os modelos de transcrição e de rosto, cria o workspace em `~/Clipator`, registra o MCP no Claude Code e no Codex e baixa o app de desktop da última [release](https://github.com/JBragon/clipator/releases), quando houver uma. Rodar de novo atualiza tudo. De dentro de uma cópia do repositório, `./install.sh` ou `.\install.ps1` instalam o motor dessa cópia, o que serve para redes que bloqueiam o GitHub. Opções (`--sem-app`, `--sem-ia`, `--sem-modelos` e outras), manutenção e desinstalação estão em [docs/instalacao.md](docs/instalacao.md).
+Pode levar vários minutos, porque baixa uns 3 GB. No fim, procure "Clipator" no menu Iniciar (Windows), em `~/Applications` (Mac) ou no menu de aplicativos (Linux). Se o comando `clipator` não for encontrado, feche e abra o terminal de novo. No Mac, instale antes o [Homebrew](https://brew.sh); no Linux, o script pede a senha do `sudo` para o FFmpeg.
+
+Se o app não foi instalado, o fim da instalação avisa em amarelo. Nesse caso, baixe o instalador do app na página de [Releases](https://github.com/JBragon/clipator/releases) e abra. O motor já fica pronto, então não precisa rodar o comando de novo.
+
+Em detalhes, o script instala o uv, o FFmpeg, o Deno, o Node.js, o motor, o HyperFrames e os modelos de transcrição e de rosto, cria o workspace em `~/Clipator`, registra o MCP no Claude Code e no Codex e baixa o app de desktop da última [release](https://github.com/JBragon/clipator/releases), quando houver uma. Rodar de novo atualiza tudo. De dentro de uma cópia do repositório, `./install.sh` ou `.\install.ps1` instalam o motor dessa cópia, o que serve para redes que bloqueiam o GitHub. Opções (`--sem-app`, `--sem-ia`, `--sem-modelos` e outras), manutenção e desinstalação estão em [docs/instalacao.md](docs/instalacao.md).
 
 Quem só quer o app pode baixar o instalador na página de [Releases](https://github.com/JBragon/clipator/releases): `.exe` para Windows, `.dmg` para Mac (Intel e Apple Silicon) e `.AppImage` para Linux. O app precisa do motor, então o caminho recomendado continua sendo o script acima. Os pacotes ainda não são assinados: no Windows, o SmartScreen pode pedir "Executar assim mesmo"; no Mac, abra o `.dmg` baixado pelo navegador com clique direito e Abrir na primeira vez.
 
