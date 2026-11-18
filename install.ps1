@@ -3,15 +3,16 @@
 #   irm https://raw.githubusercontent.com/JBragon/clipator/main/install.ps1 | iex
 #   .\install.ps1                     (de dentro de uma cópia do repositório: instala o motor dela)
 #
-# Opções: -Sim (não pergunta nada e não instala Claude Code nem Codex), -SemApp, -SemHyperFrames, -SemModelos, -SemIA
+# Opções: -Sim (não pergunta nada e não instala Claude Code nem Codex), -SemApp, -ReinstalarApp, -SemHyperFrames, -SemModelos, -SemIA
 # Pelo `irm | iex`, use variáveis: $env:CLIPATOR_SIM = "1", CLIPATOR_SEM_APP, CLIPATOR_SEM_MODELOS,
-# CLIPATOR_SEM_HYPERFRAMES, CLIPATOR_SEM_IA, e também CLIPATOR_FONTE e CLIPATOR_WORKSPACE.
+# CLIPATOR_SEM_HYPERFRAMES, CLIPATOR_SEM_IA, CLIPATOR_REINSTALAR_APP, e também CLIPATOR_FONTE e CLIPATOR_WORKSPACE.
 #
 # Instala só para o seu usuário: uv, Python 3.12 isolado, o comando `clipator`,
 # o HyperFrames e os modelos. FFmpeg, Deno e Node.js vêm pelo winget.
 param(
   [switch]$Sim,
   [switch]$SemApp,
+  [switch]$ReinstalarApp,
   [switch]$SemHyperFrames,
   [switch]$SemModelos,
   [switch]$SemIA
@@ -35,6 +36,7 @@ if ($env:CLIPATOR_SEM_APP -eq '1') { $SemApp = $true }
 if ($env:CLIPATOR_SEM_HYPERFRAMES -eq '1') { $SemHyperFrames = $true }
 if ($env:CLIPATOR_SEM_MODELOS -eq '1') { $SemModelos = $true }
 if ($env:CLIPATOR_SEM_IA -eq '1') { $SemIA = $true }
+if ($env:CLIPATOR_REINSTALAR_APP -eq '1') { $ReinstalarApp = $true }
 
 function Passo($t) { Write-Host ''; Write-Host "==> $t" -ForegroundColor Magenta }
 function Info($t)  { Write-Host "    $t" }
@@ -220,19 +222,36 @@ if (-not $SemIA) {
 }
 
 # ---- 8. app de desktop ----------------------------------------------------------
+# O instalador do app (NSIS, só para o usuário) se registra em "Programas e Recursos".
+# A versão de lá diz se o download pode ser pulado.
+function App-Instalado {
+  $chaves = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+            'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'
+  Get-ItemProperty $chaves -ErrorAction SilentlyContinue |
+    Where-Object { $_.PSObject.Properties['DisplayName'] -and $_.DisplayName -like 'Clipator*' } |
+    Select-Object -First 1
+}
+
 function Instalar-App {
   try {
     $rel = Invoke-RestMethod "https://api.github.com/repos/$Repo/releases/latest" -Headers @{ 'User-Agent' = 'clipator-install' }
   } catch { return $false }
+  $versao = ([string]$rel.tag_name).TrimStart('v')
+  $atual = App-Instalado
+  if (-not $ReinstalarApp -and $atual -and $versao -and $atual.DisplayVersion -eq $versao) {
+    Info "O app já está na versão mais recente ($($rel.tag_name)). Para baixar de novo: -ReinstalarApp"
+    return $true
+  }
   $exes = $rel.assets | Where-Object { $_.name -match '\.exe$' }
   $asset = if ($Arq -eq 'ARM64') { $exes | Where-Object { $_.name -match 'arm64' } | Select-Object -First 1 } else { $null }
   if (-not $asset) { $asset = $exes | Where-Object { $_.name -notmatch 'arm64' } | Select-Object -First 1 }
   if (-not $asset) { return $false }
+  Info "Baixando o app $($rel.tag_name)…"
   $tmp = Join-Path $env:TEMP $asset.name
   Invoke-WebRequest $asset.browser_download_url -OutFile $tmp -UseBasicParsing
   Start-Process -FilePath $tmp -ArgumentList '/S' -Wait
   Remove-Item $tmp -ErrorAction SilentlyContinue
-  Info 'App instalado: procure "Clipator" no menu Iniciar.'
+  Info "App $($rel.tag_name) instalado."
   return $true
 }
 
@@ -251,6 +270,9 @@ Passo 'Pronto'
 if (-not $SemApp -and -not $AppOk) {
   Write-Host ''
   Aviso "o app de desktop NÃO foi instalado. Baixe em $Releases"
+} elseif ($AppOk) {
+  Write-Host ''
+  Info 'Para abrir o app: procure "Clipator" no menu Iniciar ou use o atalho na área de trabalho.'
 }
 Write-Host @'
 

@@ -35,7 +35,7 @@ Se o GitHub estiver bloqueado na sua rede, baixe o repositório de outro jeito (
 6. Cria o workspace em `~/Clipator`, com um canal de exemplo.
 7. Roda `clipator preparar`, que baixa o modelo de transcrição certo para o seu hardware, o modelo de rosto e o Chrome do HyperFrames. Depois disso, o Clipator funciona offline.
 8. Se você não tiver o Claude Code nem o Codex, oferece instalar o Claude Code (ou o Codex). Depois registra o servidor MCP nos dois com `clipator mcp registrar`.
-9. Baixa e instala o app de desktop da última release do GitHub, se houver uma.
+9. Baixa e instala o app de desktop da última release do GitHub, se houver uma. Se essa versão já estiver instalada, pula o download. No Mac, o app vai para `/Applications` (ou `~/Applications`, sem permissão); no Linux, para `~/.local/bin/clipator-app`, com uma entrada no menu de aplicativos.
 10. Roda `clipator doctor`.
 
 Rodar o script de novo atualiza o motor e conserta o que estiver faltando.
@@ -46,6 +46,7 @@ Rodar o script de novo atualiza o motor e conserta o que estiver faltando.
 | --- | --- | --- |
 | `--sim` | `-Sim` | Não pergunta nada. Também não instala o Claude Code nem o Codex, só registra o MCP nos que já existem |
 | `--sem-app` | `-SemApp` | Não baixa o app de desktop |
+| `--reinstalar-app` | `-ReinstalarApp` | Baixa e instala o app de novo, mesmo que a versão seja a mesma |
 | `--sem-hyperframes` | `-SemHyperFrames` | Não instala o Node.js nem o HyperFrames. Os estilos animados saem com a legenda simples |
 | `--sem-modelos` | `-SemModelos` | Não baixa os modelos agora. Eles vêm no primeiro uso |
 | `--sem-ia` | `-SemIA` | Não mexe no Claude Code nem no Codex |
