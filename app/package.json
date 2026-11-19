@@ -1,6 +1,6 @@
 {
   "name": "clipator-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "App de desktop do Clipator: clips curtos de vídeos longos, tudo local.",
   "author": "Jordan Bragon",
@@ -10,7 +10,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "node --test src/renderer/src/passos.test.ts src/renderer/src/trecho.test.ts src/renderer/src/legenda.test.ts",
+    "test": "node --test src/main/caminho.test.ts src/renderer/src/passos.test.ts src/renderer/src/trecho.test.ts src/renderer/src/legenda.test.ts",
     "web": "vite --config vite.web.config.ts",
     "dist": "electron-vite build && electron-builder"
   },

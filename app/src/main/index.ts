@@ -12,6 +12,7 @@ import { homedir } from 'node:os'
 import { isAbsolute, join, relative, resolve } from 'node:path'
 import * as terminal from './terminal'
 import * as chat from './chat'
+import { acharNoPath } from './caminho'
 import icone from '../../resources/icon.png?asset'
 
 type Prefs = { workspace?: string; tema?: 'sistema' | 'claro' | 'escuro' }
@@ -21,6 +22,16 @@ let janela: BrowserWindow | null = null
 let motor: ChildProcess | null = null
 let info: InfoMotor = { log: '', workspace: '' }
 let prontoPromise: Promise<InfoMotor> | null = null
+
+// Uma cópia só do app: abrir de novo pelo menu traz a janela que já está aberta.
+const primeiraCopia = app.requestSingleInstanceLock()
+if (!primeiraCopia) app.quit()
+app.on('second-instance', () => {
+  if (!janela) return
+  if (janela.isMinimized()) janela.restore()
+  janela.show()
+  janela.focus()
+})
 
 // CLIPATOR_DADOS_APP separa as preferências (útil para testar sem mexer no app do dia a dia)
 if (process.env.CLIPATOR_DADOS_APP) app.setPath('userData', process.env.CLIPATOR_DADOS_APP)
@@ -78,11 +89,9 @@ completarPath()
 // Onde está o motor: variável de ambiente; em desenvolvimento, o código da pasta
 // motor/ via uv; depois o `clipator` instalado pelo instalador (uv tool); por
 // último o código empacotado junto com o app, rodando via uv.
-function noPath(nome: string): boolean {
-  const exts = process.platform === 'win32' ? ['.exe', '.cmd', '.bat', ''] : ['']
-  return (process.env.PATH ?? '')
-    .split(process.platform === 'win32' ? ';' : ':')
-    .some((d) => d && exts.some((e) => existsSync(join(d, nome + e))))
+// Caminho completo, sem nunca cair no executável do próprio app (veja caminho.ts).
+function noPath(nome: string): string | null {
+  return acharNoPath(nome, process.env.PATH ?? '', process.platform, existsSync, [process.execPath])
 }
 
 function comandoMotor(): { cmd: string; args: string[] } {
@@ -95,9 +104,10 @@ function comandoMotor(): { cmd: string; args: string[] } {
     // sem --extra visao o venv fica sem OpenCV/MediaPipe e o render quebra no recorte
     return { cmd: 'uv', args: ['run', '--project', dev, '--extra', 'visao', 'clipator'] }
   }
-  if (noPath('clipator')) return { cmd: 'clipator', args: [] }
+  const clipator = noPath('clipator')
+  if (clipator) return { cmd: clipator, args: [] }
   const empacotado = join(process.resourcesPath ?? '', 'motor')
-  return { cmd: 'uv', args: ['run', '--project', empacotado, '--extra', 'visao', 'clipator'] }
+  return { cmd: noPath('uv') ?? 'uv', args: ['run', '--project', empacotado, '--extra', 'visao', 'clipator'] }
 }
 
 // o three.js (MIT, dependência npm do app) que a maquete 3D usa no render: o motor recebe o caminho do arquivo
@@ -125,11 +135,16 @@ async function subirMotor(): Promise<InfoMotor> {
       }
     }
     try {
-      motor = spawn(cmd, [...args, '-w', workspace, 'serve', '--porta', String(porta), '--token', token, '--vigiar-stdin'], {
+      const todos = [...args, '-w', workspace, 'serve', '--porta', String(porta), '--token', token, '--vigiar-stdin']
+      // .cmd/.bat só abrem pelo cmd; o .exe sobe direto, sem shell. A pasta de trabalho é
+      // a pasta pessoal, nunca a pasta do app (o atalho do menu Iniciar abre o app nela).
+      const lote = process.platform === 'win32' && /\.(cmd|bat)$/i.test(cmd)
+      const [exe, a] = lote ? [process.env.ComSpec || 'cmd.exe', ['/d', '/c', cmd, ...todos]] : [cmd, todos]
+      motor = spawn(exe, a, {
+        cwd: homedir(),
         env: { ...process.env, PYTHONUNBUFFERED: '1', PYTHONIOENCODING: 'utf-8', ...threeJs() },
         windowsHide: true,
-        stdio: ['pipe', 'pipe', 'pipe'],
-        shell: process.platform === 'win32'
+        stdio: ['pipe', 'pipe', 'pipe']
       })
     } catch (e) {
       fim({ ...info, erro: String(e) })
@@ -262,6 +277,7 @@ ipcMain.handle('chat:interromper', (_e, id: string) => chat.interromperChat(Stri
 ipcMain.handle('chat:fechar', (_e, id: string) => chat.fecharChat(String(id)))
 
 app.whenReady().then(() => {
+  if (!primeiraCopia) return
   prontoPromise = subirMotor()
   criarJanela()
   app.on('activate', () => {
