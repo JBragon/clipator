@@ -3,16 +3,17 @@
 // O motor roda como processo auxiliar (`clipator serve`), só em 127.0.0.1 e com
 // um token aleatório que só esta janela conhece.
 
-import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell } from 'electron'
-import { spawn, type ChildProcess } from 'node:child_process'
+import { app, BrowserWindow, dialog, ipcMain, nativeTheme, net, shell } from 'electron'
+import { spawn, type ChildProcess, type SpawnOptions } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { chmodSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { createServer } from 'node:net'
 import { homedir } from 'node:os'
 import { isAbsolute, join, relative, resolve } from 'node:path'
 import * as terminal from './terminal'
 import * as chat from './chat'
 import { acharNoPath } from './caminho'
+import * as atualizacao from './atualizacao'
 import icone from '../../resources/icon.png?asset'
 
 type Prefs = { workspace?: string; tema?: 'sistema' | 'claro' | 'escuro' }
@@ -251,6 +252,73 @@ ipcMain.handle('shell:lixeira', async (_e, caminho: string) => {
   await shell.trashItem(alvo)
 })
 ipcMain.handle('app:idioma', () => app.getLocale())
+
+// ---- atualização (ver atualizacao.ts) -----------------------------------------
+// Só no app instalado: em desenvolvimento, CLIPATOR_CHECAR_ATUALIZACAO=1 força a checagem
+// (CLIPATOR_VERSAO finge a versão atual). CLIPATOR_SEM_ATUALIZACAO=1 desliga.
+const versaoApp = (): string => process.env.CLIPATOR_VERSAO || app.getVersion()
+let checagem: Promise<atualizacao.Atualizacao | null> | null = null
+let pendente: atualizacao.Atualizacao | null = null
+
+async function checarAtualizacao(): Promise<atualizacao.Atualizacao | null> {
+  if (process.env.CLIPATOR_SEM_ATUALIZACAO === '1') return null
+  if (!app.isPackaged && process.env.CLIPATOR_CHECAR_ATUALIZACAO !== '1') return null
+  try {
+    // net.fetch usa o proxy do sistema; sem internet, o app abre normalmente e não pergunta nada
+    const r = await net.fetch(atualizacao.URL_RELEASE_MAIS_RECENTE, {
+      headers: { accept: 'application/vnd.github+json', 'user-agent': 'clipator-app' },
+      signal: AbortSignal.timeout(10000)
+    })
+    if (!r.ok) return null
+    pendente = atualizacao.avaliarRelease((await r.json()) as atualizacao.Release, versaoApp(), process.platform)
+    return pendente
+  } catch {
+    return null
+  }
+}
+
+function soltar(cmd: string, args: string[], extra: SpawnOptions = {}): void {
+  const p = spawn(cmd, args, { detached: true, stdio: 'ignore', ...extra })
+  p.on('error', () => undefined)
+  p.unref()
+}
+
+function lancarNoTerminal(script: string): void {
+  if (process.platform === 'win32') {
+    // o "start" abre um console novo, onde o instalador mostra a barra de progresso
+    const cmd = `"start "Atualizando o Clipator" powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${script}""`
+    soltar(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', cmd], { windowsHide: true, windowsVerbatimArguments: true })
+    return
+  }
+  if (process.platform === 'darwin') {
+    soltar('open', ['-a', 'Terminal', script])
+    return
+  }
+  for (const [nome, antes] of atualizacao.TERMINAIS_LINUX) {
+    const exe = noPath(nome)
+    if (exe) {
+      soltar(exe, [...antes, 'bash', script])
+      return
+    }
+  }
+  // sem terminal conhecido: roda escondido e o app abre sozinho no fim
+  soltar('bash', [script])
+}
+
+ipcMain.handle('atualizacao:verificar', () => (checagem ??= checarAtualizacao()))
+ipcMain.handle('atualizacao:instalar', async () => {
+  const a = pendente ?? (await (checagem ??= checarAtualizacao()))
+  if (!a) throw new Error('Não achei a versão nova para instalar.')
+  const dados = { tag: a.tag, pid: process.pid, executavel: process.execPath, appImage: process.env.APPIMAGE }
+  const win = process.platform === 'win32'
+  const script = join(app.getPath('temp'), win ? 'clipator-atualizar.ps1' : 'clipator-atualizar.command')
+  // com BOM, o PowerShell 5.1 lê os acentos do script (e caminhos como C:\Users\João) certo
+  writeFileSync(script, win ? '\ufeff' + atualizacao.scriptWindows(dados) : atualizacao.scriptUnix(dados, process.platform), 'utf-8')
+  if (!win) chmodSync(script, 0o755)
+  lancarNoTerminal(script)
+  // o motor precisa estar fechado para o uv trocar os arquivos dele (no Windows, ficam travados)
+  setTimeout(() => app.quit(), 500)
+})
 
 // conversas com a IA no terminal embutido (ver terminal.ts)
 const enviar = (canal: string, ...args: unknown[]): void => {

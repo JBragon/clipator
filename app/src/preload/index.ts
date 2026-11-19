@@ -15,6 +15,10 @@ contextBridge.exposeInMainWorld('clipator', {
   abrir: (caminho: string) => ipcRenderer.invoke('shell:abrir', caminho),
   lixeira: (caminho: string) => ipcRenderer.invoke('shell:lixeira', caminho),
   idiomaSistema: () => ipcRenderer.invoke('app:idioma'),
+  atualizacao: {
+    verificar: () => ipcRenderer.invoke('atualizacao:verificar'),
+    instalar: () => ipcRenderer.invoke('atualizacao:instalar')
+  },
   chat: {
     abrir: (p: unknown) => ipcRenderer.invoke('chat:abrir', p),
     listar: () => ipcRenderer.invoke('chat:listar'),

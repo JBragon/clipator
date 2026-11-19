@@ -76,6 +76,8 @@ O app do Linux é um AppImage. No Ubuntu 22.04 ou mais novo, se ele não abrir, 
 
 ### Atualizar e outras opções
 
+O app de desktop confere sozinho, toda vez que abre, se saiu uma versão nova no GitHub. Se saiu, ele pergunta "Atualizar agora" ou "Depois". Atualizar fecha o app e roda este mesmo instalador, na versão nova, numa janela do terminal: ele atualiza o app e o motor e abre o Clipator de novo no fim. Sem internet, o app abre normalmente e não pergunta nada. `CLIPATOR_SEM_ATUALIZACAO=1` desliga a checagem.
+
 Para atualizar ou consertar a instalação, rode o mesmo comando de novo. A cada execução, ele confere cada peça (uv e Python, FFmpeg, Deno, Node.js, motor, HyperFrames, workspace, modelos, IA e app), instala só o que falta e mostra no fim uma lista "Verificação" com o estado de cada uma. O app só é baixado de novo quando sai uma versão nova (`--reinstalar-app` força o download). Tudo o que os comandos escrevem vai para `~/.clipator/instalacao.log`; `CLIPATOR_SIMPLES=1` mostra essa saída na tela, como antes.
 
 Em detalhes, o script instala o uv, o FFmpeg, o Deno, o Node.js, o motor, o HyperFrames e os modelos de transcrição e de rosto, cria o workspace em `~/Clipator`, registra o MCP no Claude Code e no Codex e baixa o app de desktop da última [release](https://github.com/JBragon/clipator/releases). De dentro de uma cópia do repositório, `./install.sh` ou `.\install.ps1` instalam o motor dessa cópia, o que serve para redes que bloqueiam o GitHub. Opções (`--sem-app`, `--sem-ia`, `--sem-modelos` e outras), manutenção e desinstalação estão em [docs/instalacao.md](docs/instalacao.md).
