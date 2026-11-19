@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Api, type Job } from './api'
 import { IdiomaCtx, textos, type Idioma } from './i18n'
-import { ponte, type InfoMotor } from './ponte'
+import { ponte, type Atualizacao, type InfoMotor } from './ponte'
 import { Explorador } from './components/Explorador'
 import { EditorArquivo } from './components/EditorArquivo'
 import { ProjetoView } from './components/ProjetoView'
@@ -12,6 +12,7 @@ import { GaleriaEstilos } from './components/GaleriaEstilos'
 import { Skills } from './components/Skills'
 import { NovoCanal, NovoProjeto } from './components/Dialogos'
 import { AvisoDireitos } from './components/AvisoDireitos'
+import { AvisoAtualizacao } from './components/AvisoAtualizacao'
 
 export type Aba =
   | { tipo: 'arquivo'; id: string; titulo: string; caminho: string }
@@ -33,6 +34,7 @@ export function App(): React.JSX.Element {
   const [versao, setVersao] = useState(0) // sobe quando um job termina: recarrega o que estiver aberto
   const [dialogo, setDialogo] = useState<null | 'canal' | 'projeto'>(null)
   const [selecionados, setSelecionados] = useState<Set<string>>(new Set())
+  const [atualizacao, setAtualizacao] = useState<Atualizacao | null>(null)
 
   const t = textos[config?.idioma_interface ?? 'pt']
 
@@ -54,6 +56,11 @@ export function App(): React.JSX.Element {
   useEffect(() => {
     void conectar()
   }, [conectar])
+
+  // toda vez que o app abre: versão nova no GitHub? (sem internet, não pergunta nada)
+  useEffect(() => {
+    void ponte.atualizacao?.verificar().then(setAtualizacao).catch(() => undefined)
+  }, [])
 
   // "Abrir Configurações" de qualquer tela (o aviso de que o recurso precisa da IA)
   useEffect(() => {
@@ -117,6 +124,17 @@ export function App(): React.JSX.Element {
     setConfig(await api.put<Config>('/api/config', parcial))
   }
 
+  const caixaAtualizacao = atualizacao && (
+    <AvisoAtualizacao
+      a={atualizacao}
+      jobsRodando={Object.values(jobs).filter((j) => j.status === 'rodando' || j.status === 'na_fila').length}
+      atualizar={async () => {
+        await ponte.atualizacao?.instalar()
+      }}
+      depois={() => setAtualizacao(null)}
+    />
+  )
+
   if (!info || (!api && !info.erro)) {
     return (
       <IdiomaCtx.Provider value={t}>
@@ -138,6 +156,7 @@ export function App(): React.JSX.Element {
             </button>
           </div>
         </div>
+        {caixaAtualizacao}
       </IdiomaCtx.Provider>
     )
   }
@@ -263,6 +282,7 @@ export function App(): React.JSX.Element {
           />
         )}
         {config && !config.aviso_direitos_aceito && <AvisoDireitos aceitar={() => void salvarConfig({ aviso_direitos_aceito: true })} />}
+        {config?.aviso_direitos_aceito && caixaAtualizacao}
       </div>
     </IdiomaCtx.Provider>
   )

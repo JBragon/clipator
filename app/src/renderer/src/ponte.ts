@@ -45,6 +45,13 @@ export type PonteIA = {
   aoSair(f: (id: string, codigo: number) => void): () => void
 }
 
+// versão nova do Clipator encontrada no GitHub ao abrir o app (ver main/atualizacao.ts)
+export type Atualizacao = { atual: string; nova: string; tag: string; pagina: string }
+export type PonteAtualizacao = {
+  verificar(): Promise<Atualizacao | null>
+  instalar(): Promise<void>
+}
+
 type Ponte = {
   infoMotor(): Promise<InfoMotor>
   reiniciarMotor(): Promise<InfoMotor>
@@ -59,6 +66,7 @@ type Ponte = {
   abrir(p: string): Promise<string>
   lixeira?(p: string): Promise<void>
   idiomaSistema(): Promise<string>
+  atualizacao?: PonteAtualizacao
   ia?: PonteIA
   chat?: PonteChat
 }

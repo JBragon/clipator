@@ -729,6 +729,15 @@ const pt = {
   nenhuma: 'Nenhuma',
   modeloWhisper: 'Modelo de transcrição',
   automatico: 'Automático (pelo hardware)',
+  atualizacaoTitulo: 'Atualização disponível',
+  atualizacaoTexto: (nova: string, atual: string) => `Saiu o Clipator ${nova}. Você está usando a versão ${atual}. Quer atualizar agora?`,
+  atualizacaoComoFunciona:
+    'O Clipator fecha, uma janela do terminal atualiza o app e o motor (leva alguns minutos) e o Clipator abre de novo sozinho no fim. Seus canais, vídeos e configurações continuam onde estão.',
+  atualizacaoJobs: (n: number) => `${n} job(s) em andamento vão parar. Você pode esperar terminar e atualizar na próxima vez que abrir o app.`,
+  atualizacaoNovidades: 'Ver o que mudou nesta versão',
+  atualizacaoAgora: 'Atualizar agora',
+  atualizacaoDepois: 'Depois',
+  atualizacaoAbrindo: 'Abrindo a atualização…',
   avisoTitulo: 'Antes de começar',
   avisoTexto:
     'Use o Clipator só com vídeos que você tem direito de recortar e publicar. Cortes de conteúdo de terceiros podem levar reivindicação de direitos autorais ou derrubar o seu canal. O Clipator roda tudo no seu computador e não envia vídeo nem áudio para lugar nenhum.',
@@ -1547,6 +1556,15 @@ const en: Textos = {
   nenhuma: 'None',
   modeloWhisper: 'Transcription model',
   automatico: 'Automatic (by hardware)',
+  atualizacaoTitulo: 'Update available',
+  atualizacaoTexto: (nova: string, atual: string) => `Clipator ${nova} is out. You are on version ${atual}. Update now?`,
+  atualizacaoComoFunciona:
+    'Clipator will close, a terminal window will update the app and the engine (it takes a few minutes), and Clipator will open again by itself when it is done. Your channels, videos and settings stay where they are.',
+  atualizacaoJobs: (n: number) => `${n} running job(s) will stop. You can wait for them to finish and update the next time you open the app.`,
+  atualizacaoNovidades: 'See what changed in this version',
+  atualizacaoAgora: 'Update now',
+  atualizacaoDepois: 'Later',
+  atualizacaoAbrindo: 'Starting the update…',
   avisoTitulo: 'Before you start',
   avisoTexto:
     'Only use Clipator on videos you have the right to cut and publish. Clips of third-party content can get copyright claims or take your channel down. Clipator runs everything on your computer and never uploads video or audio.',
