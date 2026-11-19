@@ -32,19 +32,125 @@ done
 [ "${CLIPATOR_SIM:-}" = "1" ] && SIM=1
 [ "${CLIPATOR_REINSTALAR_APP:-}" = "1" ] && REINSTALAR_APP=1
 
-passo() { printf '\n\033[1;35m==>\033[0m \033[1m%s\033[0m\n' "$*"; }
-info()  { printf '    %s\n' "$*"; }
-aviso() { printf '\033[33m    Aviso: %s\033[0m\n' "$*"; }
-falha() { printf '\033[31mErro: %s\033[0m\n' "$*" >&2; exit 1; }
+# ---- tela -------------------------------------------------------------------
+# Num terminal, cada etapa vira uma linha com ✓ e a etapa atual fica numa barra que se
+# atualiza no lugar. A saída dos comandos vai para ~/.clipator/instalacao.log. Fora de
+# um terminal (CI, saída redirecionada) ou com CLIPATOR_SIMPLES=1, a saída é a de sempre.
+mkdir -p "$BASE"
+LOG="$BASE/instalacao.log"
+: > "$LOG"
+UI=0
+if [ -t 1 ] && [ -z "${CI:-}" ] && [ "${TERM:-dumb}" != dumb ] && [ "${CLIPATOR_SIMPLES:-}" != 1 ]; then UI=1; fi
+TOTAL=$((6 + HF + MODELOS + IA + APP))
+N=0; ETAPA=""; DETALHE=""; ETAPA_AVISO=0; GIRO=0
+GIROS=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+
+colunas() { local c; c="$(tput cols 2>/dev/null || echo 80)"; [ "$c" -gt 20 ] 2>/dev/null || c=80; echo "$c"; }
+
+desenhar() {  # a linha da etapa atual: giro, barra, n/total, nome e detalhe
+  [ "$UI" = 1 ] && [ -n "$ETAPA" ] || return 0
+  local largura=20 cheio=$(( (N - 1) * 20 / TOTAL )) barra="" i
+  for ((i = 0; i < largura; i++)); do if [ "$i" -lt "$cheio" ]; then barra+="█"; else barra+="░"; fi; done
+  local txt="$ETAPA"; [ -n "$DETALHE" ] && txt="$ETAPA · $DETALHE"
+  local max=$(( $(colunas) - 36 )); [ "$max" -lt 10 ] && max=10
+  [ "${#txt}" -gt "$max" ] && txt="${txt:0:$((max - 1))}…"
+  printf '\r\033[K  \033[35m%s\033[0m \033[35m%s\033[0m \033[2m%2d/%d\033[0m  %s' \
+    "${GIROS[$((GIRO % 10))]}" "$barra" "$N" "$TOTAL" "$txt"
+}
+
+limpar_linha() { [ "$UI" = 1 ] && printf '\r\033[K'; return 0; }
+
+fechar_etapa() {  # troca a barra pela linha final da etapa
+  [ -n "$ETAPA" ] || return 0
+  if [ "$UI" = 1 ]; then
+    limpar_linha
+    if [ "$ETAPA_AVISO" = 1 ]; then printf '  \033[33m!\033[0m %s\n' "$ETAPA"
+    else printf '  \033[32m✓\033[0m %s\n' "$ETAPA"; fi
+  fi
+  ETAPA=""
+}
+
+banner() {
+  [ "$UI" = 1 ] || return 0
+  printf '\033[35m'
+  cat <<'ARTE'
+
+     ____ _     ___ ____   _  _____ ___  ____
+    / ___| |   |_ _|  _ \ / \|_   _/ _ \|  _ \
+   | |   | |    | || |_) / _ \ | || | | | |_) |
+   | |___| |___ | ||  __/ ___ \| || |_| |  _ <
+    \____|_____|___|_| /_/   \_\_| \___/|_| \_\
+
+ARTE
+  printf '\033[0m   \033[1mClips curtos de vídeos longos, de graça e na sua máquina\033[0m\n'
+  printf '   \033[2mDetalhes da instalação: %s\033[0m\n\n' "$LOG"
+}
+
+passo() {
+  printf '\n==> %s\n' "$*" >> "$LOG"
+  if [ "$UI" = 1 ]; then
+    fechar_etapa
+    N=$((N + 1)); ETAPA="$*"; DETALHE=""; ETAPA_AVISO=0
+    desenhar
+  else
+    printf '\n\033[1;35m==>\033[0m \033[1m%s\033[0m\n' "$*"
+  fi
+}
+info() {
+  printf '    %s\n' "$*" >> "$LOG"
+  if [ "$UI" = 1 ] && [ -n "$ETAPA" ]; then DETALHE="$*"; desenhar; else printf '    %s\n' "$*"; fi
+}
+aviso() {
+  printf '    Aviso: %s\n' "$*" >> "$LOG"
+  ETAPA_AVISO=1
+  limpar_linha
+  printf '\033[33m    Aviso: %s\033[0m\n' "$*"
+  desenhar
+}
+falha() {
+  printf 'Erro: %s\n' "$*" >> "$LOG"
+  if [ "$UI" = 1 ]; then
+    limpar_linha
+    [ -n "$ETAPA" ] && printf '  \033[31m✗\033[0m %s\n' "$ETAPA"
+    printf '\n\033[2m    Últimas linhas de %s:\033[0m\n' "$LOG"
+    tail -n 15 "$LOG" | sed 's/^/    /'
+  fi
+  printf '\n\033[31mErro: %s\033[0m\n' "$*" >&2
+  exit 1
+}
 tem()   { command -v "$1" >/dev/null 2>&1; }
+
+# Verificação: cada item termina com um estado, mostrado no fim. Rodar o instalador de
+# novo confere tudo outra vez e só instala o que falta.
+VERIF=()
+marcar() {  # marcar ok|novo|aviso ITEM DETALHE
+  local m
+  case "$1" in
+    ok) m="\033[32m✓\033[0m" ;; novo) m="\033[32m✓\033[0m" ;; *) m="\033[33m!\033[0m" ;;
+  esac
+  VERIF+=("$(printf '  %b %-22s \033[2m%s\033[0m' "$m" "$2" "$3")")
+  printf '    [%s] %s: %s\n' "$1" "$2" "$3" >> "$LOG"
+}
+
+# rodar COMANDO…: no terminal, a saída vai para o log e a barra gira enquanto espera.
+rodar() {
+  printf '$ %s\n' "$*" >> "$LOG"
+  if [ "$UI" != 1 ]; then "$@"; return; fi
+  "$@" >> "$LOG" 2>&1 < /dev/null &
+  local pid=$!
+  while kill -0 "$pid" 2>/dev/null; do GIRO=$((GIRO + 1)); desenhar; sleep 0.1; done
+  wait "$pid"
+}
 
 # Perguntas leem do terminal, mesmo quando o script chega por `curl | bash`.
 perguntar() {
   [ "$SIM" = 1 ] && return 0
   local r=""
   if [ -r /dev/tty ]; then
+    limpar_linha
     printf '    %s [S/n] ' "$1" > /dev/tty
     read -r r < /dev/tty || r=""
+    desenhar
   fi
   case "$r" in n|N|nao|não|no) return 1 ;; *) return 0 ;; esac
 }
@@ -54,6 +160,7 @@ baixar() {  # baixar URL DESTINO
 }
 
 # ---- 1. sistema --------------------------------------------------------------
+banner
 passo "Conferindo o sistema"
 SO="$(uname -s)"; ARQ="$(uname -m)"
 case "$SO" in
@@ -77,12 +184,15 @@ export PATH="$HOME/.local/bin:$BASE/node/bin:$PATH"
 
 # ---- 2. uv (traz o Python 3.12 isolado) ---------------------------------------
 passo "uv e Python"
+UV_ANTES=0; tem uv && UV_ANTES=1
 if ! tem uv; then
   info "Instalando o uv…"
-  curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null
+  rodar bash -o pipefail -c 'curl -LsSf https://astral.sh/uv/install.sh | sh' || falha "não consegui instalar o uv."
   tem uv || falha "o uv não ficou disponível. Abra um terminal novo e rode o instalador de novo."
 fi
 info "$(uv --version)"
+if [ "$UV_ANTES" = 1 ]; then marcar ok "uv e Python" "$(uv --version | cut -d' ' -f2) · já estava instalado"
+else marcar novo "uv e Python" "$(uv --version | cut -d' ' -f2) · instalado agora"; fi
 
 # ---- 3. FFmpeg, Deno e Node.js ----------------------------------------------
 ffmpeg_ok() {
@@ -124,35 +234,50 @@ node_linux() {  # Node.js 22 só para o usuário, em ~/.clipator/node
 }
 
 passo "FFmpeg, Deno e Node.js"
+FF_ANTES=0; ffmpeg_ok && FF_ANTES=1
+DENO_ANTES=0; tem deno && DENO_ANTES=1
+NODE_ANTES=0; node_ok && NODE_ANTES=1
 if [ "$SO" = mac ]; then
   if ! tem brew; then
     falha "o Homebrew é necessário no Mac. Instale em https://brew.sh e rode este instalador de novo."
   fi
-  ffmpeg_ok || { info "Instalando o FFmpeg completo (com legendas)…"; brew install ffmpeg-full; }
-  tem deno  || { info "Instalando o Deno…"; brew install deno; }
-  if [ "$HF" = 1 ] && ! node_ok; then info "Instalando o Node.js…"; brew install node; fi
+  ffmpeg_ok || { info "Instalando o FFmpeg completo (com legendas)…"; rodar brew install ffmpeg-full || aviso "o brew não instalou o FFmpeg."; }
+  tem deno  || { info "Instalando o Deno…"; rodar brew install deno || aviso "o brew não instalou o Deno."; }
+  if [ "$HF" = 1 ] && ! node_ok; then info "Instalando o Node.js…"; rodar brew install node || aviso "o brew não instalou o Node.js."; fi
 else
   if ! ffmpeg_ok; then
     info "Instalando o FFmpeg (pede sua senha)…"
-    instalar_pacote_linux ffmpeg || aviso "não consegui instalar o FFmpeg. Instale pelo gerenciador do seu sistema."
+    if [ -n "$SUDO" ] && [ "$UI" = 1 ]; then limpar_linha; $SUDO -v < /dev/tty || true; desenhar; fi
+    rodar instalar_pacote_linux ffmpeg || aviso "não consegui instalar o FFmpeg. Instale pelo gerenciador do seu sistema."
   fi
   if ! tem deno; then
     info "Instalando o Deno…"
-    curl -fsSL https://deno.land/install.sh | env DENO_INSTALL="$BASE/deno" sh -s -- -y --no-modify-path >/dev/null \
+    rodar bash -o pipefail -c 'curl -fsSL https://deno.land/install.sh | env DENO_INSTALL="$1" sh -s -- -y --no-modify-path' _ "$BASE/deno" \
       && ln -sf "$BASE/deno/bin/deno" "$HOME/.local/bin/deno" \
       || aviso "não consegui instalar o Deno. Sem ele, links do YouTube podem falhar."
   fi
   if [ "$HF" = 1 ] && ! node_ok; then
     info "Instalando o Node.js $NODE_MIN em $BASE/node…"
-    node_linux || aviso "não consegui instalar o Node.js. Os estilos animados vão sair com a legenda simples."
+    rodar node_linux || aviso "não consegui instalar o Node.js. Os estilos animados vão sair com a legenda simples."
   fi
 fi
 ffmpeg_ok && info "FFmpeg com legendas: ok" || aviso "FFmpeg sem legendas. Rode 'clipator doctor' depois."
 tem deno && info "Deno: $(deno --version | head -1)"
 node_ok && info "Node.js: $(node --version)"
+estado() {  # estado ANTES AGORA_OK ITEM DETALHE_SE_FALTA
+  if [ "$2" = 1 ]; then
+    if [ "$1" = 1 ]; then marcar ok "$3" "já estava instalado"; else marcar novo "$3" "instalado agora"; fi
+  else marcar aviso "$3" "$4"; fi
+}
+AGORA=0; ffmpeg_ok && AGORA=1; estado "$FF_ANTES" "$AGORA" "FFmpeg com legendas" "falta · os clips saem sem legenda"
+AGORA=0; tem deno && AGORA=1; estado "$DENO_ANTES" "$AGORA" "Deno" "falta · links do YouTube podem falhar"
+if [ "$HF" = 1 ]; then
+  AGORA=0; node_ok && AGORA=1; estado "$NODE_ANTES" "$AGORA" "Node.js $NODE_MIN+" "falta · estilos animados saem simples"
+fi
 
 # ---- 4. motor ---------------------------------------------------------------
 passo "Motor do Clipator"
+MOTOR_ANTES=""; tem clipator && MOTOR_ANTES="$(clipator --version 2>/dev/null || true)"
 DIR_SCRIPT=""
 if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
   DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -167,29 +292,49 @@ else
   FONTE="clipator[visao] @ https://github.com/$REPO/archive/refs/heads/main.zip#subdirectory=motor"
 fi
 info "Origem: $FONTE"
-uv tool install --python 3.12 --force "$FONTE"
+info "Instalando (pode levar alguns minutos)…"
+rodar uv tool install --python 3.12 --force "$FONTE" || falha "o uv não conseguiu instalar o motor."
 tem clipator || falha "o comando clipator não ficou no PATH. Abra um terminal novo e rode 'clipator doctor'."
-info "$(clipator --version)"
+MOTOR_AGORA="$(clipator --version 2>/dev/null || true)"
+info "$MOTOR_AGORA"
+if [ -z "$MOTOR_ANTES" ]; then marcar novo "Motor" "$MOTOR_AGORA · instalado agora"
+elif [ "$MOTOR_ANTES" = "$MOTOR_AGORA" ]; then marcar ok "Motor" "$MOTOR_AGORA · conferido e atualizado"
+else marcar novo "Motor" "$MOTOR_ANTES → $MOTOR_AGORA"; fi
 
 # ---- 5. HyperFrames -----------------------------------------------------------
 if [ "$HF" = 1 ]; then
   passo "HyperFrames (estilos animados)"
+  HF_ANTES=0; [ -d "$BASE/hyperframes/node_modules/hyperframes" ] && HF_ANTES=1
   if node_ok && tem npm; then
-    npm install --silent --no-fund --no-audit --prefix "$BASE/hyperframes" "hyperframes@$HF_VERSAO" \
-      && info "HyperFrames $HF_VERSAO instalado." \
-      || aviso "o npm falhou. Os estilos animados vão sair com a legenda simples."
+    if rodar npm install --silent --no-fund --no-audit --prefix "$BASE/hyperframes" "hyperframes@$HF_VERSAO"; then
+      info "HyperFrames $HF_VERSAO instalado."
+      estado "$HF_ANTES" 1 "HyperFrames" ""
+    else
+      aviso "o npm falhou. Os estilos animados vão sair com a legenda simples."
+      marcar aviso "HyperFrames" "o npm falhou · estilos animados saem simples"
+    fi
   else
     aviso "sem Node.js $NODE_MIN+, pulei o HyperFrames."
+    marcar aviso "HyperFrames" "sem Node.js $NODE_MIN+ · estilos animados saem simples"
   fi
 fi
 
 # ---- 6. workspace e modelos ---------------------------------------------------
 passo "Workspace"
-clipator init ${CLIPATOR_WORKSPACE:+"$CLIPATOR_WORKSPACE"}
+WS="${CLIPATOR_WORKSPACE:-$HOME/Clipator}"
+WS_ANTES=0; [ -d "$WS" ] && WS_ANTES=1
+rodar clipator init ${CLIPATOR_WORKSPACE:+"$CLIPATOR_WORKSPACE"} || falha "não consegui criar o workspace."
+info "$WS"
+if [ "$WS_ANTES" = 1 ]; then marcar ok "Workspace" "$WS · já existia"; else marcar novo "Workspace" "$WS · criado agora"; fi
 
 if [ "$MODELOS" = 1 ]; then
   passo "Modelos (pode levar alguns minutos na primeira vez)"
-  clipator preparar || aviso "parte dos downloads falhou. O Clipator baixa o que faltar no primeiro uso."
+  info "Baixando os modelos de transcrição e de rosto…"
+  if rodar clipator preparar; then marcar ok "Modelos" "conferidos e prontos para usar offline"
+  else
+    aviso "parte dos downloads falhou. O Clipator baixa o que faltar no primeiro uso."
+    marcar aviso "Modelos" "parte falhou · o que faltar vem no primeiro uso"
+  fi
 fi
 
 # ---- 7. Claude Code e Codex ---------------------------------------------------
@@ -200,12 +345,19 @@ if [ "$IA" = 1 ]; then
     if [ "$SIM" = 1 ]; then
       info "Para instalar depois: curl -fsSL https://claude.ai/install.sh | bash   (ou: npm install -g @openai/codex)"
     elif perguntar "Instalar o Claude Code agora?"; then
-      curl -fsSL https://claude.ai/install.sh | bash || aviso "a instalação do Claude Code falhou."
+      info "Instalando o Claude Code…"
+      rodar bash -o pipefail -c 'curl -fsSL https://claude.ai/install.sh | bash' || aviso "a instalação do Claude Code falhou."
     elif tem npm && perguntar "Instalar o Codex agora?"; then
-      npm install -g @openai/codex || aviso "a instalação do Codex falhou."
+      info "Instalando o Codex…"
+      rodar npm install -g @openai/codex || aviso "a instalação do Codex falhou."
     fi
   fi
-  clipator mcp registrar || aviso "não consegui registrar o MCP. Rode 'clipator mcp registrar' depois."
+  MCP_OK=1
+  rodar clipator mcp registrar || { MCP_OK=0; aviso "não consegui registrar o MCP. Rode 'clipator mcp registrar' depois."; }
+  IAS=""; tem claude && IAS="Claude Code"; tem codex && IAS="${IAS:+$IAS e }Codex"
+  if [ -z "$IAS" ]; then marcar aviso "IA" "nenhuma instalada · opcional, funciona sem"
+  elif [ "$MCP_OK" = 1 ]; then marcar ok "IA" "$IAS · MCP registrado"
+  else marcar aviso "IA" "$IAS · o MCP não foi registrado"; fi
   tem claude && info "Para entrar na sua conta: rode 'claude' uma vez."
   tem codex && info "Para entrar na sua conta: rode 'codex login' uma vez."
 fi
@@ -243,7 +395,7 @@ instalar_app() {
     else mkdir -p "$HOME/Applications"; destino="$HOME/Applications/Clipator.app"
     fi
     info "Baixando o app $tag…"
-    tmp="$(mktemp -d)"; baixar "$url" "$tmp/Clipator.dmg" || return 1
+    tmp="$(mktemp -d)"; rodar baixar "$url" "$tmp/Clipator.dmg" || return 1
     local vol; vol="$(hdiutil attach -nobrowse -quiet "$tmp/Clipator.dmg" | awk -F'\t' 'END {print $NF}')"
     rm -rf "/Applications/Clipator.app" "$HOME/Applications/Clipator.app" 2>/dev/null || true
     cp -R "$vol/Clipator.app" "$destino" || return 1
@@ -252,7 +404,7 @@ instalar_app() {
     url="$(asset "$json" AppImage)"; [ -n "$url" ] || return 1
     destino="$HOME/.local/bin/clipator-app"
     info "Baixando o app $tag…"
-    baixar "$url" "$destino" || return 1; chmod +x "$destino"
+    rodar baixar "$url" "$destino" || return 1; chmod +x "$destino"
     local icone="$HOME/.local/share/icons/clipator.png"
     mkdir -p "$(dirname "$icone")" "$HOME/.local/share/applications"
     baixar "https://raw.githubusercontent.com/$REPO/${tag:-main}/app/resources/icon.png" "$icone" 2>/dev/null \
@@ -281,13 +433,33 @@ RELEASES="https://github.com/$REPO/releases"
 APP_OK=0
 if [ "$APP" = 1 ]; then
   passo "App de desktop"
-  if instalar_app; then APP_OK=1
-  else aviso "não consegui baixar o app de desktop. O motor foi instalado e o comando 'clipator' já funciona. Baixe o app em $RELEASES ou rode este instalador de novo mais tarde."
+  APP_ANTES="$(cat "$VERSAO_APP" 2>/dev/null | cut -d' ' -f1 || true)"
+  if instalar_app; then
+    APP_OK=1
+    APP_AGORA="$(cut -d' ' -f1 "$VERSAO_APP" 2>/dev/null || true)"
+    if [ -n "$APP_ANTES" ] && [ "$APP_ANTES" = "$APP_AGORA" ] && [ "$REINSTALAR_APP" = 0 ]; then
+      marcar ok "App de desktop" "$APP_AGORA · já estava na versão mais recente"
+    else marcar novo "App de desktop" "${APP_AGORA:-instalado} · instalado agora"; fi
+  else
+    marcar aviso "App de desktop" "não instalado · baixe em $RELEASES"
+    aviso "não consegui baixar o app de desktop. O motor foi instalado e o comando 'clipator' já funciona. Baixe o app em $RELEASES ou rode este instalador de novo mais tarde."
   fi
 fi
 
-passo "Pronto"
-clipator doctor || true
+passo "Conferindo a instalação"
+DOCTOR_OK=1
+DOCTOR="$(clipator doctor 2>&1)" || DOCTOR_OK=0
+printf '%s\n' "$DOCTOR" >> "$LOG"
+if [ "$DOCTOR_OK" = 1 ]; then marcar ok "clipator doctor" "tudo pronto"
+else marcar aviso "clipator doctor" "faltam itens obrigatórios · veja abaixo"; fi
+fechar_etapa
+if [ "$UI" = 1 ]; then
+  printf '\n  \033[32m████████████████████ Pronto!\033[0m\n'
+fi
+printf '\n  \033[1mVerificação\033[0m\n'
+for l in "${VERIF[@]}"; do printf '%s\n' "$l"; done
+# Num terminal, o relatório completo do doctor só aparece quando falta algo (está no log).
+if [ "$UI" != 1 ] || [ "$DOCTOR_OK" = 0 ]; then printf '\n%s\n' "$DOCTOR"; fi
 if [ "$APP" = 1 ] && [ "$APP_OK" = 0 ]; then
   printf '\n'
   aviso "o app de desktop NÃO foi instalado. Baixe em $RELEASES"
