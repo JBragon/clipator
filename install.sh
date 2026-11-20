@@ -11,6 +11,16 @@
 # o HyperFrames e os modelos. Pede sudo apenas para o FFmpeg no Linux.
 set -euo pipefail
 
+# No Mac, o `curl | bash` costuma rodar sem locale UTF-8, e o bash 3.2 do sistema lê os
+# acentos byte a byte. Toda variável colada num caractere acentuado vai entre chaves
+# (${tag}…), e o locale vira UTF-8 para o resto do script e para os programas chamados.
+if [ "$(uname -s)" = Darwin ]; then
+  case "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" in
+    *UTF-8*|*utf-8*|*UTF8*|*utf8*) ;;
+    *) export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ;;
+  esac
+fi
+
 REPO="JBragon/clipator"
 HF_VERSAO="0.8.229"
 NODE_MIN=22
@@ -394,16 +404,24 @@ instalar_app() {
     if [ -w /Applications ]; then destino="/Applications/Clipator.app"
     else mkdir -p "$HOME/Applications"; destino="$HOME/Applications/Clipator.app"
     fi
-    info "Baixando o app $tag…"
+    info "Baixando o app ${tag}…"
     tmp="$(mktemp -d)"; rodar baixar "$url" "$tmp/Clipator.dmg" || return 1
     local vol; vol="$(hdiutil attach -nobrowse -quiet "$tmp/Clipator.dmg" | awk -F'\t' 'END {print $NF}')"
+    if [ -z "$vol" ] || [ ! -d "$vol/Clipator.app" ]; then
+      [ -n "$vol" ] && hdiutil detach -quiet "$vol" 2>/dev/null
+      rm -rf "$tmp"; return 1
+    fi
     rm -rf "/Applications/Clipator.app" "$HOME/Applications/Clipator.app" 2>/dev/null || true
-    cp -R "$vol/Clipator.app" "$destino" || return 1
-    hdiutil detach -quiet "$vol"; rm -rf "$tmp"
+    if ! cp -R "$vol/Clipator.app" "$destino"; then hdiutil detach -quiet "$vol"; rm -rf "$tmp"; return 1; fi
+    hdiutil detach -quiet "$vol" || true; rm -rf "$tmp"
+    # O app ainda não é assinado pela Apple: sem a marca de quarentena e com assinatura
+    # local (ad-hoc), o macOS abre o app sem dizer que ele "está danificado".
+    xattr -dr com.apple.quarantine "$destino" 2>/dev/null || true
+    codesign --verify "$destino" >/dev/null 2>&1 || codesign --force --deep --sign - "$destino" >/dev/null 2>&1 || true
   else
     url="$(asset "$json" AppImage)"; [ -n "$url" ] || return 1
     destino="$HOME/.local/bin/clipator-app"
-    info "Baixando o app $tag…"
+    info "Baixando o app ${tag}…"
     rodar baixar "$url" "$destino" || return 1; chmod +x "$destino"
     local icone="$HOME/.local/share/icons/clipator.png"
     mkdir -p "$(dirname "$icone")" "$HOME/.local/share/applications"
