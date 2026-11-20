@@ -26,7 +26,14 @@ jobs:
           CODEX_HOME: ${{ runner.temp }}/codex
         run: |
           mkdir -p "$CODEX_HOME"
-          ./install.sh --sim --sem-modelos --sem-app
+          if [ "$RUNNER_OS" = macOS ]; then
+            # Como no Mac de quem usa: o bash 3.2 do sistema, sem locale UTF-8, e com o app
+            LC_ALL=C LANG=C /bin/bash ./install.sh --sim --sem-modelos
+            test -d /Applications/Clipator.app || test -d "$HOME/Applications/Clipator.app"
+            codesign --verify --deep "$(cut -d' ' -f2- "$HOME/.clipator/app-versao")"
+          else
+            ./install.sh --sim --sem-modelos --sem-app
+          fi
           export PATH="$HOME/.local/bin:$PATH"
           clipator --version
           clipator doctor
