@@ -406,10 +406,13 @@ instalar_app() {
     fi
     info "Baixando o app ${tag}…"
     tmp="$(mktemp -d)"; rodar baixar "$url" "$tmp/Clipator.dmg" || return 1
-    local vol; vol="$(hdiutil attach -nobrowse -quiet "$tmp/Clipator.dmg" | awk -F'\t' 'END {print $NF}')"
-    if [ -z "$vol" ] || [ ! -d "$vol/Clipator.app" ]; then
-      [ -n "$vol" ] && hdiutil detach -quiet "$vol" 2>/dev/null
+    # Com -quiet o hdiutil não diz onde montou; por isso o ponto de montagem é escolhido aqui.
+    local vol="$tmp/volume"
+    if ! hdiutil attach -nobrowse -noautoopen -quiet -mountpoint "$vol" "$tmp/Clipator.dmg" >> "$LOG" 2>&1; then
       rm -rf "$tmp"; return 1
+    fi
+    if [ ! -d "$vol/Clipator.app" ]; then
+      hdiutil detach -quiet "$vol" 2>/dev/null; rm -rf "$tmp"; return 1
     fi
     rm -rf "/Applications/Clipator.app" "$HOME/Applications/Clipator.app" 2>/dev/null || true
     if ! cp -R "$vol/Clipator.app" "$destino"; then hdiutil detach -quiet "$vol"; rm -rf "$tmp"; return 1; fi
