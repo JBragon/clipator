@@ -13,10 +13,10 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
-from . import __version__, gerenciar, ingest, pipeline
+from . import __version__, gerenciar, ingest, pipeline, remoto_previa
 from .remoto import COOKIE, WEB_DIR, Remoto, endereco_permitido
 from .service import Servico
-from .workspace import WorkspaceError
+from .workspace import WorkspaceError, fontes_dir
 
 ATIVOS = ("na_fila", "rodando")
 TIPOS_WEB = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
@@ -209,17 +209,38 @@ def criar_app_remoto(srv: Servico, remoto: Remoto) -> FastAPI:
         return FileResponse(pasta / "thumb.png", media_type="image/png", headers={"Cache-Control": "private, max-age=300"})
 
     @app.get("/m/api/canais/{canal}/projetos/{projeto}/candidatos/{cid}/quadro", dependencies=dep)
-    def quadro(canal: str, projeto: str, cid: str) -> FileResponse:
-        """O quadro do meio do corte, para o cartão no celular (o mesmo cache do app)."""
+    def quadro(canal: str, projeto: str, cid: str, vertical: bool = False) -> FileResponse:
+        """O quadro do meio do corte para o cartão (o mesmo cache do app); vertical: recortado 9:16 no rosto."""
         p = proj(canal, projeto)
         try:
-            qs = pipeline.quadros_candidato(p, cid, largura=240)
+            if vertical:
+                img: Path | None = remoto_previa.quadro_vertical(p, cid)
+            else:
+                qs = pipeline.quadros_candidato(p, cid)
+                img = Path(qs[len(qs) // 2]["imagem"]) if qs else None
         except (KeyError, FileNotFoundError, OSError, RuntimeError):
             raise HTTPException(404, "Sem imagem") from None
-        img = Path(qs[len(qs) // 2]["imagem"]) if qs else None
         if not img or not img.is_file():
             raise HTTPException(404, "Sem imagem")
         return FileResponse(img, media_type="image/jpeg", headers={"Cache-Control": "private, max-age=600"})
+
+    @app.get("/m/api/canais/{canal}/projetos/{projeto}/candidatos/{cid}/previa", dependencies=dep)
+    def previa(canal: str, projeto: str, cid: str, estilo: str | None = None) -> dict:
+        """O que o celular precisa para tocar o corte como o short vai sair: enquadramento, falas e legenda."""
+        try:
+            return remoto_previa.dados(proj(canal, projeto), cid, estilo)
+        except KeyError:
+            raise HTTPException(404, "Corte não encontrado.") from None
+
+    @app.get("/m/fonte/{arquivo}")
+    def fonte(arquivo: str, request: Request) -> FileResponse:
+        """As fontes embutidas do Clipator, para a legenda da prévia sair com a mesma letra do clip."""
+        aparelho(request)
+        f = fontes_dir() / arquivo
+        if f.suffix.lower() not in (".ttf", ".otf") or f.name not in {x.name for x in fontes_dir().iterdir()}:
+            raise HTTPException(404, "Fonte não encontrada")
+        return FileResponse(f, media_type="font/ttf" if f.suffix.lower() == ".ttf" else "font/otf",
+                            headers={"Cache-Control": "private, max-age=86400"})
 
     @app.get("/m/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/video", dependencies=dep)
     def video(canal: str, projeto: str, clip_id: str, baixar: bool = False) -> FileResponse:

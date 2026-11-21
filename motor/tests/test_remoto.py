@@ -170,6 +170,50 @@ def test_previa_do_corte_vem_do_video_original(ambiente):
     assert TestClient(app, client=CASA).get(f"{base}/video-original").status_code == 401  # sem pareamento
 
 
+def test_previa_do_short_traz_legenda_e_cartela_do_estilo(ambiente):
+    _, rem, app, p = ambiente
+    write_json(p.transcricao_path, {"segmentos": [{"inicio": 9, "fim": 52, "texto": "", "palavras": [
+        {"texto": "antes", "inicio": 9.0, "fim": 9.5}, {"texto": "Ninguém", "inicio": 10.2, "fim": 10.6},
+        {"texto": "te", "inicio": 10.6, "fim": 10.8}, {"texto": "conta", "inicio": 10.8, "fim": 11.3},
+        {"texto": "depois", "inicio": 50.5, "fim": 51.0}]}]})
+    cl = pareado(rem, app)
+    base = f"/m/api/canais/teste/projetos/{p.id}/candidatos"
+    d = cl.get(f"{base}/c01/previa").json()
+    assert d["vertical"] is True and d["inicio"] == 10 and d["fim"] == 50 and 0 <= d["rosto_x"] <= 1
+    assert [w["t"] for w in d["palavras"]] == ["Ninguém", "te", "conta"]  # só as faladas dentro do corte
+    leg = d["legenda"]
+    assert leg["modo"] and leg["tamanho"] > 0 and 0 < leg["altura"] < 1 and leg["por_linha"] >= 1
+    assert d["titulo"] == "O erro de 500 mil" and "duracao" in d["cartela"]
+    for arquivo in d["fontes"].values():  # as fontes do estilo vêm do próprio PC
+        assert cl.get(f"/m/fonte/{arquivo}").status_code == 200
+    assert cl.get(f"{base}/nao-existe/previa").status_code == 404
+    assert TestClient(app, client=CASA).get(f"{base}/c01/previa").status_code == 401
+
+
+def test_fonte_so_para_celular_pareado_e_so_da_pasta_de_fontes(ambiente):
+    from clipator.workspace import fontes_dir
+
+    _, rem, app, _ = ambiente
+    fonte = next(iter(sorted(fontes_dir().glob("*.ttf"))), None)
+    if fonte is None:
+        pytest.skip("sem fontes embutidas")
+    assert TestClient(app, client=CASA).get(f"/m/fonte/{fonte.name}").status_code == 401
+    cl = pareado(rem, app)
+    r = cl.get(f"/m/fonte/{fonte.name}")
+    assert r.status_code == 200 and r.content == fonte.read_bytes()
+    assert cl.get("/m/fonte/remoto.json").status_code == 404
+    assert cl.get("/m/fonte/..%2F..%2Fapi.py").status_code == 404
+    assert cl.get("/m/fonte/nao-existe.ttf").status_code == 404
+
+
+def test_fonte_do_estilo_pelo_nome():
+    from clipator.remoto_previa import arquivo_fonte
+
+    f = arquivo_fonte("Montserrat ExtraBold")
+    assert f is None or f.name == "Montserrat-ExtraBold.ttf"
+    assert arquivo_fonte("") is None and arquivo_fonte("Fonte Que Nao Existe") is None
+
+
 def test_novo_video_so_por_link(ambiente):
     srv, rem, app, _ = ambiente
     srv.fila.registrar("analisar", lambda params, ctx: None)
@@ -238,3 +282,20 @@ def test_app_do_pc_liga_gera_qr_e_desliga(tmp_path, monkeypatch):
         st = cl.post("/api/remoto/desligar", headers=h).json()
     assert st["ligado"] is False and rem.quer_ligado is False
     srv.fila.fechar()
+
+
+def test_capa_do_short_sai_em_pe(ambiente, video_teste):
+    import shutil
+
+    from PIL import Image
+
+    _, rem, app, p = ambiente
+    write_json(p.candidatos_path, [{"id": "c01", "inicio": 2, "fim": 10, "duracao": 8, "nota": 70, "modo": "curto"}])
+    p.fonte_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy(video_teste, p.fonte_dir / "video.mp4")
+    cl = pareado(rem, app)
+    r = cl.get(f"/m/api/canais/teste/projetos/{p.id}/candidatos/c01/quadro", params={"vertical": "true"})
+    assert r.status_code == 200
+    with Image.open(p.analise_dir / "quadros" / "c01_vertical.jpg") as img:
+        w, h = img.size
+    assert abs(w / h - 9 / 16) < 0.02  # o mesmo recorte 9:16 do short

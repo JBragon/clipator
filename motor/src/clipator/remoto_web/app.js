@@ -179,7 +179,6 @@ const estado = {
   aba: null, // 'shorts' | 'longos' | 'clips' (null: escolhe sozinho)
   marcados: new Set(),
   estiloEscolhido: '',
-  previa: null, // id do corte com a prévia aberta
   projetoAberto: '',
   dados: null, // o que a tela atual mostra
   erro: null
@@ -199,7 +198,7 @@ async function buscar() {
   if (r) {
     const chave = `${r.canal}/${r.projeto}`
     if (chave !== estado.projetoAberto) {
-      Object.assign(estado, { projetoAberto: chave, aba: null, marcados: new Set(), estiloEscolhido: '', previa: null })
+      Object.assign(estado, { projetoAberto: chave, aba: null, marcados: new Set(), estiloEscolhido: '' })
     }
     const base = `/m/api/canais/${enc(r.canal)}/projetos/${enc(r.projeto)}`
     const anterior = estado.dados && estado.dados.tela === 'projeto' && estado.dados.canal === r.canal ? estado.dados.estilos : null
@@ -271,7 +270,7 @@ function desenhar(forcar = false) {
     pintar('rodape', '', () => null, forcar)
   } else {
     const p = d.projeto
-    pintar('conteudo', JSON.stringify([d.tela, p, estado.aba, [...estado.marcados], estado.previa]), () => telaProjeto(d), forcar)
+    pintar('conteudo', JSON.stringify([d.tela, p, estado.aba, [...estado.marcados]]), () => telaProjeto(d), forcar)
     pintar('rodape', JSON.stringify([estado.marcados.size, estado.estiloEscolhido, d.estilos, estado.aba]), () => rodapeAprovar(d), forcar)
   }
 }
@@ -429,7 +428,6 @@ function abaAtual(p) {
 
 function trocarAba(a) {
   estado.aba = a
-  estado.previa = null
   desenhar(true)
   window.scrollTo({ top: 0 })
 }
@@ -449,7 +447,7 @@ function telaProjeto(d) {
   else {
     const lista = aba === 'longos' ? longos : shorts
     corpo = lista.length
-      ? lista.map((c) => cartaoCorte(d.base, p, c))
+      ? [el('div', { class: aba === 'shorts' ? 'grade-shorts' : '' }, lista.map((c) => cartaoCorte(d.base, p, c)))]
       : [el('p', { class: 'vazio' }, p.candidatos.length ? (aba === 'longos' ? t.semLongos : t.semShorts) : t.semCortes)]
   }
   return [
@@ -470,46 +468,254 @@ function alternarMarcado(id) {
 
 function cartaoCorte(base, p, c) {
   const marcado = estado.marcados.has(c.id)
-  const aberto = estado.previa === c.id
   const longo = c.modo === 'longo'
-  let midia
-  if (aberto) {
-    const v = el('video', {
-      class: 'previa',
-      src: `${base}/video-original#t=${c.inicio.toFixed(2)},${c.fim.toFixed(2)}`,
-      controls: true,
-      autoplay: true,
-      playsinline: true,
-      preload: 'auto'
-    })
-    midia = el('div', { class: 'midia' }, v,
-      el('button', { class: 'fechar', 'aria-label': t.fecharPrevia, onclick: () => { estado.previa = null; desenhar(true) } }, '×'))
-  } else {
-    midia = el('button', {
-      class: 'midia',
-      'aria-label': `${t.previa}: ${c.titulo || c.id}`,
-      disabled: !p.tem_video,
-      onclick: () => { estado.previa = c.id; desenhar(true) }
-    },
-    el('img', { loading: 'lazy', alt: '', src: `${base}/candidatos/${enc(c.id)}/quadro`, onerror: (ev) => ev.target.remove() }),
-    p.tem_video ? el('span', { class: 'play' }, `▶ ${t.previa}`) : null,
-    el('span', { class: 'tempo' }, duracao(c.duracao || c.fim - c.inicio)))
+  const botaoMarcar = c.clip
+    ? el('span', { class: 'selo ok' }, `✓ ${t.jaVirouClip}`)
+    : el('button', {
+      class: `marcar ${marcado ? 'on' : ''}`,
+      'aria-pressed': String(marcado),
+      onclick: () => alternarMarcado(c.id)
+    }, marcado ? `✓ ${t.selecionado}` : t.selecionar)
+  const midia = el('button', {
+    class: 'midia',
+    'aria-label': `${t.previa}: ${c.titulo || c.id}`,
+    disabled: !p.tem_video,
+    onclick: () => abrirPlayer(base, p, c)
+  },
+  el('img', { loading: 'lazy', alt: '', src: `${base}/candidatos/${enc(c.id)}/quadro${longo ? '' : '?vertical=true'}`, onerror: (ev) => ev.target.remove() }),
+  el('span', { class: `nota ${corNota(c.nota || 0)}` }, Math.round(c.nota || 0)),
+  p.tem_video ? el('span', { class: 'play', 'aria-hidden': 'true' }, '▶') : null,
+  el('span', { class: 'tempo' }, duracao(c.duracao || c.fim - c.inicio)))
+  if (!longo) {
+    // short: cartão vertical, como o vídeo vai aparecer no feed
+    return el('article', { class: `cartao corte-short ${marcado ? 'marcado' : ''}` },
+      midia,
+      el('div', { class: 'corpo' },
+        el('div', { class: 'titulo' }, c.titulo || c.motivo || c.texto),
+        botaoMarcar))
   }
-  return el('article', { class: `cartao corte ${marcado ? 'marcado' : ''} ${longo ? 'longo' : ''}` },
+  return el('article', { class: `cartao corte ${marcado ? 'marcado' : ''}` },
     midia,
     el('div', { class: 'corpo' },
       el('div', { class: 'linha' },
-        el('span', { class: `nota ${corNota(c.nota || 0)}` }, Math.round(c.nota || 0)),
         el('span', { class: 'meta cresce' }, `${mmss(c.inicio)} – ${mmss(c.fim)}`),
-        c.clip
-          ? el('span', { class: 'selo ok' }, `✓ ${t.jaVirouClip}`)
-          : el('button', {
-            class: `marcar ${marcado ? 'on' : ''}`,
-            'aria-pressed': String(marcado),
-            onclick: () => alternarMarcado(c.id)
-          }, marcado ? `✓ ${t.selecionado}` : t.selecionar)),
+        botaoMarcar),
       c.titulo ? el('div', { class: 'titulo' }, c.titulo) : null,
       el('div', { class: 'texto' }, c.motivo || c.texto)))
+}
+
+// ---- player da prévia ---------------------------------------------------------------------------
+// Toca o trecho do vídeo original como o clip vai sair: 9:16 enquadrado no rosto, com a cartela de
+// título e a legenda do estilo (fonte, cores, contorno, posição e palavra em destaque). É uma imitação
+// no navegador, feita com o mesmo estilo do render; o vídeo final sai do PC.
+const fontesCarregadas = new Set()
+function carregarFonte(arquivo) {
+  const familia = `clip-${arquivo.replace(/\W/g, '')}`
+  if (!fontesCarregadas.has(arquivo) && 'FontFace' in window) {
+    fontesCarregadas.add(arquivo)
+    const f = new FontFace(familia, `url(/m/fonte/${enc(arquivo)})`)
+    f.load().then((ok) => document.fonts.add(ok)).catch(() => {})
+  }
+  return familia
+}
+
+function familiaDe(dados, nome) {
+  const arq = dados.fontes && dados.fontes[nome]
+  return `${arq ? `"${carregarFonte(arq)}", ` : ''}"${nome}", "Arial Black", system-ui, sans-serif`
+}
+
+function blocosDaLegenda(palavras, porBloco) {
+  const blocos = []
+  let atual = []
+  for (const w of palavras) {
+    const anterior = atual[atual.length - 1]
+    if (atual.length >= porBloco || (anterior && w.i - anterior.f > 0.7)) {
+      blocos.push(atual)
+      atual = []
+    }
+    atual.push(w)
+  }
+  if (atual.length) blocos.push(atual)
+  return blocos.map((ws, k) => ({ ws, i: ws[0].i, f: Math.max(ws[ws.length - 1].f, (blocos[k + 1] ? blocos[k + 1][0].i : 0) - 0.25) }))
+}
+
+function textoPalavra(w, leg) {
+  let x = w.t
+  if (leg.sem_pontuacao) x = x.replace(/[,.;:]+$/, '')
+  return leg.caixa_alta ? x.toUpperCase() : x
+}
+
+let playerAberto = null
+function fecharPlayer() {
+  if (!playerAberto) return
+  playerAberto.parar()
+  playerAberto.tela.remove()
+  playerAberto = null
+  document.body.classList.remove('com-player')
+}
+
+function abrirPlayer(base, p, c) {
+  fecharPlayer()
+  const vertical = c.modo !== 'longo'
+  const ini = c.inicio
+  const fim = c.fim
+  const dur = Math.max(0.1, fim - ini)
+  const video = el('video', { playsinline: true, preload: 'auto', src: `${base}/video-original#t=${ini.toFixed(2)},${fim.toFixed(2)}` })
+  const cartela = el('div', { class: 'p-cartela', hidden: true })
+  const legenda = el('div', { class: 'p-legenda' })
+  let legendaChave = ''
+  const icone = el('div', { class: 'p-icone', 'aria-hidden': 'true' }, '▶')
+  const carregando = el('div', { class: 'girando p-carregando', 'aria-hidden': 'true' })
+  const quadro = el('div', { class: `p-quadro ${vertical ? 'vertical' : 'horizontal'}` }, video, cartela, legenda, carregando, icone)
+  const barra = el('input', { type: 'range', min: '0', max: String(dur), step: '0.1', value: '0', 'aria-label': t.previa, class: 'p-barra' })
+  const tempo = el('span', { class: 'p-tempo' }, `0:00 / ${mmss(dur)}`)
+  const marcar = el('button', { class: 'marcar' })
+  const pintarMarcar = () => {
+    const on = estado.marcados.has(c.id)
+    marcar.className = `marcar grande ${on ? 'on' : ''}`
+    marcar.textContent = on ? `✓ ${t.selecionado}` : t.selecionar
+    marcar.setAttribute('aria-pressed', String(on))
+  }
+  pintarMarcar()
+  marcar.addEventListener('click', () => {
+    alternarMarcado(c.id)
+    pintarMarcar()
+  })
+  const estiloRotulo = el('span', { class: 'p-estilo' })
+  const tela = el('div', { class: 'player-tela', role: 'dialog', 'aria-modal': 'true', 'aria-label': c.titulo || c.id },
+    el('div', { class: 'p-topo' },
+      el('button', { class: 'p-fechar', 'aria-label': t.fecharPrevia, onclick: () => (history.state && history.state.player ? history.back() : fecharPlayer()) }, '×'),
+      el('div', { class: 'cresce' }, el('div', { class: 'p-titulo' }, c.titulo || c.id), estiloRotulo)),
+    quadro,
+    el('div', { class: 'p-controles' }, el('div', { class: 'linha' }, barra, tempo)),
+    el('div', { class: 'p-acoes' },
+      el('span', { class: `nota ${corNota(c.nota || 0)}` }, Math.round(c.nota || 0)),
+      el('span', { class: 'meta cresce' }, `${mmss(ini)} – ${mmss(fim)} · ${duracao(dur)}`),
+      c.clip ? el('span', { class: 'selo ok' }, `✓ ${t.jaVirouClip}`) : marcar))
+  document.body.append(tela)
+  document.body.classList.add('com-player')
+  // o botão voltar do Android fecha o player em vez de sair do vídeo
+  history.pushState({ player: true }, '')
+
+  let dados = null
+  let blocos = []
+  let quadroAltura = 0
+  let raf = 0
+  const escala = () => quadroAltura / (vertical ? 1920 : 1080)
+
+  function aplicarEstilo() {
+    if (!dados) return
+    const leg = dados.legenda
+    const e = escala()
+    Object.assign(legenda.style, {
+      top: `${leg.altura * 100}%`,
+      fontFamily: familiaDe(dados, leg.fonte),
+      fontSize: `${leg.tamanho * e}px`,
+      fontStyle: leg.italico ? 'italic' : 'normal',
+      color: leg.cor,
+      webkitTextStroke: `${leg.espessura * 2 * e}px ${leg.contorno}`,
+      background: leg.fundo && leg.opacidade_fundo > 0 ? leg.fundo : 'transparent'
+    })
+    const ca = dados.cartela
+    Object.assign(cartela.style, {
+      fontFamily: familiaDe(dados, ca.fonte),
+      fontSize: `${ca.tamanho * e}px`,
+      color: ca.cor,
+      background: ca.fundo,
+      top: ca.posicao === 'baixo' ? 'auto' : ca.posicao === 'centro' ? '42%' : '7%',
+      bottom: ca.posicao === 'baixo' ? '12%' : 'auto'
+    })
+    cartela.textContent = ca.caixa_alta ? dados.titulo.toUpperCase() : dados.titulo
+  }
+
+  function quadroAtual() {
+    const agora = video.currentTime
+    const rel = agora - ini
+    barra.value = String(Math.max(0, Math.min(dur, rel)))
+    tempo.textContent = `${mmss(Math.max(0, rel))} / ${mmss(dur)}`
+    if (agora >= fim - 0.03 && !video.paused) {
+      video.pause()
+    }
+    if (!dados) return
+    cartela.hidden = !(dados.cartela.mostrar && rel < dados.cartela.duracao)
+    const leg = dados.legenda
+    const bloco = leg.modo === 'nenhuma' ? null : blocos.find((b) => agora >= b.i - 0.05 && agora < b.f)
+    if (!bloco) {
+      legendaChave = ''
+      return legenda.replaceChildren()
+    }
+    let falando = bloco.ws.findIndex((w) => agora >= w.i && agora < w.f)
+    if (falando < 0) falando = bloco.ws.reduce((k, w, n) => (w.i <= agora ? n : k), 0)
+    const ws = leg.modo === 'uma-palavra' ? [bloco.ws[falando]] : bloco.ws
+    const linhas = []
+    for (let k = 0; k < ws.length; k += Math.max(1, leg.por_linha)) linhas.push(ws.slice(k, k + Math.max(1, leg.por_linha)))
+    const chave = `${bloco.i}:${falando}`
+    if (chave === legendaChave) return // só redesenha quando muda a palavra falada
+    legendaChave = chave
+    legenda.replaceChildren(...linhas.map((l) => el('div', {}, l.flatMap((w, n) => {
+      const destaque = leg.modo === 'palavra-a-palavra' && w === bloco.ws[falando]
+      return [n ? ' ' : '', el('span', { style: destaque ? `color:${leg.destaque}` : '' }, textoPalavra(w, leg))]
+    }))))
+  }
+
+  function laco() {
+    quadroAtual()
+    raf = requestAnimationFrame(laco)
+  }
+
+  const medir = new ResizeObserver(() => {
+    quadroAltura = quadro.getBoundingClientRect().height
+    aplicarEstilo()
+  })
+  medir.observe(quadro)
+
+  video.addEventListener('play', () => {
+    if (video.currentTime >= fim - 0.1 || video.currentTime < ini - 0.5) video.currentTime = ini
+    icone.hidden = true
+    cancelAnimationFrame(raf)
+    raf = requestAnimationFrame(laco)
+  })
+  video.addEventListener('pause', () => {
+    icone.hidden = false
+    cancelAnimationFrame(raf)
+    quadroAtual()
+  })
+  video.addEventListener('waiting', () => (carregando.hidden = false))
+  video.addEventListener('playing', () => (carregando.hidden = true))
+  video.addEventListener('canplay', () => (carregando.hidden = true))
+  video.addEventListener('error', () => {
+    carregando.hidden = true
+    avisar(t.semPrevia)
+  })
+  quadro.addEventListener('click', () => (video.paused ? video.play().catch(() => {}) : video.pause()))
+  barra.addEventListener('input', () => {
+    video.currentTime = ini + Number(barra.value)
+    quadroAtual()
+  })
+
+  playerAberto = {
+    tela,
+    parar: () => {
+      cancelAnimationFrame(raf)
+      medir.disconnect()
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
+    }
+  }
+
+  // o toque que abriu o player conta como gesto: dá para tocar com som já
+  video.play().catch(() => {})
+  const q = estado.estiloEscolhido ? `?estilo=${enc(estado.estiloEscolhido)}` : ''
+  api('GET', `${base}/candidatos/${enc(c.id)}/previa${q}`).then((d) => {
+    if (!playerAberto || playerAberto.tela !== tela) return
+    dados = d
+    blocos = blocosDaLegenda(d.palavras, Math.max(1, d.legenda.por_linha * d.legenda.linhas))
+    video.style.objectPosition = `${Math.round(d.rosto_x * 100)}% 50%`
+    estiloRotulo.textContent = `${t.estilo}: ${d.estilo_nome}`
+    aplicarEstilo()
+    quadroAtual()
+  }).catch(() => {})
 }
 
 function listaClips(base, p) {
@@ -575,9 +781,14 @@ $('voltar').addEventListener('click', () => {
   location.hash = '#/'
 })
 window.addEventListener('hashchange', () => {
+  fecharPlayer()
   if (lerCodigoDoQr()) return
   window.scrollTo({ top: 0 })
   atualizar()
+})
+window.addEventListener('popstate', () => fecharPlayer())
+document.addEventListener('keydown', (ev) => {
+  if (ev.key === 'Escape' && playerAberto) history.state && history.state.player ? history.back() : fecharPlayer()
 })
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) atualizar()
