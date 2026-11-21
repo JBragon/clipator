@@ -125,3 +125,22 @@ def test_render_com_abertura_em_preto_e_branco(ws, video_teste, monkeypatch):
         return float((a.max(axis=2) - a.min(axis=2)).mean())
 
     assert sat(q1) < 8 < sat(q2)
+
+
+@precisa_ffmpeg
+def test_loudnorm_nao_embola_os_carimbos_do_audio(tmp_path):
+    """O loudnorm devolvia os 3 s iniciais com carimbos embolados (pacotes de 1 amostra e depois um buraco).
+    O player local tocava normal, mas YouTube e Facebook aceleravam, emudeciam e voltavam nesse trecho."""
+    import subprocess
+
+    saida = tmp_path / "ln.mp4"
+    # como no render: trechos emendados pelo concat e depois o loudnorm
+    media.run_ffmpeg(["-f", "lavfi", "-t", "4", "-i", "sine=f=440:r=48000",
+                      "-f", "lavfi", "-t", "4", "-i", "sine=f=330:r=48000",
+                      "-filter_complex", f"[0:a][1:a]concat=n=2:v=0:a=1[c];[c]asetpts=PTS-STARTPTS,{media.LOUDNORM}[a]",
+                      "-map", "[a]", "-c:a", "aac", "-ar", "48000", str(saida)])
+    pts = [int(x.strip(",")) for x in subprocess.run(
+        [media.ffprobe_bin(), "-v", "error", "-select_streams", "a", "-show_entries", "packet=pts",
+         "-of", "csv=p=0", str(saida)], capture_output=True, text=True, check=True).stdout.split()]
+    passos = {b - a for a, b in zip(pts, pts[1:])}
+    assert passos == {1024}
