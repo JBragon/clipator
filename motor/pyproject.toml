@@ -1,6 +1,6 @@
 [project]
 name = "clipator"
-version = "0.1.0"
+version = "0.1.2"
 description = "Motor local do Clipator: transforma vídeos longos em clips curtos, com IA opcional."
 readme = "README.md"
 license = "AGPL-3.0-or-later"
