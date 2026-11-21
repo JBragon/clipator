@@ -28,6 +28,7 @@ from typing import Any
 
 REFERENCIA = 2.6  # segundos no ar
 MIN_NO_AR = 1.2
+ATRASO_MAX_TITULO = 4.0  # nome dito durante a cartela de título: o cartão espera ela sair, se não passou muito do nome
 MAX_REFS = 8
 
 # o visual do cartão em cada estilo (id do estilo, ou a direção de arte / ficha dele)
@@ -161,16 +162,24 @@ def obter(pasta: Path, pals: list[dict], ad: Any, titulo: str = "", cancelar: th
     return refs
 
 
-def janelas(refs: list[dict], dur: float) -> list[dict[str, Any]]:
-    """Quando cada cartão fica no ar: do nome dito até REFERENCIA depois; o próximo nome encurta o anterior."""
+def janelas(refs: list[dict], dur: float, livre_desde: float = 0.0) -> list[dict[str, Any]]:
+    """Quando cada cartão fica no ar: do nome dito até REFERENCIA depois; o próximo nome encurta o anterior.
+
+    `livre_desde`: até quando a cartela de título está na tela. Cartão e título ficam no alto e um cobria o outro;
+    o nome dito antes disso entra quando o título sai (ou fica de fora, se já faz mais de ATRASO_MAX_TITULO).
+    """
     out: list[dict[str, Any]] = []
     for r in sorted(refs, key=lambda x: x["t"]):
         a = max(0.0, r["t"] - 0.15)
+        if a < livre_desde:
+            if livre_desde - r["t"] > ATRASO_MAX_TITULO:
+                continue
+            a = livre_desde + 0.1
         if a >= dur - 0.5:
             continue
         if out and a < out[-1]["t1"] + 0.1:  # o próximo nome chegou: o anterior sai, mas fica no ar ao menos MIN_NO_AR
             a = max(a, out[-1]["t0"] + MIN_NO_AR + 0.1)
-            if a > r["t"] + 1.5 or a >= dur - 0.5:
+            if a > max(r["t"], livre_desde) + 1.5 or a >= dur - 0.5:
                 continue  # atrasaria demais: o nome já passou
             out[-1]["t1"] = round(a - 0.1, 3)
         out.append({**r, "t0": round(a, 3), "t1": round(min(dur, a + REFERENCIA), 3)})

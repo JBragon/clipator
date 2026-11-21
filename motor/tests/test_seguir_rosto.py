@@ -175,3 +175,59 @@ def test_topo_dos_rostos_pega_a_cabeca_mais_alta_sem_ruido():
     topo = reframe.topo_dos_rostos(am, None, 1920, 1080, 608, 1080, 656)
     assert topo == pytest.approx(0.35 - 0.8 * (0.01 * 1920 * 1080) ** 0.5 / 1080, abs=1e-3)
     assert reframe.topo_dos_rostos(am[:2], None, 1920, 1080, 608, 1080, 656) is None
+
+
+def _react(fala_esq, fala_dir, fim=24.0):
+    """React: o vídeo reagido à esquerda (rosto maior) e o locutor à direita, os dois sempre na imagem.
+    `fala_*(t)` diz se a boca daquele lado está mexendo naquele instante."""
+    def rostos(t):
+        k = int(round(t * POR_S))
+        mexe = lambda falando: (0.45 + 0.1 * (k % 3)) if falando else (0.05 + 0.02 * (k % 2))  # noqa: E731
+        return [R(0.3, 0.4, 0.03, fala=mexe(fala_esq(t))), R(0.8, 0.4, 0.015, fala=mexe(fala_dir(t)))]
+    return _amostras(rostos, fim=fim)
+
+
+def _lado_em(traj, t):
+    x = [cx for tt, cx, _ in traj if tt <= t + 1e-6][-1]
+    return "esq" if x < 0.55 else "dir"
+
+
+def test_react_a_camera_vai_para_quem_esta_falando():
+    # o locutor (direita, rosto menor) fala de 0 a 4 s e de 12 a 16 s; no resto fala o vídeo reagido
+    loc = lambda t: t < 4 or 12 <= t < 16  # noqa: E731
+    traj = reframe.trajetoria(_react(lambda t: not loc(t), loc), largura_crop=CW / W)
+    assert [_lado_em(traj, t) for t in (1, 3, 6, 10, 13, 15, 18, 22)] == ["dir", "dir", "esq", "esq", "dir", "dir", "esq", "esq"]
+    # a troca chega quando a fala começa (no máximo meio segundo depois), em corte seco
+    cortes = [p for _, _, p in traj if p is not None]
+    assert len(cortes) == 3 and all(min(abs(c - x) for x in (4, 12, 16)) <= 0.6 for c in cortes)
+
+
+def test_react_fala_curta_ou_empate_nao_faz_a_camera_ir_e_voltar():
+    # o locutor solta meio segundo de "hum" no meio da fala do vídeo reagido: a câmera fica onde está
+    traj = reframe.trajetoria(_react(lambda t: True if not 8 <= t < 8.5 else False, lambda t: 8 <= t < 8.5),
+                              largura_crop=CW / W)
+    assert {_lado_em(traj, t) for t in np.arange(1, 23, 0.5)} == {"esq"}
+    # os dois mexendo a boca igual (ninguém sabe quem fala): segue a regra de sempre, sem trocar
+    traj = reframe.trajetoria(_react(lambda t: True, lambda t: True), largura_crop=CW / W)
+    assert all(p is None for _, _, p in traj)
+
+
+def test_sem_medida_da_boca_a_escolha_e_a_de_antes():
+    # MediaPipe/Haar não dão a boca: fala None e a câmera segue a regra de tamanho e presença, como sempre
+    am = _amostras(lambda t: [R(0.3, 0.4, 0.03), R(0.8, 0.4, 0.015)])
+    assert reframe.quem_fala(am) == [None] * len(am)
+    assert {_lado_em(reframe.trajetoria(am, largura_crop=CW / W), t) for t in (1, 6, 11)} == {"esq"}
+
+
+def test_boca_alinhada_pelos_marcos_do_rosto():
+    cinza = np.zeros((360, 640), np.float32)
+    cinza[200:215, 300:340] = 255  # a boca aberta
+    marcos = [300, 160, 340, 160, 320, 185, 305, 205, 335, 205]  # olho d, olho e, nariz, boca d, boca e
+    p = reframe.recorte_boca(cinza, marcos)
+    assert p is not None and p.shape == (24, 32) and abs(float(p.mean())) < 1e-3
+    assert reframe.recorte_boca(cinza, [0, 0, 2, 0, 1, 1, 0, 2, 2, 2]) is None  # rosto pequeno demais
+    fechada = np.zeros_like(cinza)
+    fechada[205:208, 300:340] = 255
+    a, b = R(0.5, 0.5, 0.02, boca=p), R(0.5, 0.5, 0.02, boca=reframe.recorte_boca(fechada, marcos))
+    reframe._medir_fala([b], [a])
+    assert b.fala is not None and b.fala > 0.3

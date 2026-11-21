@@ -62,6 +62,9 @@ class Rosto:
     cx: float  # centro em fração da largura (0..1)
     cy: float
     area: float  # fração da área do quadro
+    # quanto a boca mexeu desde a amostra anterior da mesma pessoa (None = sem como medir): ver amostrar_rostos
+    fala: float | None = None
+    boca: "np.ndarray | None" = field(default=None, repr=False, compare=False)  # recorte da boca, só durante a amostragem
 
 
 class Detector:
@@ -130,11 +133,17 @@ class Detector:
             with self._lock:  # o mesmo detector serve várias threads (render e thumbs) e guarda o tamanho de entrada
                 self._yn.setInputSize((w, h))
                 _, faces = self._yn.detect(np.ascontiguousarray(frame_bgr))
+            cinza = None
             for f in faces if faces is not None else []:
                 x, y, fw, fh = (float(v) for v in f[:4])
                 x0, y0, x1, y1 = max(0.0, x), max(0.0, y), min(float(w), x + fw), min(float(h), y + fh)
                 if x1 > x0 and y1 > y0:
-                    out.append(Rosto((x0 + x1) / 2 / w, (y0 + y1) / 2 / h, (x1 - x0) * (y1 - y0) / (w * h)))
+                    if cinza is None:
+                        import cv2
+
+                        cinza = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY).astype(np.float32)
+                    out.append(Rosto((x0 + x1) / 2 / w, (y0 + y1) / 2 / h, (x1 - x0) * (y1 - y0) / (w * h),
+                                     boca=recorte_boca(cinza, [float(v) for v in f[4:14]])))
         elif self._mp is not None:
             import cv2
             import mediapipe as mp
@@ -151,6 +160,29 @@ class Detector:
             for x, y, fw, fh in self._haar.detectMultiScale(gray, 1.15, 5, minSize=(max(24, w // 25), max(24, w // 25))):
                 out.append(Rosto((x + fw / 2) / w, (y + fh / 2) / h, fw * fh / (w * h)))
         return out
+
+
+def recorte_boca(cinza: np.ndarray, marcos: list[float]) -> np.ndarray | None:
+    """A boca alinhada pelos marcos do YuNet (olhos e cantos da boca), num tamanho fixo e com o brilho normalizado.
+
+    Alinhar pelos marcos tira o balanço da cabeça: o que muda entre duas amostras é a boca abrindo e fechando.
+    """
+    import cv2
+
+    if len(marcos) < 10:
+        return None
+    olho_d, olho_e = np.array(marcos[0:2]), np.array(marcos[2:4])
+    boca_d, boca_e = np.array(marcos[6:8]), np.array(marcos[8:10])
+    olhos = float(np.hypot(*(olho_e - olho_d)))
+    if olhos < 6:  # rosto pequeno demais para ver a boca
+        return None
+    cx, cy = (boca_d + boca_e) / 2
+    x0, x1 = int(cx - 0.9 * olhos), int(cx + 0.9 * olhos)
+    y0, y1 = int(cy - 0.36 * olhos), int(cy + 0.6 * olhos)
+    if x0 < 0 or y0 < 0 or x1 > cinza.shape[1] or y1 > cinza.shape[0]:
+        return None
+    p = cv2.resize(cinza[y0:y1, x0:x1], (32, 24), interpolation=cv2.INTER_AREA)
+    return (p - p.mean()) / (p.std() + 1e-3)
 
 
 _detector: Detector | None = None
@@ -202,6 +234,7 @@ def amostrar_rostos(video: str | Path, tl: Timeline, cancelar: threading.Event |
         for s, e in tl.trechos:
             cap.set(cv2.CAP_PROP_POS_MSEC, s * 1000)
             idx = 0
+            antes: list[Rosto] = []  # a amostra anterior, para medir quanto cada boca mexeu
             while True:
                 if cancelar is not None and cancelar.is_set():
                     raise Cancelado()
@@ -215,7 +248,12 @@ def amostrar_rostos(video: str | Path, tl: Timeline, cancelar: threading.Event |
                     h, w = frame.shape[:2]
                     if w > LARGURA_ANALISE:
                         frame = cv2.resize(frame, (LARGURA_ANALISE, int(h * LARGURA_ANALISE / w)))
-                    out.append((acc + max(0.0, t - s), det.detectar(frame)))
+                    rostos = det.detectar(frame)
+                    _medir_fala(rostos, antes)
+                    out.append((acc + max(0.0, t - s), rostos))
+                    for r in antes:
+                        r.boca = None  # já serviu: não guarda um recorte por amostra do clip inteiro
+                    antes = rostos
                 else:
                     if not cap.grab():
                         break
@@ -223,7 +261,21 @@ def amostrar_rostos(video: str | Path, tl: Timeline, cancelar: threading.Event |
             acc += e - s
     finally:
         cap.release()
+    for _, rs in out[-1:]:
+        for r in rs:
+            r.boca = None
     return out
+
+
+def _medir_fala(rostos: list[Rosto], antes: list[Rosto]) -> None:
+    """`fala` de cada rosto: diferença média entre a boca dele agora e a da mesma pessoa na amostra anterior."""
+    for r in rostos:
+        if r.boca is None:
+            continue
+        pares = [a for a in antes if a.boca is not None and _mesma_pessoa(r, a)]
+        if pares:
+            a = min(pares, key=lambda a: abs(a.cx - r.cx) + abs(a.cy - r.cy))
+            r.fala = round(float(np.mean(np.abs(r.boca - a.boca))), 4)
 
 
 # --- câmera que segue o locutor -------------------------------------------------------------------------------
@@ -233,6 +285,11 @@ MEDIANA_S = 0.7  # janela da mediana que tira falso positivo solto do detector
 TROCA_AUSENTE_S = 0.8  # o locutor sumiu por esse tempo e há outro rosto: troca
 TROCA_DOMINIO_S = 1.5  # outro rosto bem maior (o locutor com menos de 60% da área dele) por esse tempo: troca
 CORTE_TROCA = 0.5  # troca de pessoa que anda mais que meia largura do crop vira corte seco, não panorâmica
+# quem fala (duas pessoas na mesma imagem: react, podcast em plano aberto): a boca que mais mexe em volta da amostra
+FALA_JANELA_S = 0.5  # média da `fala` de cada pessoa de 0.5 s antes a 0.5 s depois da amostra
+FALA_MIN = 0.22  # abaixo disso ninguém está falando (boca parada; vídeo reagido pausado dá 0)
+FALA_RAZAO = 1.5  # quem fala mexe a boca pelo menos 1.5 vez mais que o outro; menos que isso é empate e nada muda
+TROCA_FALA_S = 1.0  # o outro falou por esse tempo: a câmera vai para ele (desde quando ele começou)
 
 Ponto = tuple[float, float, "float | None"]  # (t, valor, pulo): pulo = instante do corte seco antes deste ponto
 
@@ -242,16 +299,62 @@ def _mesma_pessoa(a: Rosto, b: Rosto) -> bool:
     return abs(a.cx - b.cx) < max(0.06, 1.2 * lado) and abs(a.cy - b.cy) < max(0.10, 1.5 * lado)
 
 
+def quem_fala(amostras: list[tuple[float, list[Rosto]]]) -> list[Rosto | None]:
+    """Em cada amostra com duas pessoas ou mais, o rosto de quem está falando, ou None (uma pessoa só, empate,
+    ninguém falando ou sem medida da boca).
+
+    Num react, o vídeo reagido de um lado e o locutor do outro estão sempre na imagem; o tamanho do rosto não diz
+    quem fala. A boca diz: a de quem fala abre e fecha, a do outro fica quase parada (e o vídeo reagido pausado
+    enquanto o locutor comenta fica parado de vez).
+    """
+    return _falas(amostras)[0]
+
+
+def _falas(amostras: list[tuple[float, list[Rosto]]]) -> tuple[list[Rosto | None], list[Rosto | None]]:
+    """(quem fala com certeza, quem mexe mais a boca mesmo sem certeza). O segundo diz onde a troca começou de fato:
+    a fala de um vai crescendo enquanto a do outro some, e a certeza só chega no meio dessa passagem."""
+    ts = [t for t, _ in amostras]
+    validos = [_validos(rs) for _, rs in amostras]
+    out: list[Rosto | None] = []
+    inclina: list[Rosto | None] = []
+    a = b = 0
+    for i, t in enumerate(ts):
+        while ts[a] < t - FALA_JANELA_S:
+            a += 1
+        while b + 1 < len(ts) and ts[b + 1] <= t + FALA_JANELA_S:
+            b += 1
+        rs = validos[i]
+        if len(rs) < 2:
+            out.append(None)
+            inclina.append(None)
+            continue
+        notas = []
+        for r in rs:
+            vs = []
+            for j in range(a, b + 1):
+                par = [x for x in validos[j] if x.fala is not None and _mesma_pessoa(r, x)]
+                if par:
+                    vs.append(min(par, key=lambda x: abs(x.cx - r.cx) + abs(x.cy - r.cy)).fala)
+            notas.append((float(np.mean(vs)) if len(vs) >= 2 else 0.0, r))
+        notas.sort(key=lambda n: n[0], reverse=True)
+        (n1, r1), (n2, _) = notas[0], notas[1]
+        out.append(r1 if n1 >= FALA_MIN and n1 >= FALA_RAZAO * n2 else None)
+        inclina.append(r1 if n1 >= FALA_MIN / 2 and n1 > 1.1 * n2 else None)
+    return out, inclina
+
+
 def _escolher_locutor(amostras: list[tuple[float, list[Rosto]]],
                       cenas: list[float]) -> tuple[list[Rosto | None], list[bool]]:
     """Quem a câmera segue em cada amostra (None = ninguém visto; a câmera segura) e onde houve troca de pessoa.
 
-    Fica na mesma pessoa enquanto ela aparece; só troca se ela sumir por TROCA_AUSENTE_S ou se outro rosto dominar o
-    quadro por TROCA_DOMINIO_S. Assim duas pessoas parecidas em tamanho não fazem a câmera ir e voltar.
+    Fica na mesma pessoa enquanto ela aparece; só troca se ela sumir por TROCA_AUSENTE_S, se outra pessoa falar por
+    TROCA_FALA_S (quem_fala) ou, sem saber quem fala, se outro rosto dominar o quadro por TROCA_DOMINIO_S. Assim duas
+    pessoas parecidas em tamanho não fazem a câmera ir e voltar, e num react a câmera vai para quem está falando.
     """
+    falantes, inclina = _falas(amostras)
     alvo: Rosto | None = None
-    faltou = dominio = 0.0
-    k_falta = k_dominio = 0  # amostra em que o locutor sumiu / em que o outro rosto passou a dominar
+    faltou = dominio = falou = 0.0
+    k_falta = k_dominio = k_fala = 0  # amostra em que o locutor sumiu / o outro passou a dominar / o outro começou a falar
     ci = 0
     out: list[Rosto | None] = []
     trocas: list[bool] = []
@@ -274,17 +377,34 @@ def _escolher_locutor(amostras: list[tuple[float, list[Rosto]]],
         dt, t_ant = max(0.0, t - t_ant), t
         while ci < len(cenas) and cenas[ci] <= t:
             ci += 1
-            alvo, faltou, dominio = None, 0.0, 0.0  # cena nova: escolhe de novo
+            alvo, faltou, dominio, falou = None, 0.0, 0.0, 0.0  # cena nova: escolhe de novo
         rs = _validos(rostos) or list(rostos)
         maior = max(rs, key=lambda r: r.area) if rs else None
+        fala = falantes[i]
         mesmo = None
         if alvo is not None and rs:
             perto = min(rs, key=lambda r: abs(r.cx - alvo.cx) + abs(r.cy - alvo.cy))
             mesmo = perto if _mesma_pessoa(alvo, perto) else None
         troca = False
-        if mesmo is not None:
-            faltou = 0.0
-            if maior is not mesmo and mesmo.area < 0.6 * maior.area:
+        if mesmo is not None and fala is not None and fala is not mesmo:  # o outro está falando
+            faltou = dominio = 0.0
+            k_fala = i if falou == 0.0 else k_fala
+            falou += dt if falou else 1e-9
+            if falou >= TROCA_FALA_S:
+                alvo, falou = fala, 0.0
+                ult = max((j for j in range(len(trocas)) if trocas[j]), default=0)
+                while k_fala - 1 > ult and inclina[k_fala - 1] is not None and _mesma_pessoa(fala, inclina[k_fala - 1]):
+                    k_fala -= 1  # a fala dele já vinha ganhando antes da certeza: a câmera chega quando ela começou
+                trocar(fala, k_fala)
+                troca = k_fala >= i
+            else:
+                alvo = mesmo
+            out.append(alvo)
+        elif mesmo is not None:
+            faltou = falou = 0.0
+            if fala is mesmo:  # quem a câmera segue está falando: o tamanho do outro não tira ela dele
+                dominio = 0.0
+            elif maior is not mesmo and mesmo.area < 0.6 * maior.area:
                 k_dominio = i if dominio == 0.0 else k_dominio
                 dominio += dt if dominio else 1e-9
             else:
@@ -297,9 +417,10 @@ def _escolher_locutor(amostras: list[tuple[float, list[Rosto]]],
                 alvo = mesmo
             out.append(alvo)
         elif alvo is None:
-            alvo = maior
-            out.append(maior)
+            alvo = fala or maior
+            out.append(alvo)
         else:
+            falou = 0.0
             k_falta = i if faltou == 0.0 else k_falta
             faltou += dt if faltou else 1e-9
             if maior is not None and faltou >= TROCA_AUSENTE_S:

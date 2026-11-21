@@ -273,7 +273,8 @@ def _camada_referencias(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Time
         if not refs:
             return None
         pasta_r = pasta / "referencias-camada"
-        jan = referencias.preparar(referencias.janelas(refs, tl.duracao), pasta, pasta_r)
+        titulo_ate = min(estilo.cartela.duracao, tl.duracao) if clip.cartela and clip.titulo else 0.0
+        jan = referencias.preparar(referencias.janelas(refs, tl.duracao, titulo_ate), pasta, pasta_r)
         visual = referencias.visual_do_estilo(estilo, clip.estilo or "")
         fonte = estilo.legenda.fonte
         _, p_fonte = hyperframes._fonte_css(fonte, [projeto.canal.path / "assets" / "fontes"])
