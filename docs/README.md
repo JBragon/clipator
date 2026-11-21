@@ -6,6 +6,7 @@ Fase atual: versão 0.1, primeira versão pública. O motor fica em `motor/` e o
 | --- | --- |
 | [requisitos-arquitetura.md](requisitos-arquitetura.md) | Documento principal: visão, fluxo, stack, detecção de virais, estilos, títulos, multiagente, MCP local, instalação, integração das skills e perguntas em aberto |
 | [instalacao.md](instalacao.md) | Instalador de um comando (Windows, Mac e Linux), opções, manutenção, desinstalação, GPU e como publicar o app |
+| [modo-remoto.md](modo-remoto.md) | Modo remoto: acompanhar e aprovar cortes pelo celular, em casa e fora, com o Tailscale (passo a passo, segurança e problemas comuns) |
 | [hyperframes.md](hyperframes.md) | Motor HyperFrames dos estilos animados: como renderiza, como instalar e como escrever um template |
 | [artes.md](artes.md) | As 28 direções de arte com renderizador próprio: plano, âncoras, parâmetros, mídia e como conferir |
 | [direcao-de-arte.md](direcao-de-arte.md) | Direção de arte do canal (`arte/direcao.yaml`): dicionário dos tokens, predefinidos, validador, prancha, rotas, aprovação, uso nos estilos e comandos `clipator arte` |

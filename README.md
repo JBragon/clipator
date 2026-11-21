@@ -17,6 +17,7 @@ App local, open-source e gratuito que transforma um vídeo longo (link ou upload
 - Corta em 9:16, 1:1, 4:5 ou 16:9, segue o rosto e queima a legenda animada fora da zona que o app da plataforma cobre.
 - Traz dezenas de estilos prontos, de legenda simples a estilos animados e direções de arte com cenas desenhadas por cima do vídeo ([docs/artes.md](docs/artes.md)).
 - Gera thumbnails 1280x720, títulos e o pacote de postagem para Shorts, Reels e TikTok, conferido contra os limites de cada um.
+- Modo remoto: com o PC ligado, você acompanha, aprova cortes e baixa os clips pelo celular, em casa ou na rua, pelo Tailscale e sem abrir portas no roteador ([docs/modo-remoto.md](docs/modo-remoto.md)).
 - Funciona sem IA e offline depois do download do vídeo. Tudo vira arquivo num workspace que dá para versionar com git.
 
 ## Instalar

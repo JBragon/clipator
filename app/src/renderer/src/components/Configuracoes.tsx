@@ -4,6 +4,7 @@ import { useT } from '../i18n'
 import { noElectron, ponte } from '../ponte'
 import type { Navegadores } from './AvisoCookies'
 import { useContaYoutube } from './ContaYoutube'
+import { ModoRemoto } from './ModoRemoto'
 
 type Agente = { instalado: boolean; versao?: string | null; logado?: boolean | null }
 type Config = {
@@ -109,6 +110,7 @@ export function Configuracoes(props: { api: Api; config: Config; salvar(c: Parti
           </select>
         </label>
       </section>
+      <ModoRemoto api={api} />
       <section>
         <h3>{t.contaYoutube}</h3>
         <p className="dica" style={{ margin: 0 }}>{t.contaYoutubeDica}</p>
