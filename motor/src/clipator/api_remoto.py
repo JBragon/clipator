@@ -180,11 +180,33 @@ def criar_app_remoto(srv: Servico, remoto: Remoto) -> FastAPI:
                   "texto": (c.get("texto") or "")[:280], "motivo": (c.get("ia") or {}).get("motivo", ""),
                   "clip": por_cand.get(c["id"])} for c in p.candidatos()]
         return {"id": p.id, "titulo": m.titulo, "fase": gerenciar.status_projeto(p)["fase"],
+                "tem_video": p.video_path() is not None,
                 "etapas": {k: v.status for k, v in m.etapas.items()}, "candidatos": cands,
                 "clips": [{"id": c.id, "titulo": c.titulo, "status": c.status, "formato": c.formato,
                            "estilo": c.estilo, "duracao": round(c.fim - c.inicio, 1),
-                           "saida": (d / "saida.mp4").exists(), "preview": (d / "preview.mp4").exists()}
+                           "saida": (d / "saida.mp4").exists(), "preview": (d / "preview.mp4").exists(),
+                           "capa": (d / "thumb.png").exists()}
                           for c, d in clips]}
+
+    @app.get("/m/api/canais/{canal}/projetos/{projeto}/video-original", dependencies=dep)
+    def video_original(canal: str, projeto: str) -> FileResponse:
+        """O vídeo baixado, para a prévia de cada corte. O celular pede só o trecho (#t=início,fim) por Range."""
+        v = proj(canal, projeto).video_path()
+        if v is None or not v.is_file():
+            raise HTTPException(404, "O vídeo ainda não foi baixado.")
+        tipo = {".mp4": "video/mp4", ".m4v": "video/mp4", ".mov": "video/quicktime", ".webm": "video/webm",
+                ".mkv": "video/x-matroska"}.get(v.suffix.lower(), "application/octet-stream")
+        return FileResponse(v, media_type=tipo)
+
+    @app.get("/m/api/canais/{canal}/projetos/{projeto}/clips/{clip_id}/capa", dependencies=dep)
+    def capa(canal: str, projeto: str, clip_id: str) -> FileResponse:
+        try:
+            _, pasta = proj(canal, projeto).clip(clip_id)
+        except WorkspaceError as exc:
+            raise HTTPException(404, str(exc)) from exc
+        if not (pasta / "thumb.png").is_file():
+            raise HTTPException(404, "Sem capa")
+        return FileResponse(pasta / "thumb.png", media_type="image/png", headers={"Cache-Control": "private, max-age=300"})
 
     @app.get("/m/api/canais/{canal}/projetos/{projeto}/candidatos/{cid}/quadro", dependencies=dep)
     def quadro(canal: str, projeto: str, cid: str) -> FileResponse:

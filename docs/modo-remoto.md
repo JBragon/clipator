@@ -64,7 +64,8 @@ No navegador do celular, use **Adicionar à tela inicial** (Android: menu ⋮; i
 - O PC precisa estar **ligado, com o Clipator aberto** e com o Tailscale conectado. Configure o PC para não entrar em suspensão enquanto você quiser acessar de fora (no Windows: Configurações → Sistema → Energia → "Colocar em suspensão" → Nunca, na tomada).
 - No celular, o Tailscale precisa estar **ativo** quando você abrir a página fora de casa.
 - A página se atualiza sozinha: a cada 3 segundos quando algo está rodando, a cada 10 quando o PC está parado.
-- Para baixar um clip, abra o vídeo, aba **Clips**, e toque em **Baixar**.
+- Dentro de um vídeo, os cortes ficam nas abas **Shorts** e **Longos 16:9**, do de nota mais alta para o de nota mais baixa. Toque na imagem de um corte para ver a **prévia** (o trecho do vídeo original) e em **Selecionar** para escolher. Depois escolha o estilo na barra de baixo e toque em **Aprovar**.
+- Para baixar um clip, abra o vídeo, vá na aba **Clips**, e toque em **Baixar**.
 
 ## Segurança
 

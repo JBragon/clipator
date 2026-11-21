@@ -156,6 +156,20 @@ def test_celular_assiste_e_baixa_o_clip(ambiente):
     assert r.content == b"0123456789" and "attachment" in r.headers["content-disposition"]
 
 
+def test_previa_do_corte_vem_do_video_original(ambiente):
+    _, rem, app, p = ambiente
+    cl = pareado(rem, app)
+    base = f"/m/api/canais/teste/projetos/{p.id}"
+    assert cl.get(base).json()["tem_video"] is False
+    assert cl.get(f"{base}/video-original").status_code == 404
+    p.fonte_dir.mkdir(parents=True, exist_ok=True)
+    (p.fonte_dir / "video.mp4").write_bytes(bytes(range(100)))
+    assert cl.get(base).json()["tem_video"] is True
+    r = cl.get(f"{base}/video-original", headers={"Range": "bytes=10-19"})
+    assert r.status_code == 206 and r.content == bytes(range(10, 20)) and r.headers["content-type"] == "video/mp4"
+    assert TestClient(app, client=CASA).get(f"{base}/video-original").status_code == 401  # sem pareamento
+
+
 def test_novo_video_so_por_link(ambiente):
     srv, rem, app, _ = ambiente
     srv.fila.registrar("analisar", lambda params, ctx: None)

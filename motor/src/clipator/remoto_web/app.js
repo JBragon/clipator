@@ -25,7 +25,7 @@ const TEXTOS = {
     nCortes: (n) => (n === 1 ? '1 corte' : `${n} cortes`),
     nClips: (n) => (n === 1 ? '1 clip' : `${n} clips`),
     semCortes: 'Os cortes aparecem aqui quando a análise terminar.',
-    semClips: 'Aprove cortes na aba Cortes para gerar os clips.',
+    semClips: 'Selecione cortes nas abas Shorts ou Longos e toque em Aprovar para gerar os clips.',
     aprovar: (n) => (n === 1 ? 'Aprovar 1 corte e gerar' : `Aprovar ${n} cortes e gerar`),
     estilo: 'Estilo',
     estiloPadrao: 'padrão do canal',
@@ -43,7 +43,19 @@ const TEXTOS = {
     status: { na_fila: 'na fila', rodando: 'rodando', ok: 'pronto', erro: 'erro', cancelado: 'cancelado', interrompido: 'interrompido' },
     statusClip: { selecionado: 'na fila', renderizando: 'gerando', renderizado: 'pronto', erro: 'erro' },
     tipos: { analisar: 'Análise do vídeo', renderizar: 'Gerando clips', ranquear: 'Nota da IA', transcrever: 'Transcrição', candidatos: 'Achando cortes', thumbnail: 'Thumbnail', postagem: 'Textos da postagem', checagem: 'Checagem de fatos', acabamento: 'Acabamento' },
-    recentes: 'Terminados há pouco'
+    recentes: 'Terminados há pouco',
+    shorts: 'Shorts',
+    longos: 'Longos 16:9',
+    previa: 'Prévia',
+    fecharPrevia: 'Fechar prévia',
+    selecionar: 'Selecionar',
+    selecionado: 'Selecionado',
+    limpar: 'Limpar',
+    nSelecionados: (n) => (n === 1 ? '1 selecionado' : `${n} selecionados`),
+    semShorts: 'Nenhum corte de short neste vídeo.',
+    semLongos: 'Nenhum corte longo neste vídeo (o vídeo precisa ter mais de 8 minutos).',
+    semPrevia: 'O vídeo original ainda não foi baixado.',
+    conectado: 'conectado'
   },
   en: {
     parearTitulo: 'Connect to your PC',
@@ -67,7 +79,7 @@ const TEXTOS = {
     nCortes: (n) => (n === 1 ? '1 cut' : `${n} cuts`),
     nClips: (n) => (n === 1 ? '1 clip' : `${n} clips`),
     semCortes: 'Cuts show up here when the analysis finishes.',
-    semClips: 'Approve cuts in the Cuts tab to make clips.',
+    semClips: 'Select cuts in the Shorts or Long tabs and tap Approve to make clips.',
     aprovar: (n) => (n === 1 ? 'Approve 1 cut and render' : `Approve ${n} cuts and render`),
     estilo: 'Style',
     estiloPadrao: 'channel default',
@@ -85,7 +97,19 @@ const TEXTOS = {
     status: { na_fila: 'queued', rodando: 'running', ok: 'done', erro: 'error', cancelado: 'canceled', interrompido: 'interrupted' },
     statusClip: { selecionado: 'queued', renderizando: 'rendering', renderizado: 'ready', erro: 'error' },
     tipos: { analisar: 'Video analysis', renderizar: 'Rendering clips', ranquear: 'AI score', transcrever: 'Transcription', candidatos: 'Finding cuts', thumbnail: 'Thumbnail', postagem: 'Post texts', checagem: 'Fact check', acabamento: 'Finishing' },
-    recentes: 'Recently finished'
+    recentes: 'Recently finished',
+    shorts: 'Shorts',
+    longos: 'Long 16:9',
+    previa: 'Preview',
+    fecharPrevia: 'Close preview',
+    selecionar: 'Select',
+    selecionado: 'Selected',
+    limpar: 'Clear',
+    nSelecionados: (n) => (n === 1 ? '1 selected' : `${n} selected`),
+    semShorts: 'No short cuts in this video.',
+    semLongos: 'No long cuts in this video (it needs to be longer than 8 minutes).',
+    semPrevia: 'The original video has not been downloaded yet.',
+    conectado: 'connected'
   }
 }
 let t = TEXTOS[(navigator.language || 'pt').toLowerCase().startsWith('pt') ? 'pt' : 'en']
@@ -109,8 +133,13 @@ const $ = (id) => document.getElementById(id)
 const enc = encodeURIComponent
 const mmss = (s) => {
   s = Math.max(0, Math.round(s || 0))
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const ss = String(s % 60).padStart(2, '0')
+  return h ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`
 }
+const duracao = (s) => (s >= 90 ? `${Math.round(s / 60)} min` : `${Math.round(s)} s`)
+const corNota = (n) => (n >= 65 ? 'alta' : n >= 45 ? 'media' : 'baixa')
 
 class SemPareamento extends Error {}
 
@@ -142,13 +171,20 @@ function avisar(msg) {
 }
 
 // ---- estado -------------------------------------------------------------------------------------
+// A página busca os dados a cada poucos segundos, mas só redesenha um pedaço da tela quando o que ele
+// mostra mudou, e nunca enquanto a pessoa está usando um campo, uma lista ou um vídeo daquele pedaço.
+// (Redesenhar a cada busca fechava a lista de estilos e fazia a tela pular.)
 const estado = {
   canal: localStorage.getItem('clipator.canal') || '',
-  aba: 'cortes',
+  aba: null, // 'shorts' | 'longos' | 'clips' (null: escolhe sozinho)
   marcados: new Set(),
   estiloEscolhido: '',
-  ultimo: null // último /estado
+  previa: null, // id do corte com a prévia aberta
+  projetoAberto: '',
+  dados: null, // o que a tela atual mostra
+  erro: null
 }
+const assinaturas = { jobs: '', conteudo: '', rodape: '' }
 let timer = 0
 
 function rota() {
@@ -156,43 +192,91 @@ function rota() {
   return m ? { canal: decodeURIComponent(m[1]), projeto: decodeURIComponent(m[2]) } : null
 }
 
+async function buscar() {
+  const st = await api('GET', '/m/api/estado')
+  if (st.idioma && TEXTOS[st.idioma]) t = TEXTOS[st.idioma]
+  const r = rota()
+  if (r) {
+    const chave = `${r.canal}/${r.projeto}`
+    if (chave !== estado.projetoAberto) {
+      Object.assign(estado, { projetoAberto: chave, aba: null, marcados: new Set(), estiloEscolhido: '', previa: null })
+    }
+    const base = `/m/api/canais/${enc(r.canal)}/projetos/${enc(r.projeto)}`
+    const anterior = estado.dados && estado.dados.tela === 'projeto' && estado.dados.canal === r.canal ? estado.dados.estilos : null
+    const [projeto, estilos] = await Promise.all([
+      api('GET', base),
+      anterior ? Promise.resolve(anterior) : api('GET', `/m/api/canais/${enc(r.canal)}/estilos`).catch(() => [])
+    ])
+    return { tela: 'projeto', st, canal: r.canal, base, projeto, estilos }
+  }
+  estado.projetoAberto = ''
+  const canais = await api('GET', '/m/api/canais')
+  if (canais.length && !canais.some((c) => c.slug === estado.canal)) estado.canal = (canais.find((c) => c.projetos > 0) || canais[0]).slug
+  const projetos = canais.length ? await api('GET', `/m/api/canais/${enc(estado.canal)}/projetos`) : []
+  return { tela: 'inicio', st, canais, projetos }
+}
+
 async function atualizar() {
   clearTimeout(timer)
   try {
-    const st = await api('GET', '/m/api/estado')
-    estado.ultimo = st
-    if (st.idioma && TEXTOS[st.idioma]) t = TEXTOS[st.idioma]
-    $('pc').textContent = st.pc
-    const r = rota()
-    $('voltar').hidden = !r
-    if (r) await telaProjeto(r.canal, r.projeto, st)
-    else await telaInicio(st)
+    estado.dados = await buscar()
+    estado.erro = null
   } catch (e) {
-    if (e instanceof SemPareamento) return telaParear()
-    telaErro(e.message)
+    if (e instanceof SemPareamento) {
+      estado.dados = null
+      return telaParear()
+    }
+    estado.erro = e.message
   }
+  desenhar()
   // mais rápido quando tem coisa rodando; parado quando a aba está escondida
-  if (!document.hidden) timer = setTimeout(atualizar, estado.ultimo && estado.ultimo.ativos.length ? 3000 : 10000)
+  const ativos = estado.dados && estado.dados.st.ativos.length
+  if (!document.hidden) timer = setTimeout(atualizar, ativos ? 3000 : 10000)
 }
 
-function trocar(...nos) {
-  const raiz = $('raiz')
-  // guarda os vídeos tocando: recriar a tela a cada atualização faria o vídeo parar
-  const tocando = [...raiz.querySelectorAll('video')].filter((v) => !v.paused || v.currentTime > 0)
-  const manter = new Map(tocando.map((v) => [v.dataset.chave, v]))
-  raiz.replaceChildren(...nos.flat().filter(Boolean))
-  for (const v of raiz.querySelectorAll('video')) {
-    const velho = manter.get(v.dataset.chave)
-    if (velho) v.replaceWith(velho)
+// Alguém está mexendo neste pedaço da tela? Então não troca nada nele agora.
+function emUso(caixa) {
+  const a = document.activeElement
+  if (a && caixa.contains(a) && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true
+  return [...caixa.querySelectorAll('video')].some((v) => !v.paused && !v.ended)
+}
+
+function pintar(id, assinatura, montar, forcar) {
+  const caixa = $(id)
+  if (!forcar && assinatura === assinaturas[id]) return
+  if (!forcar && emUso(caixa)) return // tenta de novo na próxima busca
+  assinaturas[id] = assinatura
+  caixa.replaceChildren(...[montar()].flat().filter(Boolean))
+}
+
+function desenhar(forcar = false) {
+  const d = estado.dados
+  $('voltar').hidden = !rota()
+  if (estado.erro && !d) {
+    $('jobs').replaceChildren()
+    $('rodape').replaceChildren()
+    assinaturas.jobs = assinaturas.rodape = ''
+    pintar('conteudo', `erro:${estado.erro}`, () => el('div', { class: 'vazio' },
+      el('p', { class: 'erro' }, estado.erro),
+      el('button', { class: 'botao', onclick: atualizar }, t.tentarDeNovo)), true)
+    return
+  }
+  if (!d) return
+  $('pc').textContent = estado.erro ? `${d.st.pc} · ${t.semConexao}` : d.st.pc
+  $('ponto').className = `ponto ${estado.erro ? 'off' : 'on'}`
+  const jobs = d.tela === 'projeto' ? d.st.ativos.filter((j) => j.projeto === d.projeto.id) : d.st.ativos
+  pintar('jobs', JSON.stringify([d.tela, jobs, t === TEXTOS.en]), () => blocoJobs(jobs, d.tela === 'inicio'), forcar)
+  if (d.tela === 'inicio') {
+    pintar('conteudo', JSON.stringify([d.tela, estado.canal, d.canais, d.projetos]), () => telaInicio(d), forcar)
+    pintar('rodape', '', () => null, forcar)
+  } else {
+    const p = d.projeto
+    pintar('conteudo', JSON.stringify([d.tela, p, estado.aba, [...estado.marcados], estado.previa]), () => telaProjeto(d), forcar)
+    pintar('rodape', JSON.stringify([estado.marcados.size, estado.estiloEscolhido, d.estilos, estado.aba]), () => rodapeAprovar(d), forcar)
   }
 }
 
-// ---- telas --------------------------------------------------------------------------------------
-function telaErro(msg) {
-  $('voltar').hidden = !rota()
-  trocar(el('div', { class: 'vazio' }, el('p', { class: 'erro' }, msg), el('button', { class: 'botao', onclick: atualizar }, t.tentarDeNovo)))
-}
-
+// ---- pareamento ---------------------------------------------------------------------------------
 function nomeAparelho() {
   const ua = navigator.userAgent
   if (/iPhone/.test(ua)) return 'iPhone'
@@ -203,6 +287,9 @@ function nomeAparelho() {
 
 function telaParear(erro) {
   $('voltar').hidden = true
+  $('jobs').replaceChildren()
+  $('rodape').replaceChildren()
+  Object.keys(assinaturas).forEach((k) => (assinaturas[k] = ''))
   const codigo = el('input', { name: 'codigo', autocomplete: 'one-time-code', autocapitalize: 'off', spellcheck: 'false', required: true })
   const nome = el('input', { name: 'nome', value: localStorage.getItem('clipator.nome') || nomeAparelho(), maxlength: '60' })
   const botao = el('button', { class: 'botao primario largo', type: 'submit' }, t.conectar)
@@ -217,7 +304,7 @@ function telaParear(erro) {
   el('label', { class: 'campo' }, t.parearCodigo, codigo),
   el('label', { class: 'campo' }, t.nomeAparelho, nome),
   botao)
-  trocar(el('section', { class: 'pareamento' },
+  $('conteudo').replaceChildren(el('section', { class: 'pareamento' },
     el('img', { src: 'icone.svg', alt: '' }),
     el('h1', {}, t.parearTitulo),
     el('p', { class: 'dica' }, t.parearDica),
@@ -235,53 +322,66 @@ async function parear(codigo, nome) {
   }
 }
 
-function cartaoJob(j) {
+// ---- jobs ---------------------------------------------------------------------------------------
+function cartaoJob(j, comLink) {
   const andando = j.status === 'rodando' || j.status === 'na_fila'
   const pct = Math.round((j.progresso || 0) * 100)
-  return el('div', { class: 'cartao' },
+  return el('div', { class: 'job' },
     el('div', { class: 'linha' },
-      el('div', { class: 'cresce titulo' }, t.tipos[j.tipo] || j.tipo),
-      el('span', { class: `selo ${j.status === 'ok' ? 'ok' : j.status === 'erro' ? 'erro' : andando ? 'andando' : ''}` }, t.status[j.status] || j.status)),
+      el('span', { class: `girando ${j.status === 'rodando' ? '' : 'parado'}`, 'aria-hidden': 'true' }),
+      el('div', { class: 'cresce' },
+        el('div', { class: 'titulo' }, t.tipos[j.tipo] || j.tipo),
+        el('div', { class: 'meta' }, j.erro || j.mensagem || t.status[j.status] || '')),
+      el('span', { class: 'pct' }, andando ? `${pct}%` : t.status[j.status] || j.status)),
     andando ? el('div', { class: 'barra' }, el('div', { style: `width:${pct}%` })) : null,
-    el('div', { class: 'meta' }, j.erro || j.mensagem || ''),
-    andando ? el('div', { class: 'linha', style: 'margin-top:8px' },
-      j.canal && j.projeto ? el('a', { class: 'botao', href: `#/p/${enc(j.canal)}/${enc(j.projeto)}` }, t.abrirVideo) : null,
+    el('div', { class: 'linha acoes' },
+      comLink && j.canal && j.projeto ? el('a', { class: 'link', href: `#/p/${enc(j.canal)}/${enc(j.projeto)}` }, `${t.abrirVideo} ›`) : null,
       el('span', { class: 'cresce' }),
-      el('button', {
-        class: 'botao perigo',
+      andando ? el('button', {
+        class: 'link perigo',
         onclick: async (ev) => {
           ev.currentTarget.disabled = true
           await api('POST', `/m/api/jobs/${enc(j.id)}/cancelar`).catch((e) => avisar(e.message))
           atualizar()
         }
-      }, t.cancelar)) : null)
+      }, t.cancelar) : null))
 }
 
-async function telaInicio(st) {
-  const canais = await api('GET', '/m/api/canais')
-  if (!canais.length) return trocar(blocoJobs(st), el('p', { class: 'vazio' }, t.semCanais), rodapeSair())
-  if (!canais.some((c) => c.slug === estado.canal)) estado.canal = (canais.find((c) => c.projetos > 0) || canais[0]).slug
-  const projetos = await api('GET', `/m/api/canais/${enc(estado.canal)}/projetos`)
+function blocoJobs(jobs, inicio) {
+  if (!jobs.length) return inicio ? el('p', { class: 'dica nada' }, t.nadaRodando) : null
+  return el('div', {}, el('h2', {}, t.rodando), jobs.map((j) => cartaoJob(j, inicio)))
+}
 
+// ---- início -------------------------------------------------------------------------------------
+function seloFase(fase) {
+  const tipo = fase === 'erro' ? 'erro' : fase === 'clips' ? 'ok' : fase === 'baixando' || fase === 'analisando' ? 'andando' : ''
+  return el('span', { class: `selo ${tipo}` }, t.fases[fase] || fase)
+}
+
+function telaInicio(d) {
+  if (!d.canais.length) return [el('p', { class: 'vazio' }, t.semCanais), rodapeSair()]
   const sel = el('select', {
     class: 'campo-solto',
     'aria-label': t.canal,
     onchange: (ev) => {
       estado.canal = ev.target.value
       localStorage.setItem('clipator.canal', estado.canal)
+      ev.target.blur()
       atualizar()
     }
-  }, canais.map((c) => el('option', { value: c.slug, selected: c.slug === estado.canal }, c.nome)))
+  }, d.canais.map((c) => el('option', { value: c.slug, selected: c.slug === estado.canal }, c.nome)))
 
   const link = el('input', { type: 'url', inputmode: 'url', placeholder: 'https://youtube.com/watch?v=…', required: true, autocomplete: 'off' })
   const enviar = el('button', { class: 'botao primario', type: 'submit' }, t.analisar)
   const novo = el('form', {
+    class: 'cartao novo',
     onsubmit: async (ev) => {
       ev.preventDefault()
       enviar.disabled = true
       try {
         const r = await api('POST', `/m/api/canais/${enc(estado.canal)}/projetos`, { link: link.value })
         avisar(t.enviado)
+        link.blur()
         location.hash = `#/p/${enc(estado.canal)}/${enc(r.id)}`
       } catch (e) {
         avisar(e.message)
@@ -290,25 +390,21 @@ async function telaInicio(st) {
     }
   }, el('label', { class: 'campo' }, t.linkVideo, link), enviar)
 
-  const lista = projetos.length
-    ? projetos.map((p) => el('a', { class: 'cartao', href: `#/p/${enc(estado.canal)}/${enc(p.id)}` },
-      el('div', { class: 'linha' },
-        el('div', { class: 'cresce titulo' }, p.titulo),
-        el('span', { class: `selo ${p.fase === 'erro' ? 'erro' : p.fase === 'clips' ? 'ok' : p.fase === 'baixando' || p.fase === 'analisando' ? 'andando' : ''}` }, t.fases[p.fase] || p.fase)),
-      el('div', { class: 'meta' }, `${t.nCortes(p.cortes)} · ${t.nClips(p.clips)}`)))
+  const lista = d.projetos.length
+    ? d.projetos.map((p) => el('a', { class: 'cartao projeto', href: `#/p/${enc(estado.canal)}/${enc(p.id)}` },
+      el('div', { class: 'cresce' },
+        el('div', { class: 'titulo' }, p.titulo),
+        el('div', { class: 'meta' }, `${t.nCortes(p.cortes)} · ${t.nClips(p.clips)}`)),
+      seloFase(p.fase),
+      el('span', { class: 'seta', 'aria-hidden': 'true' }, '›')))
     : [el('p', { class: 'vazio' }, t.semVideos)]
 
-  trocar(blocoJobs(st),
+  return [
     el('h2', {}, t.canal), sel,
     el('h2', {}, t.novoVideo), novo,
     el('h2', {}, t.videos), ...lista,
-    rodapeSair())
-}
-
-function blocoJobs(st) {
-  return el('div', {},
-    el('h2', {}, t.rodando),
-    st.ativos.length ? st.ativos.map(cartaoJob) : el('p', { class: 'dica' }, t.nadaRodando))
+    rodapeSair()
+  ]
 }
 
 function rodapeSair() {
@@ -322,69 +418,98 @@ function rodapeSair() {
   }, t.sair))
 }
 
-let projetoAberto = ''
-let estilosCache = { canal: '', lista: [] }
-
-async function telaProjeto(canal, projeto, st) {
-  const chave = `${canal}/${projeto}`
-  if (chave !== projetoAberto) {
-    projetoAberto = chave
-    estado.marcados = new Set()
-    estado.aba = 'cortes'
-    estado.estiloEscolhido = ''
-  }
-  const base = `/m/api/canais/${enc(canal)}/projetos/${enc(projeto)}`
-  const p = await api('GET', base)
-  if (estilosCache.canal !== canal) estilosCache = { canal, lista: await api('GET', `/m/api/canais/${enc(canal)}/estilos`).catch(() => []) }
-  if (p.clips.length && !p.candidatos.some((c) => !c.clip) && estado.aba === 'cortes' && !estado.marcados.size && estado.trocouAba !== chave) estado.aba = 'clips'
-  const jobsDaqui = st.ativos.filter((j) => j.projeto === projeto)
-
-  const abas = el('div', { class: 'abas', role: 'tablist' },
-    ['cortes', 'clips'].map((a) => el('button', {
-      role: 'tab',
-      'aria-selected': String(estado.aba === a),
-      onclick: () => {
-        estado.aba = a
-        estado.trocouAba = chave
-        atualizar()
-      }
-    }, a === 'cortes' ? `${t.cortes} (${p.candidatos.length})` : `${t.clips} (${p.clips.length})`)))
-
-  const corpo = estado.aba === 'cortes' ? listaCortes(base, p) : listaClips(base, p)
-  trocar(
-    el('h1', {}, p.titulo),
-    el('div', { class: 'linha', style: 'margin-bottom:8px' }, el('span', { class: `selo ${p.fase === 'erro' ? 'erro' : p.fase === 'clips' ? 'ok' : ''}` }, t.fases[p.fase] || p.fase)),
-    jobsDaqui.length ? jobsDaqui.map(cartaoJob) : null,
-    abas, ...corpo,
-    estado.aba === 'cortes' && estado.marcados.size ? rodapeAprovar(base, canal) : null)
+// ---- projeto ------------------------------------------------------------------------------------
+function abaAtual(p) {
+  const shorts = p.candidatos.filter((c) => c.modo !== 'longo')
+  const longos = p.candidatos.filter((c) => c.modo === 'longo')
+  if (estado.aba === 'longos' && longos.length) return 'longos'
+  if (estado.aba) return estado.aba === 'longos' ? 'shorts' : estado.aba
+  return shorts.length ? 'shorts' : longos.length ? 'longos' : 'clips'
 }
 
-function listaCortes(base, p) {
-  if (!p.candidatos.length) return [el('p', { class: 'vazio' }, t.semCortes)]
-  const cor = (n) => (n >= 65 ? 'var(--nota-alta)' : n >= 45 ? 'var(--nota-media)' : 'var(--nota-baixa)')
-  return p.candidatos.map((c) => {
-    const marcado = estado.marcados.has(c.id)
-    const caixa = el('input', {
-      type: 'checkbox',
-      checked: marcado,
-      disabled: !!c.clip,
-      'aria-label': c.titulo || c.id,
-      onchange: () => {
-        if (estado.marcados.has(c.id)) estado.marcados.delete(c.id)
-        else estado.marcados.add(c.id)
-        atualizar()
-      }
+function trocarAba(a) {
+  estado.aba = a
+  estado.previa = null
+  desenhar(true)
+  window.scrollTo({ top: 0 })
+}
+
+function telaProjeto(d) {
+  const p = d.projeto
+  const shorts = p.candidatos.filter((c) => c.modo !== 'longo').sort((a, b) => (b.nota || 0) - (a.nota || 0))
+  const longos = p.candidatos.filter((c) => c.modo === 'longo').sort((a, b) => (b.nota || 0) - (a.nota || 0))
+  const aba = abaAtual(p)
+  const opcoes = [['shorts', `${t.shorts} ${shorts.length}`], ...(longos.length ? [['longos', `${t.longos} ${longos.length}`]] : []), ['clips', `${t.clips} ${p.clips.length}`]]
+
+  const abas = el('div', { class: 'abas', role: 'tablist' }, opcoes.map(([a, rotulo]) =>
+    el('button', { role: 'tab', 'aria-selected': String(aba === a), onclick: () => trocarAba(a) }, rotulo)))
+
+  let corpo
+  if (aba === 'clips') corpo = listaClips(d.base, p)
+  else {
+    const lista = aba === 'longos' ? longos : shorts
+    corpo = lista.length
+      ? lista.map((c) => cartaoCorte(d.base, p, c))
+      : [el('p', { class: 'vazio' }, p.candidatos.length ? (aba === 'longos' ? t.semLongos : t.semShorts) : t.semCortes)]
+  }
+  return [
+    el('div', { class: 'cabecalho' },
+      el('h1', {}, p.titulo),
+      el('div', { class: 'linha' }, seloFase(p.fase),
+        el('span', { class: 'meta' }, `${t.nCortes(p.candidatos.length)} · ${t.nClips(p.clips.length)}`))),
+    abas,
+    el('div', { class: 'lista' }, corpo)
+  ]
+}
+
+function alternarMarcado(id) {
+  if (estado.marcados.has(id)) estado.marcados.delete(id)
+  else estado.marcados.add(id)
+  desenhar(true)
+}
+
+function cartaoCorte(base, p, c) {
+  const marcado = estado.marcados.has(c.id)
+  const aberto = estado.previa === c.id
+  const longo = c.modo === 'longo'
+  let midia
+  if (aberto) {
+    const v = el('video', {
+      class: 'previa',
+      src: `${base}/video-original#t=${c.inicio.toFixed(2)},${c.fim.toFixed(2)}`,
+      controls: true,
+      autoplay: true,
+      playsinline: true,
+      preload: 'auto'
     })
-    return el('label', { class: `cartao corte ${marcado ? 'marcado' : ''}` },
-      el('img', { class: 'quadro', loading: 'lazy', alt: '', src: `${base}/candidatos/${enc(c.id)}/quadro`, onerror: (ev) => (ev.target.style.visibility = 'hidden') }),
-      el('div', { style: 'min-width:0' },
-        el('div', { class: 'linha' },
-          el('span', { class: 'nota', style: `color:${cor(c.nota || 0)}` }, Math.round(c.nota || 0)),
-          el('span', { class: 'meta cresce' }, `${mmss(c.inicio)} · ${Math.round(c.duracao || c.fim - c.inicio)} s${c.modo === 'longo' ? ' · 16:9' : ''}`),
-          c.clip ? el('span', { class: 'selo ok' }, t.jaVirouClip) : caixa),
-        c.titulo ? el('div', { class: 'titulo' }, c.titulo) : null,
-        el('div', { class: 'texto' }, c.motivo || c.texto)))
-  })
+    midia = el('div', { class: 'midia' }, v,
+      el('button', { class: 'fechar', 'aria-label': t.fecharPrevia, onclick: () => { estado.previa = null; desenhar(true) } }, '×'))
+  } else {
+    midia = el('button', {
+      class: 'midia',
+      'aria-label': `${t.previa}: ${c.titulo || c.id}`,
+      disabled: !p.tem_video,
+      onclick: () => { estado.previa = c.id; desenhar(true) }
+    },
+    el('img', { loading: 'lazy', alt: '', src: `${base}/candidatos/${enc(c.id)}/quadro`, onerror: (ev) => ev.target.remove() }),
+    p.tem_video ? el('span', { class: 'play' }, `▶ ${t.previa}`) : null,
+    el('span', { class: 'tempo' }, duracao(c.duracao || c.fim - c.inicio)))
+  }
+  return el('article', { class: `cartao corte ${marcado ? 'marcado' : ''} ${longo ? 'longo' : ''}` },
+    midia,
+    el('div', { class: 'corpo' },
+      el('div', { class: 'linha' },
+        el('span', { class: `nota ${corNota(c.nota || 0)}` }, Math.round(c.nota || 0)),
+        el('span', { class: 'meta cresce' }, `${mmss(c.inicio)} – ${mmss(c.fim)}`),
+        c.clip
+          ? el('span', { class: 'selo ok' }, `✓ ${t.jaVirouClip}`)
+          : el('button', {
+            class: `marcar ${marcado ? 'on' : ''}`,
+            'aria-pressed': String(marcado),
+            onclick: () => alternarMarcado(c.id)
+          }, marcado ? `✓ ${t.selecionado}` : t.selecionar)),
+      c.titulo ? el('div', { class: 'titulo' }, c.titulo) : null,
+      el('div', { class: 'texto' }, c.motivo || c.texto)))
 }
 
 function listaClips(base, p) {
@@ -392,43 +517,57 @@ function listaClips(base, p) {
   return p.clips.map((c) => {
     const pronto = c.saida || c.preview
     const src = `${base}/clips/${enc(c.id)}/video`
-    return el('div', { class: 'cartao clip' },
-      el('div', { class: 'linha' },
-        el('div', { class: 'cresce titulo' }, c.titulo || c.id),
-        el('span', { class: `selo ${c.status === 'renderizado' ? 'ok' : c.status === 'erro' ? 'erro' : 'andando'}` }, t.statusClip[c.status] || c.status)),
-      el('div', { class: 'meta' }, `${c.formato} · ${Math.round(c.duracao)} s · ${c.estilo}`),
-      pronto ? el('video', { src, controls: true, playsinline: true, preload: 'metadata', 'data-chave': c.id }) : el('p', { class: 'dica', style: 'margin-top:8px' }, t.semVideo),
-      pronto ? el('a', { class: 'botao largo', href: `${src}?baixar=true`, download: `${c.id}.mp4` }, `⬇ ${t.baixar}`) : null)
+    const vertical = /^9:16|4:5/.test(c.formato || '')
+    return el('article', { class: 'cartao clip' },
+      pronto
+        ? el('video', { class: vertical ? 'vertical' : '', src, controls: true, playsinline: true, preload: 'metadata', poster: c.capa ? `${base}/clips/${enc(c.id)}/capa` : null })
+        : el('div', { class: 'sem-video' }, t.semVideo),
+      el('div', { class: 'corpo' },
+        el('div', { class: 'linha' },
+          el('div', { class: 'cresce titulo' }, c.titulo || c.id),
+          el('span', { class: `selo ${c.status === 'renderizado' ? 'ok' : c.status === 'erro' ? 'erro' : 'andando'}` }, t.statusClip[c.status] || c.status)),
+        el('div', { class: 'meta' }, `${c.formato} · ${duracao(c.duracao)} · ${c.estilo}`),
+        pronto ? el('a', { class: 'botao largo', href: `${src}?baixar=true`, download: `${c.id}.mp4` }, `⬇ ${t.baixar}`) : null))
   })
 }
 
-function rodapeAprovar(base, canal) {
+function rodapeAprovar(d) {
   const n = estado.marcados.size
-  const lista = estilosCache.lista
+  if (!n) return null
+  const lista = d.estilos
   const padrao = lista.find((e) => e.padrao)
-  const sel = el('select', {
+  const sel = lista.length > 1 ? el('select', {
     class: 'campo-solto',
     'aria-label': t.estilo,
-    onchange: (ev) => (estado.estiloEscolhido = ev.target.value)
+    onchange: (ev) => {
+      estado.estiloEscolhido = ev.target.value
+      ev.target.blur()
+    }
   },
   el('option', { value: '' }, `${t.estilo}: ${padrao ? padrao.nome : ''} (${t.estiloPadrao})`),
-  lista.filter((e) => !e.padrao).map((e) => el('option', { value: e.id, selected: e.id === estado.estiloEscolhido }, e.nome)))
+  lista.filter((e) => !e.padrao).map((e) => el('option', { value: e.id, selected: e.id === estado.estiloEscolhido }, e.nome))) : null
   const botao = el('button', {
-    class: 'botao primario largo',
+    class: 'botao primario cresce',
     onclick: async () => {
       botao.disabled = true
       try {
-        const r = await api('POST', `${base}/aprovar`, { ids: [...estado.marcados], estilo: estado.estiloEscolhido || null })
+        const r = await api('POST', `${d.base}/aprovar`, { ids: [...estado.marcados], estilo: estado.estiloEscolhido || null })
         estado.marcados = new Set()
         estado.aba = 'clips'
         avisar(t.aprovado(r.clips.length))
       } catch (e) {
         avisar(e.message)
       }
-      atualizar()
+      await atualizar()
+      desenhar(true)
     }
   }, t.aprovar(n))
-  return el('div', { class: 'rodape' }, lista.length > 1 ? sel : null, botao)
+  return el('div', { class: 'barra-aprovar' },
+    el('div', { class: 'linha' },
+      el('strong', { class: 'cresce' }, t.nSelecionados(n)),
+      el('button', { class: 'link', onclick: () => { estado.marcados = new Set(); desenhar(true) } }, t.limpar)),
+    sel,
+    el('div', { class: 'linha' }, botao))
 }
 
 // ---- partida ------------------------------------------------------------------------------------
@@ -436,11 +575,16 @@ $('voltar').addEventListener('click', () => {
   location.hash = '#/'
 })
 window.addEventListener('hashchange', () => {
-  if (!lerCodigoDoQr()) atualizar()
+  if (lerCodigoDoQr()) return
+  window.scrollTo({ top: 0 })
+  atualizar()
 })
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) atualizar()
 })
+// quando a pessoa larga a lista ou o vídeo, aplica o que chegou enquanto ela usava
+document.addEventListener('focusout', () => setTimeout(() => desenhar(), 0))
+document.addEventListener('pause', () => setTimeout(() => desenhar(), 0), true)
 
 // o QR code traz o código no fragmento (#parear=...), que nunca vai para o servidor nem para o histórico.
 // Vale também quando a página já estava aberta e o celular lê o QR de novo (só muda o fragmento).
