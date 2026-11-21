@@ -332,6 +332,45 @@ JS = r"""
         pecas.forEach((o, i) => { o.position.y = 0.2 + i * 0.28 + sep * exp * 1.4 * i; o.rotation.y = i * 0.3 + sep * 0.4; });
         camera(AZ, ISO * 0.8, 0.82 + ap * liso((lt - c.fases[1]) / 1.6) - 0.04 * sep); };
     },
+    'atlas-de-percursos': (c, g) => {
+      // um atlas de mesa: terreno em relevo (ruído de senos com a semente da cena), água no vale, a rota em tubo que se desenha,
+      // o cursor que chega a cada marco no segundo em que a nota dele abre, e a câmera que acompanha o cursor
+      const rr = rng(c.semente + 3), fases = [0, 1, 2, 3].map(() => [rr() * 6.28, rr() * 6.28, 0.6 + rr() * 0.9]);
+      const altura = (x, z) => fases.reduce((h, [a, b, f], i) => h + Math.sin(x * f * (i + 1) * 0.7 + a) * Math.cos(z * f * (i + 1) * 0.8 + b) * 0.2 / (i + 1), 0.08);
+      const geo = new T.PlaneGeometry(9, 6.4, 72, 52); geo.rotateX(-Math.PI / 2); const pos = geo.attributes.position, cores = [];
+      const baixo = cor('--superficie'), alto = cor('--superficie').clone().lerp(cor('--texto'), 0.35), agua = cor('--fundo').clone().lerp(cor('--texto'), 0.16), NIVEL = 0.0;
+      for (let i = 0; i < pos.count; i++) { const x = pos.getX(i), z = pos.getZ(i), h = altura(x, z), borda = Math.min(1, Math.min(4.5 - Math.abs(x), 3.2 - Math.abs(z)) / 0.5);
+        pos.setY(i, Math.max(NIVEL - 0.02, h) * borda); const k = clamp((h - NIVEL) / 0.35), ka = clamp((NIVEL + 0.03 - h) / 0.08); const cc = baixo.clone().lerp(alto, k).lerp(agua, ka); cores.push(cc.r, cc.g, cc.b); }
+      geo.setAttribute('color', new T.Float32BufferAttribute(cores, 3)); geo.computeVertexNormals();
+      const terreno = malha(geo, new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true })); terreno.castShadow = false; g.add(terreno);
+      sol.shadow.normalBias = 0.05; sol.shadow.bias = -0.003; // relevo recebe a sombra dos marcos sem listras de acne
+      g.add(caixa(9.1, 0.3, 6.5, mat(cor('--fundo').clone().lerp(cor('--superficie'), 0.4)), 0, -0.32, 0));
+      const n = Math.max(2, c.marcos), sobre = (x, z) => Math.max(NIVEL, altura(x, z)) + 0.07;
+      const lado = (i) => (c.lados[i] === undefined ? (i % 2 ? 1 : -1) : c.lados[i]); // um marco só vira origem e destino
+      const marcos = []; for (let i = 0; i < n; i++) { const x = -3.4 + 6.8 * i / (n - 1), z = lado(i) * (0.55 + rr() * 0.75); marcos.push(new T.Vector3(x, sobre(x, z), z)); }
+      // a rota passa pelos marcos rente ao relevo: amostra a curva no plano e põe cada ponto em cima do terreno
+      const plana = new T.CatmullRomCurve3(marcos.map((v) => new T.Vector3(v.x, 0, v.z)), false, 'centripetal'), amostras = plana.getSpacedPoints(160).map((v) => new T.Vector3(v.x, sobre(v.x, v.z), v.z));
+      const rota = new T.CatmullRomCurve3(amostras), SEG = 320, raio = 0.018 * c.par.espessura_rota_px;
+      const tubo = malha(new T.TubeGeometry(rota, SEG, raio, 10, false), mat(cor('--primaria'), { emissive: cor('--primaria'), emissiveIntensity: 0.25 })); g.add(tubo);
+      const POR_SEG = tubo.geometry.index.count / SEG;
+      // o parâmetro u (0..1, por comprimento) de cada marco na rota 3D
+      const us = marcos.map((m) => { let melhor = 0, d0 = 1e9; for (let k = 0; k <= 400; k++) { const d = rota.getPointAt(k / 400).distanceTo(m); if (d < d0) { d0 = d; melhor = k / 400; } } return melhor; });
+      us[0] = 0; us[n - 1] = 1;
+      const cursor = malha(new T.SphereGeometry(raio * 3.2, 20, 14), mat(cor('--destaque'), { emissive: cor('--destaque'), emissiveIntensity: 0.6, flatShading: false })); g.add(cursor);
+      const pinos = marcos.map((m) => { const p = new T.Group(); p.add(malha(new T.CylinderGeometry(0.025, 0.025, 0.5, 8), TXT, 0, 0.25, 0));
+        p.add(malha(new T.SphereGeometry(0.11, 18, 12), mat(cor('--fundo').clone().lerp(cor('--texto'), 0.9)), 0, 0.55, 0)); p.position.copy(m); p.scale.setScalar(0.001); g.add(p); return p; });
+      const ch = c.chegadas.length >= n ? c.chegadas : [...c.chegadas, ...Array(n - c.chegadas.length).fill(0).map((_, k) => c.chegadas[c.chegadas.length - 1] + 0.6 * (k + 1))];
+      const uEm = (lt) => { if (lt <= ch[0]) return 0; for (let i = 0; i < n - 1; i++) if (lt < ch[i + 1]) return us[i] + (us[i + 1] - us[i]) * liso((lt - ch[i]) / Math.max(0.05, ch[i + 1] - ch[i])); return 1; };
+      const alvo = new T.Vector3();
+      return (lt) => { const u = uEm(lt); tubo.geometry.setDrawRange(0, Math.max(0, Math.floor(u * SEG) * POR_SEG)); cursor.position.copy(rota.getPointAt(u)); cursor.position.y += raio;
+        cursor.visible = lt >= ch[0] - 0.2;
+        pinos.forEach((p, i) => p.scale.setScalar(Math.max(0.001, liso((lt - ch[i] + 0.05) / 0.35) * (1 + 0.25 * Math.sin(Math.PI * clamp((lt - ch[i]) / 0.35))))));
+        const fimc = c.fim - c.inicio, abre = liso((fimc - lt) / 0.9), segue = liso((lt - c.t_ini) / 0.8) * abre;
+        alvo.set(cursor.position.x * 0.35 * segue, 0.1, cursor.position.z * 0.25 * segue);
+        const az = -0.22 + 0.16 * (lt / Math.max(1, fimc)), el = 0.92 - 0.12 * segue, d = 12.5 - 2.2 * segue;
+        cam.position.set(alvo.x + d * Math.cos(el) * Math.sin(az), alvo.y + d * Math.sin(el), alvo.z + d * Math.cos(el) * Math.cos(az)); cam.lookAt(alvo);
+        sol.position.set(alvo.x - 4, 8, alvo.z + 3); sol.target.position.copy(alvo); sol.target.updateMatrixWorld(); };
+    },
     'cidade-de-bolso': (c, g, ci) => {
       // o mundo é 3D, mas desenhado num buffer pequeno e ampliado sem suavizar: pixels quadrados com volume de verdade
       const rr = rng(c.semente + 11), base = cor('--superficie'), luz = '#' + cor('--primaria').getHexString(), escuro = cor('--fundo').clone().lerp(base, 0.55);

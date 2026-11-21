@@ -5,6 +5,12 @@ import { abrirConfiguracoes } from './MelhorarIA'
 import { useAgentesIA } from './PedidoIA'
 import { RelatoJob } from './RelatoJob'
 
+type DirecaoVideo = {
+  historia: { assunto: string; metafora: string; logline: string; comeco: string; meio: string; fim: string }
+  elenco: { id: string; papel: string; tipo: string; nome: string; visual: string }[]
+  cenarios: { id: string; lugar: string; descricao: string }[]
+  rodadas?: { problemas: string[] }[]
+}
 type CenaRoteiro = { inicio: number; fim: number; ancora: string; etiqueta: string; descricao: string; dado: string; balao: string }
 type Camada = { tipo: string; peca?: string; rotulo?: string; valor?: string; grafico?: string }
 type LimiteArte = { tipo: 'inteiro' | 'numero' | 'booleano' | 'texto'; minimo?: number; maximo?: number; opcoes?: string[] }
@@ -18,6 +24,7 @@ type Direcao = {
   ativa: boolean; modo: 'cenas' | 'desenho' | 'arte'; layout: string; ficha: string; estilo: string; cores: Record<string, string>
   analise: { tema: string; ideias: { ancora: string; tipo: string; resumo: string; dado: string }[] } | null
   roteiro: CenaRoteiro[] | null; camadas: Camada[][] | null; modelo: string | null; criado: string | null
+  direcao_video: DirecaoVideo | null
   cenas: { inicio: number; fim: number; cena: string; texto: string }[]; pecas: string[]; nomes_pecas: Record<string, string>
 }
 
@@ -145,9 +152,11 @@ export function DirecaoDoClip(props: { api: Api; base: string; clip: string; job
         </section>
       )}
 
+      {info.direcao_video && <PainelDirecaoVideo dv={info.direcao_video} />}
+
       {temRoteiro && (
         <section>
-          <h5>2 · {desenho ? d.roteiro : d.roteiroCenas}</h5>
+          <h5>{info.direcao_video ? 3 : 2} · {desenho ? d.roteiro : d.roteiroCenas}</h5>
           {roteiro.length === 0 && <p className="dica">{d.semRoteiro}</p>}
           <ol className="roteiro-desenho">
             {roteiro.map((c, k) => (
@@ -285,4 +294,27 @@ export function DirecaoDoClip(props: { api: Api; base: string; clip: string; job
 
 function resumoCamadas(cs: Camada[], nomes: Record<string, string>): string {
   return cs.map((c) => (c.peca ? (nomes[c.peca] ?? c.peca).split(' (')[0].split(',')[0] : c.tipo === 'dado' ? `${c.grafico} ${c.valor ?? ''}`.trim() : c.rotulo ?? c.tipo)).join(', ')
+}
+
+// A direção de vídeo que a IA escreveu antes das cenas: a história, o elenco fixo, os cenários e a conferência.
+function PainelDirecaoVideo(props: { dv: DirecaoVideo }): React.JSX.Element {
+  const { dv } = props
+  const d = useT().dir
+  const corrigidos = (dv.rodadas?.[0]?.problemas ?? []).filter((p) => !p.startsWith('aviso:')).length
+  const h = dv.historia
+  return (
+    <section className="direcao-video">
+      <h5>2 · {d.direcaoVideo}</h5>
+      <p style={{ margin: 0 }}><b>{d.historia}:</b> {h.logline || '—'}</p>
+      {h.metafora && <p style={{ margin: 0 }}><b>{d.metafora}:</b> {h.metafora}</p>}
+      {(h.comeco || h.meio || h.fim) && <p className="dica" style={{ margin: 0 }}>{d.arco}: {[h.comeco, h.meio, h.fim].filter(Boolean).join(' → ')}</p>}
+      <p style={{ margin: 0 }}><b>{d.elenco}:</b>{' '}
+        {dv.elenco.length ? dv.elenco.map((e) => <span key={e.id} className="chip" title={e.visual}>{e.nome || e.papel} · {e.tipo}{e.visual ? ` · ${e.visual}` : ''}</span>) : <span className="dica">{d.semElenco}</span>}
+      </p>
+      {dv.cenarios.length > 0 && (
+        <p style={{ margin: 0 }}><b>{d.cenarios}:</b> {dv.cenarios.map((c) => <span key={c.id} className="chip" title={c.descricao}>{c.lugar}</span>)}</p>
+      )}
+      <p className="dica" style={{ margin: 0 }}>{d.conferencia}: {corrigidos ? d.conferidaCorrigida.replace('{n}', String(corrigidos)) : d.conferidaOk}</p>
+    </section>
+  )
 }

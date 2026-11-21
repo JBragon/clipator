@@ -100,3 +100,35 @@ def _isolar_skills(tmp_path, monkeypatch):
     monkeypatch.setenv("CLIPATOR_AMOSTRAS", str(tmp_path / "amostras"))  # amostras dos estilos fora do cache real
     monkeypatch.setenv("CLIPATOR_YT_COOKIES", str(tmp_path / "yt-cookies.txt"))  # nunca a conta do usuário
     monkeypatch.setenv("CLIPATOR_YT_PERFIL", str(tmp_path / "perfil-yt"))  # nem o perfil do navegador dele
+
+
+# ---- direção de vídeo nas IAs falsas -------------------------------------------------------------------------------
+def e_pedido_de_direcao(prompt: str) -> bool:
+    return prompt.startswith("Você é o diretor de uma animação") or prompt.startswith("Esta é a direção de vídeo")
+
+
+def direcao_de_roteiro(resp) -> dict:
+    """Converte o roteiro antigo ({"cenas": [...]}) das IAs falsas na direção de vídeo, sem elenco, num cenário só."""
+    from clipator.artes import curta
+
+    lugar = curta.listas()["cenario"][0]
+    cenas = (resp or {}).get("cenas") or [] if isinstance(resp, dict) else []
+    return {"historia": {"assunto": "o assunto", "metafora": "", "logline": "a história do corte", "comeco": "", "meio": "", "fim": ""},
+            "elenco": [], "cenarios": [{"id": "c1", "lugar": lugar, "descricao": ""}],
+            "planos": [{"ancora": c.get("ancora", ""), "ate": c.get("ate", ""), "etiqueta": c.get("etiqueta", ""),
+                        "o_que_mostra": c.get("descricao", ""), "cenario": "c1", "em_cena": [], "plano": "medio", "movimento": "fixo",
+                        "transicao": "corte", "dado": c.get("dado", ""), "balao": c.get("balao", "")} for c in cenas if isinstance(c, dict)]}
+
+
+def com_direcao(resposta):
+    """Embrulha a resposta de uma IA falsa: o pedido de direção é respondido com o roteiro que ela daria."""
+    def r(prompt):
+        if e_pedido_de_direcao(prompt):
+            if callable(resposta):
+                propria = resposta(prompt)
+                if isinstance(propria, dict) and "historia" in propria:
+                    return propria
+            base = resposta("Escreva o roteiro") if callable(resposta) else resposta
+            return base if isinstance(base, dict) and "planos" in base else direcao_de_roteiro(base)
+        return resposta(prompt) if callable(resposta) else resposta
+    return r

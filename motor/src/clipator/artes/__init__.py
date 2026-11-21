@@ -23,6 +23,7 @@ from . import kit  # noqa: F401
 from .kit import CSS, T0, Ctx
 
 VERSAO_RENDERER = 2  # muda quando o desenho de uma direção muda (entra na camada e, com ela, no cache)
+VERSAO_ARTE = {"atlas-de-percursos": 3}  # versão própria de uma direção redesenhada sozinha: refaz só a amostra dela
 PARAMETROS_COMUNS: dict[str, dict[str, Any]] = {
     "leve": {"tipo": "booleano"},  # a alternativa leve da direção, sem máscaras nem texturas
     "semente": {"tipo": "inteiro", "minimo": 0, "maximo": 4294967295},

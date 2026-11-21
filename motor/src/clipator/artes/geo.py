@@ -4,7 +4,9 @@ Quem aparece sai da transcrição: cada nome dito é resolvido para uma entidade
 tipo e país pai. Sem IA, por regras; com IA, o adaptador recebe texto e devolve nomes e níveis, nunca coordenadas, e tudo passa
 de novo pelo resolvedor. Ambiguidade ou lugar ausente fica como pendência com aviso, e nenhum polígono é desenhado no lugar.
 A cena guarda a âncora literal; o segundo de cada lugar sai das palavras depois dos cortes internos. O mapa do clip inteiro é
-desenhado por dados/geo/geo.js em canvas 2D, como função do tempo, dentro do retângulo livre calculado por composicao.py.
+desenhado por dados/geo/geo3d.js em three.js (países citados sobem do chão, com luz, sombra e a câmera inclinada que voa de um lugar
+ao outro) e, sem three.js, WebGL ou na alternativa leve, por dados/geo/geo.js em canvas 2D. Os dois são função do tempo e
+enquadram dentro do retângulo livre calculado por composicao.py.
 """
 
 from __future__ import annotations
@@ -16,10 +18,11 @@ from typing import Any
 from ..workspace import _dados
 from . import geografia as gg
 from .cortes import CSS as CSS_CORTES
+from .. import maquete3d
 from .kit import Ctx, retangulo
 
 SLUG = "geo-em-cena"
-VERSAO = 1  # entra no hash da amostra, junto com geo.js, o exemplo e os hashes da base
+VERSAO = 2  # 2: o mapa em 3D (geo3d.js, three.js). Entra no hash da amostra, junto com geo.js, o exemplo e os hashes da base
 ACOES = ("aproximar", "destacar")  # aproximar: a câmera vai ao lugar; destacar: ele acende e a câmera só abre o bastante para mostrá-lo
 ACAO_PADRAO = "aproximar"
 MAX_LUGARES = 6
@@ -340,11 +343,16 @@ def _extras(camada: Any, cenas: list[dict]) -> tuple[str, str]:
            "eventos": pl["eventos"], "quadros": pl["quadros"], **_dados_mapa(pl["eventos"])}
     dados = json.dumps(cfg, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     js = (_dados("geo") / "geo.js").read_text(encoding="utf-8")
-    return ('<canvas id="geo2d"></canvas><div id="rotulos3d"></div><div id="relogio3d"></div>', f"<script>window.GEO = {dados};</script>\n<script>{js}</script>")
+    three = maquete3d.caminho_three()
+    if three is None or par.get("leve"):  # sem three.js, ou a alternativa leve: o mapa plano em canvas 2D
+        return ('<canvas id="geo2d"></canvas><div id="rotulos3d"></div><div id="relogio3d"></div>', f"<script>window.GEO = {dados};</script>\n<script>{js}</script>")
+    js3d = (_dados("geo") / "geo3d.js").read_text(encoding="utf-8")
+    return ('<canvas id="geo3d"></canvas><canvas id="geo2d"></canvas><div id="rotulos3d"></div><div id="relogio3d"></div>',
+            f"<script>window.GEO = {dados};</script>\n<script>{three.read_text(encoding='utf-8')}</script>\n<script>{js3d}</script>\n<script>{js}</script>")
 
 
 CSS = CSS_CORTES + """
-#geo2d { position: absolute; left: 0; top: var(--topo); width: 100%; height: var(--alt); }
+#geo2d, #geo3d { position: absolute; left: 0; top: var(--topo); width: 100%; height: var(--alt); }
 .rot3 b { display: block; font-weight: inherit; text-transform: uppercase; }
 .rot3 small { display: block; font-size: .56em; line-height: 1.25; color: var(--suave); }
 .geo-credito { position: absolute; left: 0; top: 0; font-family: var(--f-corpo); font-size: calc(var(--u) * 19); color: var(--suave); white-space: nowrap; }

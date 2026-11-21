@@ -167,10 +167,12 @@ def chave(ws: Workspace, nome: str, canal: CanalWS | None, ajustes: dict | None 
     # a versão do Clipator não entra: atualizar o app não refaz amostra nenhuma (VERSAO muda quando a base ou a fala mudam)
     h.update(json.dumps([VERSAO, nome, formato or est.formato, ajustes or {}], sort_keys=True).encode())
     if est.direcao.modo == "arte":  # o desenho mora no código da direção, não no .md
-        from .artes import VERSAO_RENDERER
+        from .artes import VERSAO_ARTE, VERSAO_RENDERER
         from .workspace import _dados
 
         h.update(str(VERSAO_RENDERER).encode())
+        if est.direcao.arte in VERSAO_ARTE:
+            h.update(f"{est.direcao.arte}-{VERSAO_ARTE[est.direcao.arte]}".encode())
         h.update((_dados("arte") / "presets" / f"{est.direcao.arte}.yaml").read_bytes().replace(b"\r\n", b"\n"))
         from .artes import cortes
 
@@ -186,7 +188,8 @@ def chave(ws: Workspace, nome: str, canal: CanalWS | None, ajustes: dict | None 
                 from .artes import geo, geografia
 
                 h.update(f"{geo.VERSAO}-{geografia.hash_dados()}".encode())
-                h.update((_dados("geo") / "geo.js").read_bytes().replace(b"\r\n", b"\n"))
+                for js in ("geo.js", "geo3d.js"):
+                    h.update((_dados("geo") / js).read_bytes().replace(b"\r\n", b"\n"))
     for p in _arquivos_do_estilo(caminho):
         h.update(p.name.encode())
         h.update(p.read_bytes().replace(b"\r\n", b"\n"))  # mesmo hash com o checkout em CRLF (Windows) ou LF

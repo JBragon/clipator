@@ -67,6 +67,7 @@ Skills do Claude Code usadas por quem desenvolve o Clipator, separadas das skill
 | [obra/superpowers](https://github.com/obra/superpowers) | 2ce8aa1 | MIT, Copyright (c) 2025 Jesse Vincent | `systematic-debugging`, `test-driven-development`, `verification-before-completion`, `receiving-code-review` |
 | [trailofbits/skills](https://github.com/trailofbits/skills) | 2be6433 | Creative Commons Attribution-ShareAlike 4.0, Trail of Bits | `modern-python`, `property-based-testing`, `supply-chain-risk-auditor` (sem o `uv.lock` dos scripts) |
 | [anthropics/skills](https://github.com/anthropics/skills) | ca45fc4 | Apache License 2.0, Anthropic | `mcp-builder`, `webapp-testing` |
+| [CloudAI-X/threejs-skills](https://github.com/CloudAI-X/threejs-skills) | 0e18186 | MIT, Copyright (c) 2026 CloudAI-X | as 13 `threejs-*` (fundamentals, geometry, materials, lighting, textures, animation, loaders, shaders, postprocessing, interaction, performance, react-three-fiber, asset-pipeline) |
 
 As skills da Trail of Bits seguem sob CC BY-SA 4.0: quem as modificar e redistribuir precisa manter o crédito e a mesma licença nessas pastas.
 

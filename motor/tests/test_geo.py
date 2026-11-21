@@ -436,3 +436,17 @@ def test_canto_escolhido_persiste_na_edicao_e_a_escolha_de_lugar_vira_versao(ws)
     c = next(i for i in edicao.carregar(pasta).itens if i.tipo == "cena")
     assert [x["id"] for x in c.params["corte"]["lugares"]] == ["USA-3543"] and not c.params["corte"]["pendencias"]
     assert edicao.carregar(pasta).layout_arte.janela_canto == "superior-esquerdo"
+
+
+def test_mapa_em_3d_com_three_e_plano_sem_ele(monkeypatch):
+    from clipator import maquete3d
+
+    pals = fala("Olhe bem para a França agora mesmo.")
+    doc = camada(pals, 6.0, None)
+    assert '<canvas id="geo3d">' in doc and '<canvas id="geo2d">' in doc and "window.GEO3D = true" in doc
+    js3d = re.sub(r"//[^\n]*", "", (gg._dados("geo") / "geo3d.js").read_text(encoding="utf-8"))  # só o código, sem os comentários
+    assert not re.search(r"https?://|fetch\(|XMLHttpRequest|Math\.random|Date\.now|performance\.now|setAnimationLoop|new THREE\.(Clock|Timer)", js3d)
+    assert "if (!M || window.GEO3D) return" in (gg._dados("geo") / "geo.js").read_text(encoding="utf-8")  # o 2D só entra sem o 3D
+    monkeypatch.setattr(maquete3d, "caminho_three", lambda: None)
+    sem = camada(pals, 6.0, None)
+    assert '<canvas id="geo3d">' not in sem and '<canvas id="geo2d">' in sem

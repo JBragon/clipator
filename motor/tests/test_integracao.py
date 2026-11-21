@@ -2236,10 +2236,26 @@ def test_render_com_direcao_de_arte_sem_hyperframes(ws, video_teste, monkeypatch
 
     with pytest.raises(melhorar.SemIA, match="usa IA"):  # estilo com a etiqueta "Usa IA" e nenhuma IA instalada
         pipeline.renderizar(p, clip.id, preview=True)
-    ia = IAFalsa({"cenas": []})  # a IA não achou cenas: o render usa as regras
+    ia = IAFalsa({"cenas": []})  # a IA não achou cenas: sem direção não há animação (nada de regras)
     monkeypatch.setattr(melhorar, "ia_do_workspace", lambda ws, esperar_login=None: ia)
+    with pytest.raises(ValueError, match="direção de vídeo"):
+        pipeline.renderizar(p, clip.id, preview=True)
+    from clipator.timeline import Timeline
+
+    tl = Timeline.de_clip(clip.inicio, clip.fim, clip.cortes_internos)
+    ancora = " ".join(w["texto"] for w in edicao.palavras_do_clip(p, tl)[:5])
+
+    def resposta(prompt):
+        if prompt.startswith("Escreva o roteiro"):
+            return {"cenas": [{"ancora": ancora, "ate": "", "etiqueta": "o começo", "descricao": "A ideia", "dado": "", "balao": ""}]}
+        if prompt.startswith("Analise este corte"):
+            return {"tema": "O assunto", "ideias": []}
+        return {"cenas": [{"cena": "palavra", "ancora": ancora, "texto": "IDEIA", "itens": [], "valor": "", "rotulo": "", "autor": "",
+                           "a": "", "b": "", "duracao": 3, "motivo": "ilustra"}]}
+
+    ia = IAFalsa(resposta)
     r = pipeline.renderizar(p, clip.id, preview=True)
-    assert ia.prompts and "ancora" in ia.prompts[0]
+    assert ia.prompts and any("ancora" in x for x in ia.prompts)
     info = media.probe(r.video)
     assert info.duracao == pytest.approx(clip.fim - clip.inicio, abs=0.25) and "HyperFrames" in (r.aviso or "")
     pasta = p.clips_dir / clip.id
@@ -2289,7 +2305,9 @@ class IAFalsa:
     nome = "falsa"
 
     def __init__(self, resposta):
-        self.resposta = resposta
+        from .conftest import com_direcao
+
+        self.resposta = com_direcao(resposta)
         self.prompts = []
 
     def disponivel(self):
@@ -2297,7 +2315,7 @@ class IAFalsa:
 
     def run_json(self, prompt, schema, cancelar=None):
         self.prompts.append(prompt)
-        return self.resposta(prompt) if callable(self.resposta) else self.resposta
+        return self.resposta(prompt)
 
 
 def _clip_com_fala(ws, estilo="da-animacao-em-cima"):
@@ -2756,7 +2774,10 @@ def test_desenho_faz_as_tres_etapas_e_prende_tudo_na_fala(ws):
     ia = IAFalsa(_resposta_desenho)
     linhas = []
     doc = desenho.gerar(pr, clip, tl, edicao.palavras_do_clip(pr, tl), est, ia, Relato(linhas.append))
-    assert len(ia.prompts) == 3 and doc["analise"]["tema"] == "Empresa que quebrou"
+    # análise, direção, correção da direção (uma âncora não está na fala) e composição
+    assert len(ia.prompts) == 4 and doc["analise"]["tema"] == "Empresa que quebrou"
+    assert ia.prompts[1].startswith("Você é o diretor") and ia.prompts[2].startswith("Esta é a direção de vídeo")
+    assert "frase que ninguém falou" in ia.prompts[2] and doc["direcao_video"]["historia"]["logline"]
     rot = doc["roteiro"]
     assert [r["etiqueta"] for r in rot] == ["O FATURAMENTO", "A QUEDA", "TRÊS PASSOS"]  # a cena sem âncora na fala caiu
     assert rot[0]["inicio"] == 0.0 and all(a["fim"] <= b["inicio"] + 1e-6 for a, b in zip(rot, rot[1:]))
@@ -2840,8 +2861,8 @@ def test_estilos_de_cenas_fazem_a_pre_producao_antes_das_cenas(ws):
     assert desenho.resumo_do_clip(pr, "01-x")["roteiro"][1]["descricao"] == "Uma seta despencando"
     ia3 = IAFalsa(_resposta_cenas)
     desenho.refazer(pr, "01-x", tudo=True, ad=ia3)
-    assert len(ia3.prompts) == 3
-    # a IA não montou nada: as cenas saem e o próximo render usa as regras
+    assert len(ia3.prompts) == 3  # análise, direção e composição
+    # a IA não montou nada: as cenas saem e o próximo render pede a direção de novo
     r = desenho.refazer(pr, "01-x", tudo=True, ad=IAFalsa({"tema": "", "ideias": [], "cenas": []}))
     assert r["cenas"] == 0 and not edicao.carregar(pasta).cenas_planejadas
     assert not [i for i in edicao.carregar(pasta).itens if i.tipo == "cena"]
@@ -2887,7 +2908,7 @@ def test_refazer_com_a_direcao_editada_cria_versao_nova(ws):
     # "refazer tudo": as três etapas de novo
     ia3 = IAFalsa(_resposta_desenho)
     desenho.refazer(pr, "01-x", tudo=True, ad=ia3)
-    assert len(ia3.prompts) == 3
+    assert len(ia3.prompts) == 4  # análise, direção, correção e composição
 
 
 def test_enquadramento_pelo_rosto_centraliza_o_locutor_fora_do_centro():
@@ -2929,7 +2950,7 @@ def test_maquete_low_poly_usa_as_pecas_facetadas_e_o_hud(ws, monkeypatch):
     tl = Timeline.de_clip(clip.inicio, clip.fim, clip.cortes_internos)
     ia = IAFalsa(_resposta_desenho)
     doc = desenho.gerar(pr, clip, tl, edicao.palavras_do_clip(pr, tl), est, ia)
-    assert doc["ficha"] == "maquete" and "maquete explicativa" in ia.prompts[1] and "maquete explicativa" in ia.prompts[2]
+    assert doc["ficha"] == "maquete" and "maquete explicativa" in ia.prompts[1] and "maquete explicativa" in ia.prompts[3]
     itens = desenho.para_itens(doc)
     assert itens[0]["params"]["cabecalho"] == "EMPRESA QUE QUEBROU"
     lista = [{"inicio": i["inicio"], "fim": i["fim"], "params": direcao.normalizar_cena(i["params"])} for i in itens]
@@ -2974,6 +2995,17 @@ def test_curta_tem_roteiro_fechado_pela_ia_com_skill_estilo_e_fala(ws, monkeypat
     est = ws.carregar_estilo("arte-encaixe-vivo", c)[0]
 
     def resp(prompt):
+        if prompt.startswith("Você é o diretor de uma animação"):
+            return {"historia": {"assunto": "a empresa quebrou", "metafora": "uma loja que esvazia", "logline": "a loja esvazia",
+                                 "comeco": "", "meio": "", "fim": ""},
+                    "elenco": [{"id": "p1", "papel": "dono", "tipo": "pessoa", "nome": "", "visual": "avental verde"}],
+                    "cenarios": [{"id": "c1", "lugar": "loja", "descricao": "prateleiras"}],
+                    "planos": [{"ancora": "Em 2019 a empresa faturou", "ate": "", "etiqueta": "auge", "o_que_mostra": "loja cheia",
+                                "cenario": "c1", "em_cena": [{"id": "p1", "posicao": "centro", "acao": "comemorar", "olha_para": "camera"}],
+                                "plano": "geral", "movimento": "fixo", "transicao": "corte", "dado": "", "balao": ""},
+                               {"ancora": "O João Silva disse que", "ate": "", "etiqueta": "queda", "o_que_mostra": "o dono triste",
+                                "cenario": "c1", "em_cena": [{"id": "p1", "posicao": "centro", "acao": "triste", "olha_para": ""}],
+                                "plano": "close", "movimento": "aproximar", "transicao": "corte", "dado": "", "balao": ""}]}
         if "Escreva o roteiro fechado" not in prompt:
             return {"tema": "Empresa que quebrou", "ideias": []}
         return {"assunto": "a empresa quebrou", "metafora": "uma loja que esvazia", "logline": "a loja cheia esvazia e o dono reage",
@@ -2988,8 +3020,10 @@ def test_curta_tem_roteiro_fechado_pela_ia_com_skill_estilo_e_fala(ws, monkeypat
     ia = IAFalsa(resp)
     linhas = []
     doc = desenho.gerar(pr, clip, tl, edicao.palavras_do_clip(pr, tl), est, ia, Relato(linhas.append))
-    assert len(ia.prompts) == 2  # análise e roteiro do curta: a etapa cena a cena não roda
-    p = ia.prompts[1]
+    assert len(ia.prompts) == 3  # análise, direção (sem problemas: sem correção) e roteiro do curta
+    p = ia.prompts[2]
+    assert "Direção de vídeo (siga" in p and "avental verde" in p and "tudo certo" in "\n".join(linhas)
+    assert doc["direcao_video"]["elenco"][0]["visual"] == "avental verde"
     assert "peças plásticas" in p and "## Cenários" in p and "Escolha a metáfora" in p and "Como a empresa quebrou" in p
     assert doc["curta"]["metafora"] == "uma loja que esvazia" and len(doc["cenas"]) == 2
     a, b = (x["params"]["curta"] for x in doc["cenas"])

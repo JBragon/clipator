@@ -661,7 +661,8 @@ def cenas_sugeridas(projeto: ProjetoWS, clip: Any, tl: Timeline, pals: list[dict
                     cancelar: threading.Event | None = None) -> tuple[list[Item], str | None]:
     """Cenas da direção de arte para as propostas do editor (só quando o estilo do clip tem direção de arte).
 
-    Com IA, pelo planejador do direcao.py (cada cena conferida contra a fala); sem IA ou se ela falhar, pelas regras.
+    Toda animação usa IA: sem ela não há proposta de cena, só o aviso. Com IA, nos estilos de arte as cenas saem da
+    direção de vídeo do clip (desenho.gerar: análise, direção conferida e cenas); nos de cenas, do planejador do direcao.py.
     """
     from . import direcao
 
@@ -671,11 +672,23 @@ def cenas_sugeridas(projeto: ProjetoWS, clip: Any, tl: Timeline, pals: list[dict
         return [], None
     if not est.direcao.ativa:
         return [], None
-    if est.direcao.modo == "arte" and est.direcao.arte:  # as cenas da direção saem das frases da fala
-        from . import artes
+    if ad is None:
+        from .melhorar import MSG_SEM_IA
 
-        return [Item(tipo="cena", origem="heuristica", **c) for c in artes.planejar_regras(
-            est.direcao.arte, pals, tl.duracao, artes.assinatura_timeline(tl), est.direcao.parametros)], None
+        return [], f"As animações deste estilo usam IA. {MSG_SEM_IA}"
+    if est.direcao.modo == "arte" and est.direcao.arte:  # as cenas da direção saem da direção de vídeo do clip
+        from . import desenho
+        from .ai.adapter import ErroIA
+
+        _, pasta = projeto.clip(clip.id)
+        dd = desenho.ler(pasta)
+        try:
+            if not desenho.do_modo(dd, "arte") or dd.get("arte") != est.direcao.arte:
+                dd = desenho.gerar(projeto, clip, tl, pals, est, ad, cancelar=cancelar)
+        except (ErroIA, ValueError) as exc:
+            return [], f"A IA não montou a direção de vídeo ({exc})."
+        itens = [Item(**i) for i in desenho.para_itens(dd)]
+        return itens, None if itens else "A IA não montou a direção de vídeo com a fala deste corte."
     cenas, aviso = [], None
     try:  # a DA que o estilo escolheu (com a marca do canal) guia a IA e confere as cenas
         from .arte.guia import da_do_estilo
@@ -683,29 +696,23 @@ def cenas_sugeridas(projeto: ProjetoWS, clip: Any, tl: Timeline, pals: list[dict
         arte_estilo = da_do_estilo(est, projeto.canal.path)[0]
     except Exception:  # noqa: BLE001
         arte_estilo = None
-    if ad is None and est.requer_ia:
-        from .melhorar import MSG_SEM_IA
+    from .ai.adapter import CacheIA, ErroIA
 
-        return [], f"As cenas deste estilo usam IA. {MSG_SEM_IA}"
-    if ad is not None:
-        from .ai.adapter import CacheIA, ErroIA
+    try:
+        from . import skills
 
-        try:
-            from . import skills
+        extra = skills.texto_para_ia(projeto.ws, "cenas", projeto.canal.slug, projeto.id, excluir={"roteiro-do-curta"})
+        if arte_estilo is not None:
+            from .arte.guia import texto_para_ia
 
-            extra = skills.texto_para_ia(projeto.ws, "cenas", projeto.canal.slug, projeto.id, excluir={"roteiro-do-curta"})
-            if arte_estilo is not None:
-                from .arte.guia import texto_para_ia
-
-                extra = texto_para_ia(arte_estilo) + ("\n\n" + extra if extra else "")
-            cenas = direcao.planejar_ia(pals, tl.duracao, clip.titulo, ad, CacheIA(projeto.analise_dir / "cache_ia"),
-                                        projeto.canal.info()[1], cancelar, extra)
-            origem = "ia"
-        except ErroIA as exc:
-            aviso = f"A IA não planejou as cenas ({exc}); usei as regras."
+            extra = texto_para_ia(arte_estilo) + ("\n\n" + extra if extra else "")
+        cenas = direcao.planejar_ia(pals, tl.duracao, clip.titulo, ad, CacheIA(projeto.analise_dir / "cache_ia"),
+                                    projeto.canal.info()[1], cancelar, extra)
+        origem = "ia"
+    except ErroIA as exc:
+        aviso = f"A IA não planejou as cenas ({exc})."
     if not cenas:
-        cenas = direcao.planejar_regras(pals, tl.duracao, clip.titulo, est.direcao.densidade)
-        origem = "heuristica"
+        return [], aviso or "A IA não montou as cenas com a fala deste corte."
     if arte_estilo is not None and cenas:
         from .arte.guia import filtrar_cenas
 

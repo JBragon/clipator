@@ -519,8 +519,19 @@ def test_render_final_usa_a_da_do_estilo_e_carimba(ws, video_teste, monkeypatch)
             return True
 
         def run_json(self, prompt, schema, cancelar=None, *a, **k):
+            from .conftest import direcao_de_roteiro, e_pedido_de_direcao
+
             self.prompts.append(prompt)
-            return {"cenas": []}
+            if prompt.startswith("Analise este corte"):
+                return {"tema": "dinheiro", "ideias": []}
+            if e_pedido_de_direcao(prompt):
+                primeira = prompt.split("## Fala com tempos\n")[-1].split()[:4]
+                self.ancora = " ".join(w.split("]", 1)[-1] for w in primeira)
+            ancora = getattr(self, "ancora", "")
+            if e_pedido_de_direcao(prompt):
+                return direcao_de_roteiro({"cenas": [{"ancora": ancora, "etiqueta": "o dado", "descricao": "o número"}]})
+            return {"cenas": [{"cena": "lista", "ancora": ancora, "texto": "", "itens": ["segredo", "simples"], "valor": "", "rotulo": "",
+                               "autor": "", "a": "", "b": "", "duracao": 3, "motivo": "ilustra"}]}
 
     monkeypatch.setattr(transcribe, "carregar_modelo", lambda *a, **k: WhisperFalso(transcricao_falsa(duracao=9)))
     monkeypatch.setattr(hyperframes, "comando", lambda: None)

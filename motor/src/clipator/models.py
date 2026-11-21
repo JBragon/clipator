@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 Formato = Literal["9:16", "1:1", "4:5", "16:9"]
 Reenquadramento = Literal["seguir-rosto", "centro", "fundo-desfocado", "dividido", "original"]
@@ -238,6 +238,9 @@ class DirecaoArte(_Base):
         return self.layout != "nenhum"
 
 
+TEMPLATES_ANIMADOS = ("numeros-na-tela", "iceberg")  # templates HyperFrames que desenham gráficos e cenas, não só texto
+
+
 class Estilo(_Base):
     """Cabeçalho de estilos/*.md e de estilos/<nome>/estilo.md."""
 
@@ -270,7 +273,20 @@ class Estilo(_Base):
         "nenhuma", description="Só nos cortes longos: a vinheta do canal no começo (inicio), entre o gancho forte e o "
         "corte (depois-do-gancho) ou onde o canal mandar (canal: vinheta_posicao do canal.md)")
     direcao: DirecaoArte = Field(default_factory=DirecaoArte, description="Direção de arte: cenas animadas e layout")
-    requer_ia: bool = Field(False, description="Só funciona com a IA integrada (Claude Code ou Codex): sem ela, o render recusa")
+    requer_ia: bool = Field(False, description="Só funciona com a IA integrada (Claude Code ou Codex): sem ela, o render recusa. "
+                            "Todo estilo animado (com direção de arte ou template animado) fica com true, mesmo que o .md diga false")
+
+    @model_validator(mode="after")
+    def _animacao_requer_ia(self) -> "Estilo":
+        # regra do produto: toda animação (cenas, desenho, artes, mapas, gráficos) nasce da direção de vídeo da IA
+        if self.animado and not self.requer_ia:
+            object.__setattr__(self, "requer_ia", True)
+        return self
+
+    @property
+    def animado(self) -> bool:
+        """O estilo tem animação que ilustra a fala: direção de arte ligada ou um template animado (números, iceberg)."""
+        return self.direcao.ativa or (self.motor == "hyperframes" and (self.template or "") in TEMPLATES_ANIMADOS)
 
     def tamanho_saida(self) -> tuple[int, int]:
         if self.resolucao:
