@@ -147,7 +147,7 @@ def test_gerar_de_novo_usa_a_legenda_editada_e_refaz_o_acabamento(ws, video_test
     monkeypatch.setattr(transcribe, "carregar_modelo", lambda *a, **k: WhisperFalso(transcricao_falsa(duracao=9)))
     c = ws.criar_canal("Teste", palavras_chave=["dinheiro"])
     regras = c.arquivo("regras.md")
-    regras.write_text(regras.read_text().replace("duracao_min: 20", "duracao_min: 5").replace("duracao_max: 60", "duracao_max: 12"))
+    regras.write_text(regras.read_text().replace("duracao_min: 40", "duracao_min: 5").replace("duracao_max: 180", "duracao_max: 12"))
     p = c.criar_projeto("v", Origem(tipo="arquivo", valor=str(video_teste)))
     cands = pipeline.analisar(p, lambda f, m: None, modo_ia="sem-ia")
     clip = pipeline.selecionar(p, [cands[0]["id"]], formato="9:16", estilo="podcast-limpo")[0]
