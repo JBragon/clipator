@@ -52,6 +52,7 @@ class Selecao(BaseModel):
     cartela: bool | None = None
     pedido_ia: PedidoIA | None = None
     ajustes: dict[str, Any] | None = None
+    longo: dict[str, Any] | None = None  # só nos cortes longos: {"gancho": ..., "vinheta": ...}
 
 
 class PedidoAmostras(BaseModel):
@@ -513,6 +514,66 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
         md.write(c.path / "canal.md", meta, doc.body)
         return {"chamada_automatica": modo}
 
+    # ---- vinheta do canal (só nos cortes longos) ----
+    @app.get("/api/canais/{canal}/vinheta", dependencies=dep)
+    def get_vinheta(canal: str) -> dict:
+        from . import vinheta
+
+        try:
+            return vinheta.estado(ws.canal(canal))
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.get("/api/canais/{canal}/vinheta/video", dependencies=dep)
+    def ver_vinheta(canal: str) -> FileResponse:
+        from . import vinheta
+
+        try:
+            p = vinheta.arquivo(ws.canal(canal))
+        except Exception as exc:
+            raise erro(exc) from exc
+        if p is None:
+            raise HTTPException(404, "Este canal não tem vinheta.")
+        return FileResponse(p)
+
+    @app.post("/api/canais/{canal}/vinheta", dependencies=dep)
+    def enviar_vinheta(canal: str, dados: dict) -> dict:
+        import base64
+        import binascii
+
+        from . import vinheta
+
+        bruto = str(dados.get("arquivo") or "").split(",")[-1]
+        if len(bruto) > vinheta.LIMITE * 4 // 3 + 8:
+            raise HTTPException(400, f"A vinheta passa do limite de {vinheta.LIMITE // (1024 * 1024)} MB.")
+        try:
+            c = ws.canal(canal)
+            return vinheta.salvar(c, str(dados.get("nome") or ""), base64.b64decode(bruto, validate=True))
+        except (vinheta.ErroVinheta, binascii.Error, ValueError) as exc:
+            raise HTTPException(400, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.put("/api/canais/{canal}/vinheta", dependencies=dep)
+    def posicao_vinheta(canal: str, dados: dict) -> dict:
+        from . import vinheta
+
+        try:
+            return vinheta.definir_posicao(ws.canal(canal), str(dados.get("posicao") or ""))
+        except vinheta.ErroVinheta as exc:
+            raise HTTPException(400, str(exc)) from exc
+        except Exception as exc:
+            raise erro(exc) from exc
+
+    @app.delete("/api/canais/{canal}/vinheta", dependencies=dep)
+    def remover_vinheta(canal: str) -> dict:
+        from . import vinheta
+
+        try:
+            return vinheta.remover(ws.canal(canal))
+        except Exception as exc:
+            raise erro(exc) from exc
+
     @app.put("/api/canais/{canal}/glossario", dependencies=dep)
     def put_glossario(canal: str, dados: Glossario) -> dict:
         c = ws.canal(canal)
@@ -581,7 +642,7 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
     def selecionar(canal: str, projeto: str, dados: Selecao) -> list[dict]:
         try:
             clips = pipeline.selecionar(proj(canal, projeto), dados.ids, dados.formato, dados.estilo, dados.cartela,
-                                        dados.pedido_ia, dados.ajustes)
+                                        dados.pedido_ia, dados.ajustes, dados.longo)
         except Exception as exc:
             raise erro(exc) from exc
         return [c.model_dump(mode="json") for c in clips]

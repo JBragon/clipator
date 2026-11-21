@@ -11,6 +11,7 @@ import threading
 from typing import Any, Callable
 
 from . import candidates, glossario, ingest, media, render, signals, skills, titles, transcribe
+from .markdown import deep_merge
 from .ai.adapter import CacheIA, ErroIA, adaptador_com_reserva
 from .ai import ranking as ia_ranking
 from .media import Cancelado, Progress
@@ -254,16 +255,75 @@ def ranquear(projeto: ProjetoWS, modo_ia: str | None = None, agente: str | None 
         curtos = [c for c in cands if c.get("modo") != "longo"]
         longos = [c for c in cands if c.get("modo") == "longo"]
         progresso(0.05, f"perguntando ao {adapter.nome}")
-        if modo == "completo":
-            curtos = ia_ranking.completo(trans, curtos, adapter, regras, canal_md, regras_md, tmd, tmeta, cache, cancelar, progresso)
-        curtos = ia_ranking.ranquear(curtos, trans, adapter, regras, canal_md, regras_md, tmd, tmeta, cache, cancelar)
+        fio = _fio_salvo(projeto)
+        if modo == "completo":  # a IA entende a conversa inteira e acha os assuntos fortes (ai/assuntos.py)
+            curtos, longos, fio = _por_assuntos(projeto, trans, curtos, longos, adapter, regras, canal_md, regras_md,
+                                                tmd, tmeta, cache, cancelar, lambda f, m: progresso(0.05 + 0.55 * f, m))
+        progresso(0.6, f"{adapter.nome} ajustando começo, fim e títulos dos Shorts")
+        curtos = ia_ranking.ranquear(curtos, trans, adapter, regras, canal_md, regras_md, tmd, tmeta, cache, cancelar, fio)
+        sem_ia = [c for c in longos if not (c.get("ia") or {}).get("abertura")]
+        if sem_ia:  # o corte longo ganha títulos no padrão dos canais de cortes e o trecho forte que abre o vídeo
+            progresso(0.8, f"{adapter.nome} lendo os cortes longos")
+            lidos = {c["id"]: c for c in ia_ranking.analisar_longos(sem_ia, trans, adapter, regras, canal_md, regras_md,
+                                                                   tmd, tmeta, cache, cancelar, projeto.metadados(), fio)}
+            longos = [lidos.get(c["id"], c) for c in longos]
         if regras.censor_leetspeak and regras.palavras_censuradas:
-            for c in curtos:
+            for c in curtos + longos:
                 c["titulos"] = [titles.censurar(t, regras.palavras_censuradas) for t in c.get("titulos", [])]
         out = curtos + longos
         projeto.salvar_candidatos(out)
         progresso(1.0, "ranking pronto")
     return out
+
+
+ASSUNTOS_JSON = "assuntos.json"
+
+
+def _fio_salvo(projeto: ProjetoWS) -> str:
+    """O resumo do episódio que o mapa de assuntos deixou (vazio se a análise completa nunca rodou)."""
+    d = read_json(projeto.analise_dir / ASSUNTOS_JSON) or {}
+    partes = [f"Quem fala: {d['convidado']}" if d.get("convidado") else "", str(d.get("fio") or "")]
+    return "\n".join(p for p in partes if p)
+
+
+def _por_assuntos(projeto: ProjetoWS, trans: dict, curtos: list[dict], longos: list[dict], adapter: Any, regras: Any,
+                  canal_md: str, regras_md: str, tmd: str, tmeta: dict, cache: CacheIA,
+                  cancelar: threading.Event | None, progresso: Progress) -> tuple[list[dict], list[dict], str]:
+    """Modo completo: mapa de assuntos da conversa inteira, editor-chefe e os candidatos que saem deles, junto
+    com os locais (o da IA fica quando os dois pegam o mesmo trecho)."""
+    from .ai import assuntos
+
+    ctx = ia_ranking._contexto_canal(canal_md, regras_md, tmd, regras, tmeta)
+    regra_t = ia_ranking._regra_titulo(tmeta, regras.trava_titulo)
+    max_chars = int(tmeta.get("max_caracteres", 70) or 70)
+    mapa = assuntos.mapear(trans, adapter, regras, ctx, regra_t, projeto.metadados(), cache, cancelar,
+                           lambda f, m: progresso(0.8 * f, m), max_chars)
+    progresso(0.85, "editor-chefe comparando os assuntos do episódio")
+    editor = assuntos.editar(mapa, adapter, regras, ctx, cache, cancelar)
+    novos_c, novos_l = assuntos.candidatos(mapa, editor, trans, regras, adapter.nome, max_chars)
+    write_json(projeto.analise_dir / ASSUNTOS_JSON, {**mapa, "editor": editor})
+    # os candidatos que já existiam guardam o id (um clip pode apontar para eles); os novos continuam a numeração
+    usados = {c["id"] for c in projeto.candidatos()}
+    for prefixo, novos in (("c", novos_c), ("l", novos_l)):
+        n = 0
+        for c in novos:
+            while True:
+                n += 1
+                if f"{prefixo}{n:02d}" not in usados:
+                    break
+            c["id"] = f"{prefixo}{n:02d}"
+            usados.add(c["id"])
+    com_clip = {c.candidato for c, _ in projeto.clips()}
+
+    def juntar(novos: list[dict], antigos: list[dict], ratio: float) -> list[dict]:
+        out = candidates.dedupe_overlapping(novos + [dict(c) for c in antigos], ratio=ratio)
+        ficaram = {c["id"] for c in out}
+        return out + [dict(c) for c in antigos if c["id"] in com_clip and c["id"] not in ficaram]  # clip não perde o corte
+
+    curtos, longos = juntar(novos_c, curtos, 0.25), juntar(novos_l, longos, 0.3)
+    progresso(1.0, f"{len(mapa['assuntos'])} assunto(s) forte(s) no episódio")
+    return curtos, longos, "\n".join(x for x in (f"Quem fala: {mapa['convidado']}" if mapa.get("convidado") else "",
+                                                  mapa.get("fio", "")) if x)
 
 
 def _contexto_com_skills(projeto: ProjetoWS, partes: tuple[str, ...] = ("cortes", "titulos", "referencias")
@@ -354,12 +414,18 @@ def _ranking_tolerante(projeto: ProjetoWS, modo_ia: str | None, progresso: Progr
 
 def selecionar(projeto: ProjetoWS, ids: list[str], formato: str | None = None, estilo: str | None = None,
                cartela: bool | None = None, pedido_ia: PedidoIA | None = None,
-               ajustes: dict[str, Any] | None = None) -> list[Clip]:
+               ajustes: dict[str, Any] | None = None, longo: dict[str, Any] | None = None) -> list[Clip]:
     """Transforma candidatos em clips (pastas em clips/). `pedido_ia` fica guardado em cada clip.
 
     `ajustes` (cores, fonte, posição da legenda, sons…) sobrescreve o estilo nos clips criados agora; um clip
     que já existia só troca de estilo e de ajustes se `estilo` vier preenchido.
+    `longo` ({"gancho": nenhum|cor|preto-e-branco, "vinheta": nenhuma|canal|inicio|depois-do-gancho}) vale só
+    para os cortes longos: o gancho forte antes do corte e a vinheta do canal. Os Shorts ignoram.
     """
+    from . import abertura as _abertura
+
+    extra_longo = _abertura.ajustes_corte_longo(str(longo.get("gancho") or "cor"), str(longo.get("vinheta") or "canal")
+                                                ) if longo else None
     canal, _ = projeto.canal.info()
     por_id = {c["id"]: c for c in projeto.candidatos()}
     existentes = {c.candidato: c for c, _ in projeto.clips()}
@@ -367,6 +433,7 @@ def selecionar(projeto: ProjetoWS, ids: list[str], formato: str | None = None, e
     for cid in ids:
         if cid not in por_id:
             raise KeyError(f"Candidato não encontrado: {cid}")
+        e_longo = por_id[cid].get("modo") == "longo"
         if cid in existentes:
             clip = existentes[cid]
             mudou = False
@@ -380,23 +447,25 @@ def selecionar(projeto: ProjetoWS, ids: list[str], formato: str | None = None, e
             if formato:
                 clip.formato = formato  # type: ignore[assignment]
                 mudou = True
+            if e_longo and extra_longo:
+                clip.ajustes_estilo = deep_merge(clip.ajustes_estilo, extra_longo)
+                mudou = True
             if mudou:
                 projeto.salvar_clip(clip)
             out.append(clip)
             continue
         c = por_id[cid]
-        longo = c.get("modo") == "longo"
-        est_nome = estilo or ("corte-longo" if longo else canal.estilo_padrao)
+        est_nome = estilo or ("corte-longo" if e_longo else canal.estilo_padrao)
         est, _, _ = projeto.ws.carregar_estilo(est_nome, projeto.canal)
         titulos_c = c.get("titulos") or []
         titulo = titulos_c[0] if titulos_c else ""
         clip = Clip(
             id=projeto.novo_clip_id(titulo or cid), candidato=cid, inicio=c["inicio"], fim=c["fim"], titulo=titulo,
             titulos_sugeridos=titulos_c, gancho=(c.get("ia") or {}).get("gancho", ""),
-            formato=formato or ("16:9" if longo else est.formato), estilo=est_nome,
+            formato=formato or ("16:9" if e_longo else est.formato), estilo=est_nome,
             cartela=est.cartela.sugerida if cartela is None else cartela,
             pedido_ia=pedido_ia.model_copy() if pedido_ia else None,
-            ajustes_estilo=dict(ajustes or {}),
+            ajustes_estilo=deep_merge(dict(ajustes or {}), extra_longo) if e_longo and extra_longo else dict(ajustes or {}),
         )
         projeto.salvar_clip(clip)
         out.append(clip)

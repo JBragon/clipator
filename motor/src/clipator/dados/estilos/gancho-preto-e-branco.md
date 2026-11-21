@@ -40,7 +40,7 @@ Formato dos cortes de podcast que prendem nos primeiros segundos: antes do corte
 das falas mais quentes dele mesmo (às vezes a troca entre os dois convidados), sem cor e com um
 pouco mais de contraste. Um clarão branco some quando a cor volta e o corte passa do começo ao fim.
 
-Os ganchos saem da energia do áudio e da fala (gatilhos de gancho, exclamação, pergunta, número e
+Com IA na análise, os ganchos são os momentos fortes que ela apontou em cada corte. Sem IA, saem da energia do áudio e da fala (gatilhos de gancho, exclamação, pergunta, número e
 palavras do assunto), nunca dos primeiros 15% do corte, que o público vê logo depois. Para fixar
 os momentos à mão, ajuste no clip `abertura.trechos` com pares [início, fim] em segundos do vídeo
 original.

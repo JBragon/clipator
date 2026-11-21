@@ -71,15 +71,19 @@ quantidade (padrão 8; de 1 a 50)
   O que acontece: a lista de candidatos curtos guarda o triplo disso (no mínimo 15), para você ter
   opções. Os cortes longos guardam esse número (no mínimo 3).
 
-modo_ia (padrão economico; valores: sem-ia, economico, completo)
+modo_ia (padrão completo; valores: sem-ia, economico, completo)
   O que é: quanto a IA participa da escolha dos cortes.
   Como mudar: modo_ia: sem-ia
   O que acontece:
   - sem-ia: só a nota local do motor. Nada vai para a IA; funciona offline.
   - economico: o motor escolhe os candidatos e a IA só reordena os melhores (veja
     candidatos_para_ia), dá nota, ajusta o começo e o fim e escreve os títulos.
-  - completo: a IA lê a transcrição inteira em blocos, propõe trechos próprios, e depois faz o
-    mesmo do econômico. Gasta bem mais uso da IA.
+  - completo: a IA entende a conversa inteira, bloco a bloco, levando o fio do que já foi dito
+    (quem fala, as teses, o que ficou para depois). Ela acha os assuntos fortes (conflito,
+    revelação, previsão, contradição, história, número), monta Shorts e cortes longos a partir
+    deles e escreve títulos sensacionalistas na medida, cada um com a prova na fala: título cuja
+    prova não aparece no corte é descartado. Depois faz o mesmo do econômico. Gasta bem mais uso
+    da IA, mas é o modo que entende contexto. O mapa fica em analise/assuntos.json.
   O modo escolhido na tela de análise, quando há um, vale por cima deste.
 
 candidatos_para_ia (padrão 20; de 1 a 60)

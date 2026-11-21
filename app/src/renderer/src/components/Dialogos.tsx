@@ -75,7 +75,7 @@ export function NovoProjeto(props: { api: Api; canalInicial?: string; fechar(): 
   const [canais, setCanais] = useState<Canal[]>([])
   const [canal, setCanal] = useState('')
   const [origem, setOrigem] = useState('')
-  const [modo, setModo] = useState('economico')
+  const [modo, setModo] = useState('completo')
   const [longo, setLongo] = useState(true)
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)

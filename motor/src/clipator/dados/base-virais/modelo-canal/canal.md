@@ -55,6 +55,21 @@ chamada_automatica (padrão nenhuma; valores: nenhuma, inicio, fim, inicio-e-fim
   O que acontece: os próximos clips já vêm com o sticker 1 s depois do começo, perto do fim, ou
   nos dois. Clips muito curtos para caber o sticker ficam sem ele. Você pode tirar na edição.
 
+vinheta (padrão vazio)
+  O que é: a vinheta do canal, um vídeo curto em assets/ (ex.: assets/vinheta.mp4). Só entra nos
+  cortes longos, nunca nos Shorts.
+  Como mudar: cadastre pelo app (passo 3, quadro "Cortes longos", ou Detalhes do canal) ou escreva
+  vinheta: assets/vinheta.mp4
+  O que acontece: no passo 3 aparece a escolha de onde a vinheta entra nos cortes longos. Sem
+  vinheta cadastrada, a escolha nem aparece.
+
+vinheta_posicao (padrão depois-do-gancho; valores: inicio, depois-do-gancho)
+  O que é: onde a vinheta entra por padrão nos cortes longos.
+  Como mudar: vinheta_posicao: inicio
+  O que acontece: inicio abre o vídeo com a vinheta; depois-do-gancho monta gancho forte, vinheta
+  e o corte. Corte sem gancho forte fica com a vinheta no começo. Dá para trocar a cada leva no
+  passo 3.
+
 direcao_de_arte (padrão {} vazio)
   O que é: as cores e fontes da marca do canal, aplicadas por cima da ficha do estilo nas cenas
   animadas (direção de arte).

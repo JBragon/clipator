@@ -554,38 +554,86 @@ def _preparar_direcao(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Timeli
     return entradas, partes, sons_da, aviso
 
 
+def _candidato(projeto: ProjetoWS, clip: Clip) -> dict:
+    if not clip.candidato:
+        return {}
+    try:
+        return next((c for c in projeto.candidatos() if c.get("id") == clip.candidato), {})
+    except Exception:  # noqa: BLE001 - sem candidatos.json (amostras): o clip segue sem o trecho da IA
+        return {}
+
+
+def _vinheta_do_clip(projeto: ProjetoWS, estilo: Estilo, longo: bool) -> tuple[Path | None, bool, str | None]:
+    """A vinheta do canal para este clip: (arquivo, vem antes do gancho, aviso). Nunca em Short."""
+    if not longo or estilo.vinheta == "nenhuma":
+        return None, False, None
+    from . import vinheta as _vinheta
+
+    if not (projeto.canal.path / "canal.md").exists():  # canal neutro das amostras da galeria
+        return None, False, None
+    canal, _ = projeto.canal.info()
+    if not canal.vinheta:
+        return None, False, None
+    arq = _vinheta.arquivo(projeto.canal)
+    if arq is None:
+        return None, False, f"A vinheta do canal ({canal.vinheta}) não foi encontrada: o corte saiu sem ela."
+    pos = canal.vinheta_posicao if estilo.vinheta == "canal" else estilo.vinheta
+    return arq, pos == "inicio", None
+
+
 def _aplicar_abertura(projeto: ProjetoWS, estilo: Estilo, tl: Timeline, pals: list[dict], saida: Path, pasta: Path,
                       tem_audio: bool, fps: float, preview: bool, destaques: list[str] | None,
-                      cancelar: threading.Event | None, log: Callable[[str], None] | None) -> str | None:
-    """Ganchos do próprio corte em preto e branco antes dele (abertura.py). Devolve um aviso quando não deu."""
+                      cancelar: threading.Event | None, log: Callable[[str], None] | None,
+                      vinheta: Path | None = None, vinheta_antes: bool = False,
+                      trechos_ia: list[tuple[float, float]] | None = None) -> str | None:
+    """Ganchos do próprio corte antes dele (abertura.py) e a vinheta do canal nos cortes longos.
+    `trechos_ia`: o que a IA apontou na análise (segundos do original): o trecho forte do corte longo ou os
+    momentos fortes do Short. Vale quando o estilo não fixa os trechos à mão. Devolve um aviso quando não deu."""
     from . import abertura
 
     cfg = estilo.abertura
     pals_clip = subtitles.palavras_do_clip(pals, tl) if pals else []
-    ganchos = abertura.manuais(cfg, tl) if cfg.trechos else abertura.escolher(
-        pals_clip, tl.duracao, cfg, abertura.energia_do_clip(projeto.sinais(), tl),
-        subtitles.regex_destaque(estilo.legenda, destaques))
-    if not ganchos:
-        return "Corte curto ou sem fala que sirva de gancho: saiu sem a abertura em preto e branco."
+    ganchos: list[abertura.Gancho] = []
+    aviso = None
+    if cfg.ativa:
+        if cfg.trechos:
+            ganchos = abertura.manuais(cfg, tl)
+        elif trechos_ia:  # o que a IA apontou na análise: o trecho forte do longo ou os momentos do Short
+            ganchos = abertura.manuais(cfg.model_copy(update={"trechos": trechos_ia}), tl)[: cfg.max_trechos]
+        if not ganchos:
+            ganchos = abertura.escolher(pals_clip, tl.duracao, cfg, abertura.energia_do_clip(projeto.sinais(), tl),
+                                        subtitles.regex_destaque(estilo.legenda, destaques))
+        if not ganchos:
+            aviso = "Corte curto ou sem fala que sirva de gancho: saiu sem a abertura com o gancho forte."
+    if not ganchos and vinheta is None:
+        if not preview:
+            (pasta / "abertura.json").unlink(missing_ok=True)
+        return aviso
     som = None
-    if cfg.som:
+    if cfg.som and ganchos:
         som = sons.resolver(cfg.som, [projeto.canal.path, projeto.canal.path / "assets", projeto.ws.root])
     tmp = saida.with_name(saida.stem + ".abertura.tmp.mp4")
     try:
         dur = abertura.montar(saida, tmp, ganchos, cfg, tem_audio, fps, preview, som, estilo.volume_sons,
-                              cancelar=cancelar)
+                              cancelar=cancelar, vinheta=vinheta, vinheta_antes=vinheta_antes)
     except BaseException:
         media.apagar_parcial(tmp)
         raise
     media.substituir(tmp, saida)
+    dur_vin = dur - sum(g.fim - g.inicio for g in ganchos) if vinheta is not None else 0.0
     write_json(pasta / ("abertura.preview.json" if preview else "abertura.json"),
                {"duracao": round(dur, 3), "ganchos": [{"inicio": g.inicio, "fim": g.fim, "texto": g.texto, "nota": g.nota}
-                                                     for g in ganchos]})
-    if pals_clip and not preview:  # a legenda oculta acompanha o vídeo final, com os ganchos na frente
-        subtitles.gerar_srt_vtt(abertura.palavras_finais(pals_clip, ganchos), Timeline.de_clip(0.0, dur + tl.duracao + 1), pasta)
+                                                     for g in ganchos],
+                "vinheta": ({"arquivo": vinheta.name, "duracao": round(dur_vin, 3),
+                             "posicao": "inicio" if abertura.vinheta_primeiro(ganchos, vinheta_antes) else "depois-do-gancho"}
+                            if vinheta is not None else None)})
+    if pals_clip and not preview:  # a legenda oculta acompanha o vídeo final, com os ganchos e a vinheta na frente
+        subtitles.gerar_srt_vtt(abertura.palavras_finais(pals_clip, ganchos, dur_vin, vinheta_antes),
+                                Timeline.de_clip(0.0, dur + tl.duracao + 1), pasta)
     if log:
-        log(f"abertura com {len(ganchos)} gancho(s), {dur:.1f} s")
-    return None
+        log(f"abertura com {len(ganchos)} gancho(s)" + (" e a vinheta do canal" if vinheta is not None else "")
+            + f", {dur:.1f} s")
+    return aviso
 
 
 def _escolher_layout(estilo: Estilo, src_w: int, src_h: int, out_w: int, out_h: int) -> str:
@@ -931,9 +979,12 @@ def renderizar_clip(
         media.apagar_parcial(tmp)  # cancelado ou falhou: não deixa vídeo pela metade
         raise
     media.substituir(tmp, saida)
-    if estilo.abertura.ativa:
-        aviso_ab = _aplicar_abertura(projeto, estilo, tl, pals, saida, pasta, info.tem_audio, fps, preview,
-                                     destaques_ia, cancelar, log)
+    cand = _candidato(projeto, clip)
+    longo = estilo.corte_longo or cand.get("modo") == "longo"
+    vinheta, vinheta_antes, aviso_vin = _vinheta_do_clip(projeto, estilo, longo)
+    trechos_ia = [tuple(t) for t in ((cand.get("ia") or {}).get("abertura") or []) if isinstance(t, (list, tuple)) and len(t) == 2]
+    for aviso_ab in (aviso_vin, _aplicar_abertura(projeto, estilo, tl, pals, saida, pasta, info.tem_audio, fps, preview,
+                                                  destaques_ia, cancelar, log, vinheta, vinheta_antes, trechos_ia)):
         if aviso_ab:
             aviso = f"{aviso} {aviso_ab}" if aviso else aviso_ab
     if da_canal is not None and not preview:
