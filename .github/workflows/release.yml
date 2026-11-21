@@ -12,7 +12,7 @@ name: release
 #   que ser a mesma da tag).
 # - "Run workflow" na aba Actions: só gera os instaladores, sem publicar.
 #
-# O aviso no Discord usa o segredo DISCORD_WEBHOOK_URL. Sem ele, o passo é pulado.
+# O aviso no Discord usa o segredo DISCORD_WEBHOOK_CLIPATOR_URL. Sem ele, o passo é pulado.
 on:
   push:
     branches: [main]
@@ -194,11 +194,11 @@ jobs:
 
       - name: Avisa no Discord
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_CLIPATOR_URL: ${{ secrets.DISCORD_WEBHOOK_CLIPATOR_URL }}
           TAG: ${{ steps.rel.outputs.tag }}
         run: |
-          if [ -z "$DISCORD_WEBHOOK_URL" ]; then
-            echo "::notice::Sem o segredo DISCORD_WEBHOOK_URL: aviso no Discord pulado."
+          if [ -z "$DISCORD_WEBHOOK_CLIPATOR_URL" ]; then
+            echo "::notice::Sem o segredo DISCORD_WEBHOOK_CLIPATOR_URL: aviso no Discord pulado."
             exit 0
           fi
           # O Discord aceita até 4096 caracteres na descrição; ficam 1500 das notas, mais os links.
@@ -221,4 +221,4 @@ jobs:
                   )
                 }]
               }' "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/discord.json"
-          curl -fsS -H "Content-Type: application/json" --data @"$RUNNER_TEMP/discord.json" "$DISCORD_WEBHOOK_URL"
+          curl -fsS -H "Content-Type: application/json" --data @"$RUNNER_TEMP/discord.json" "$DISCORD_WEBHOOK_CLIPATOR_URL"
