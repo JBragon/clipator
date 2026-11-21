@@ -487,7 +487,12 @@ def _trocar_por_x264(args: Sequence[str]) -> list[str] | None:
     return None
 
 
-LOUDNORM = "loudnorm=I=-14:TP=-1.5:LRA=11"
+# O loudnorm guarda 3 s de áudio (a 192 kHz) antes de soltar o primeiro quadro e devolve esses 3 s com os
+# carimbos de tempo embolados: no .mp4 os pacotes de AAC do começo ficam com duração de 1 amostra e depois
+# vem um buraco de ~2 s. O player do Clipator e o TikTok tocam os pacotes em sequência e soa normal, mas o
+# YouTube e o Facebook respeitam os carimbos: o áudio acelera, fica mudo e volta. Por isso voltamos a 48 kHz e
+# refazemos os carimbos pela contagem de amostras (o loudnorm não perde nem cria amostras, então a sincronia fica).
+LOUDNORM = "loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,asetpts=N/SR/TB"
 
 
 def blurred_backdrop(out_w: int, out_h: int, sigma: float = 40) -> str:
