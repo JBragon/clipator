@@ -24,6 +24,7 @@ dependencies = [
   "faster-whisper>=1.1",
   "mcp>=2.0",
   "pillow>=10.1",
+  "segno>=1.6",  # QR code do pareamento do modo remoto (BSD-3, sem dependências)
 ]
 
 [project.optional-dependencies]

@@ -266,6 +266,11 @@ label { color: var(--texto-2); }
 .config { padding: 16px; display: grid; gap: 16px; max-width: 760px; }
 .config section { display: grid; gap: 8px; }
 .config h3 { margin: 0; font-size: 14px; }
+.remoto h4 { font-size: 13px; }
+.remoto-qr { border: 1px solid var(--borda); border-radius: var(--raio); padding: 12px; display: grid; gap: 10px; background: var(--fundo-2); }
+.remoto-qr-corpo { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.remoto-qr-corpo img { background: #fff; border-radius: 8px; padding: 4px; flex: none; }
+.remoto-codigo { font-size: 20px; letter-spacing: .06em; user-select: all; }
 .agente { display: grid; grid-template-columns: 90px 1fr; gap: 6px; }
 
 /* thumbnails */

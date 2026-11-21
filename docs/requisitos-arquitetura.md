@@ -299,6 +299,15 @@ O Clipator inclui um servidor MCP local, então o usuário pode fazer tudo pelo 
 
 Os próprios agentes internos do Clipator usam esse mesmo MCP em vez de editar arquivos soltos. Isso deixa o que a IA pode fazer bem delimitado e igual para Claude e Codex.
 
+## Modo remoto (celular)
+
+O usuário deixa o PC ligado com o Clipator aberto e acompanha pelo celular. Todo o processamento continua no PC; o celular só mostra a interface. O passo a passo para o usuário está em [modo-remoto.md](modo-remoto.md).
+
+- **Como roda:** uma página web leve (HTML, CSS e JS sem build, em `motor/src/clipator/remoto_web/`) servida pelo próprio motor numa segunda porta (8766). Não é app de loja: abre no navegador e pode ser adicionada à tela inicial (manifest de PWA; o service worker só vale em HTTPS, como no `tailscale serve`).
+- **De fora de casa:** pelo [Tailscale](https://tailscale.com) (grátis), que cria uma rede privada entre os aparelhos do usuário. Ninguém precisa mexer em NAT nem abrir porta no roteador. Em casa, também funciona pelo IP do Wi-Fi.
+- **O que o celular faz:** vê o que está rodando (e cancela), escolhe o canal, cola um link novo para analisar, aprova cortes (com o estilo do canal ou outro) e assiste ou baixa o clip pronto.
+- **Segurança:** desligado por padrão; liga em Configurações. A porta remota só atende IPs privados, do próprio PC e da faixa do Tailscale (100.64.0.0/10), então um redirecionamento de porta no roteador continua barrado. Cada celular entra uma vez lendo um QR code com código de uso único (vale 10 minutos, cai depois de 8 erros), que vira um cookie HttpOnly e SameSite=Strict; o motor guarda só o hash em `.clipator/remoto.json` e o usuário tira o acesso de cada aparelho no app. A API do celular (`/m/api`, em `api_remoto.py`) é separada da API do app e não lê nem grava arquivos, não mexe em configuração e não apaga nada. A API do app continua só em 127.0.0.1.
+
 ## Instalação com um comando
 
 O Clipator é um app de desktop em Electron, instalado com dois cliques (.exe no Windows, .dmg no Mac, AppImage no Linux) e com atualização automática. Na primeira abertura, um assistente instala o que falta e registra o MCP. Para quem prefere terminal, a mesma instalação roda com uma linha:
@@ -544,6 +553,7 @@ Todas as perguntas em aberto foram respondidas por Jordan em 01/11/2026. Estas d
 | 22 | Duração máxima dos Shorts | Cada canal define nas regras (padrão 3 min, o limite do YouTube Shorts; era 60 s até 15/11/2026) |
 | 23 | Distribuição | GitHub Releases (instaladores) + PyPI (motor, CLI e MCP) |
 | 24 | Pasta SKILLS/ | Versionada como está no repo público, por decisão do Jordan |
+| 25 | Modo remoto (celular) | Página web servida pelo motor, acesso de fora pelo Tailscale (sem abrir portas), pareamento por QR code; desligado por padrão (20/11/2026) |
 
 ## Fontes
 

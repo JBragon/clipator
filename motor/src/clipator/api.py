@@ -1,7 +1,8 @@
 """API HTTP local (FastAPI) + WebSocket de eventos, usada pelo app Electron.
 
 Só escuta em 127.0.0.1 e exige o token que o app passa ao iniciar o motor,
-para que nenhuma página aberta no navegador consiga chamar a API.
+para que nenhuma página aberta no navegador consiga chamar a API. O celular nunca fala com esta
+API: o modo remoto sobe outra, bem menor, numa segunda porta (ver remoto.py e api_remoto.py).
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from . import __version__, acabamento, checagem, legenda_editada, edicao_ia, gerenciar, hyperframes, ingest, markdown as md, media, pipeline, postagem, skills, sons, thumbs, transcribe, validacao
+from . import remoto as remoto_mod
 from .ai import detectar_agentes
 from .ai.adapter import ErroIA, abrir_login
 from .models import Clip, ConfigApp, PedidoIA
@@ -146,6 +148,10 @@ class EscolherThumb(BaseModel):
     arquivo: str
 
 
+class LigarRemoto(BaseModel):
+    porta: int | None = None
+
+
 class PedidoRanking(BaseModel):
     modo_ia: str | None = None
     agente: str | None = None
@@ -157,6 +163,7 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
     app = FastAPI(title="Clipator", version=__version__)
     app.state.servico = srv
     app.state.token = token
+    app.state.remoto = remoto_mod.Remoto(srv.ws.root / ".clipator" / "remoto.json")
     # O app Electron carrega a interface de file:// ou do Vite em desenvolvimento.
     app.add_middleware(CORSMiddleware, allow_origins=["null", "http://localhost:5173", "http://127.0.0.1:5173"],
                        allow_methods=["*"], allow_headers=["*"])
@@ -1413,6 +1420,51 @@ def criar_app(servico: Servico | None = None, token: str | None = None) -> FastA
             raise erro(exc) from exc
         return {"ok": True}
 
+    # ---- modo remoto (celular) ---------------------------------------------
+    rem: remoto_mod.Remoto = app.state.remoto
+
+    def ligar_remoto(porta: int | None = None) -> None:
+        from .api_remoto import criar_app_remoto
+
+        rem.ligar(criar_app_remoto(srv, rem), porta)
+
+    app.state.ligar_remoto = ligar_remoto
+
+    @app.get("/api/remoto", dependencies=dep)
+    def estado_remoto() -> dict:
+        return rem.estado()
+
+    @app.post("/api/remoto/ligar", dependencies=dep)
+    def ligar(dados: LigarRemoto) -> dict:
+        try:
+            ligar_remoto(dados.porta)
+        except OSError as exc:
+            raise HTTPException(409, str(exc)) from exc
+        return rem.estado()
+
+    @app.post("/api/remoto/desligar", dependencies=dep)
+    def desligar() -> dict:
+        rem.desligar()
+        return rem.estado()
+
+    @app.post("/api/remoto/codigo", dependencies=dep)
+    def codigo_remoto() -> dict:
+        """Código de pareamento de uso único, com o QR code de cada endereço do PC."""
+        if not rem.ligado:
+            raise HTTPException(409, "Ligue o modo remoto primeiro.")
+        cod, expira = rem.novo_codigo()
+        links = []
+        for e in rem.estado()["enderecos"]:
+            url = f"{e['url']}/#parear={cod}"
+            links.append({**e, "link": url, "qr": remoto_mod.qr_svg(url)})
+        return {"codigo": cod, "expira_em": expira, "links": links}
+
+    @app.delete("/api/remoto/aparelhos/{aid}", dependencies=dep)
+    def remover_aparelho(aid: str) -> dict:
+        if not rem.remover(aid):
+            raise HTTPException(404, "Aparelho não encontrado")
+        return rem.estado(com_enderecos=False) | {"ok": True}
+
     # ---- jobs --------------------------------------------------------------
     @app.get("/api/jobs", dependencies=dep)
     def jobs() -> list[dict]:
@@ -1494,6 +1546,11 @@ def rodar(host: str = "127.0.0.1", porta: int = 8765, workspace: str | None = No
         raise SystemExit("Por segurança o motor só escuta em 127.0.0.1")
     app = criar_app(Servico(workspace, limpar_erros=True), token)
     # O Electron lê esta linha para saber que o motor subiu.
+    if app.state.remoto.quer_ligado:  # o usuário deixou o modo remoto ligado da última vez
+        try:
+            app.state.ligar_remoto()
+        except OSError as exc:
+            print(f"Modo remoto não ligou: {exc}", flush=True)
     print(f"CLIPATOR_PRONTO porta={porta} token={app.state.token}", flush=True)
     uvicorn.run(app, host=host, port=porta, log_level="warning")
 

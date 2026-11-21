@@ -1,0 +1,12 @@
+{
+  "name": "Clipator remoto",
+  "short_name": "Clipator",
+  "description": "Acompanhe e aprove os cortes do Clipator pelo celular. Tudo roda no seu PC.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141518",
+  "theme_color": "#141518",
+  "icons": [{ "src": "icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
