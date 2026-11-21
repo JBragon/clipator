@@ -3,14 +3,19 @@ import { hms, type Api, type Candidato, type Job } from '../api'
 import { useT } from '../i18n'
 import { GaleriaEstilos, type AjustesEstilo } from './GaleriaEstilos'
 import { PainelPedidoIA, type PedidoIA } from './PedidoIA'
+import { VinhetaCanal, useVinheta } from './VinhetaCanal'
 
+// Só nos cortes longos: o gancho forte antes do corte e onde entra a vinheta do canal ('canal' = a posição padrão dele)
+export type GanchoLongo = 'cor' | 'preto-e-branco' | 'nenhum'
+export type VinhetaLonga = 'canal' | 'inicio' | 'depois-do-gancho' | 'nenhuma'
+export type EscolhaLongo = { gancho: GanchoLongo; vinheta: VinhetaLonga }
 // Escolhas do passo 3 que sobrevivem à troca de passo (ficam no ProjetoView)
-export type EscolhaEstilo = { estilo: string; ajustes: AjustesEstilo; formato: string; cartela: boolean; pedidoIA: PedidoIA | null }
+export type EscolhaEstilo = { estilo: string; ajustes: AjustesEstilo; formato: string; cartela: boolean; pedidoIA: PedidoIA | null; longo: EscolhaLongo }
 // tira os campos vazios (um grupo que o usuário abriu e não mexeu não vai para o clip)
 const semVazios = (a: AjustesEstilo): AjustesEstilo => Object.fromEntries(Object.entries(a)
   .map(([k, v]) => [k, v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).filter(([, x]) => x !== undefined && x !== '')) : v])
   .filter(([, v]) => v !== undefined && (typeof v !== 'object' || Object.keys(v as object).length))) as AjustesEstilo
-export const escolhaInicial = (): EscolhaEstilo => ({ estilo: '', ajustes: {}, formato: '', cartela: true, pedidoIA: null })
+export const escolhaInicial = (): EscolhaEstilo => ({ estilo: '', ajustes: {}, formato: '', cartela: true, pedidoIA: null, longo: { gancho: 'cor', vinheta: 'canal' } })
 const temAjustesEm = (a: AjustesEstilo): boolean => Object.values(a).some((v) => v !== undefined && (typeof v !== 'object' || Object.keys(v).length))
 
 // cria os clips dos cortes escolhidos com o estilo do passo 3 (e manda renderizar); usado nos passos 3 e 4
@@ -22,7 +27,9 @@ export async function criarClips(api: Api, base: string, escolhidos: Candidato[]
     estilo: escolha.estilo || null,
     cartela: escolha.cartela,
     pedido_ia: pedido,
-    ajustes: temAjustesEm(escolha.ajustes) ? semVazios(escolha.ajustes) : null
+    ajustes: temAjustesEm(escolha.ajustes) ? semVazios(escolha.ajustes) : null,
+    // o motor aplica só nos cortes longos; os Shorts nunca recebem gancho longo nem vinheta
+    longo: escolhidos.some((c) => c.modo === 'longo') ? escolha.longo : null
   })
   if (renderizar) await api.post(`${base}/renderizar`, { clips: clips.map((c) => c.id) })
   return clips.length
@@ -134,11 +141,62 @@ export function PassoEstilo(props: {
               )}
             </div>
           )}
+          {escolhidos.some((c) => c.modo === 'longo') && (
+            <QuadroLongos api={api} canal={canal} n={escolhidos.filter((c) => c.modo === 'longo').length}
+              longo={escolha.longo} setLongo={(l) => mudar({ longo: l })} />
+          )}
           <div className="barra-pedido-ia">
             <PainelPedidoIA api={api} pedido={escolha.pedidoIA} setPedido={(p) => mudar({ pedidoIA: p })} />
           </div>
         </aside>
       </div>
+    </div>
+  )
+}
+
+// O quadro dos cortes longos: gancho forte (em cor, preto e branco ou nenhum) e, só se o canal tem vinheta, onde ela entra
+function QuadroLongos(props: { api: Api; canal: string; n: number; longo: EscolhaLongo; setLongo(l: EscolhaLongo): void }): React.JSX.Element {
+  const { api, canal, n, longo, setLongo } = props
+  const t = useT()
+  const tl = t.cortesLongos
+  const [vin, setVin] = useVinheta(api, canal)
+  const temVinheta = !!vin?.arquivo
+  // 'canal' vira a posição padrão do canal; sem gancho, a vinheta só pode abrir o vídeo
+  let posicao: VinhetaLonga = longo.vinheta === 'canal' ? (vin?.posicao ?? 'depois-do-gancho') : longo.vinheta
+  if (longo.gancho === 'nenhum' && posicao === 'depois-do-gancho') posicao = 'inicio'
+  return (
+    <div className="resumo-estilo quadro-longos">
+      <strong>{tl.titulo}</strong>
+      <span className="dica">{tl.dica(n)}</span>
+      <span className="rotulo-campo">{tl.gancho}</span>
+      <div className="opcoes-longo" role="radiogroup" aria-label={tl.gancho}>
+        {(['cor', 'preto-e-branco', 'nenhum'] as const).map((g) => (
+          <label key={g} className={`chip-filtro ${longo.gancho === g ? 'ativo' : ''}`}>
+            <input type="radio" name="gancho-longo" checked={longo.gancho === g} onChange={() => setLongo({ ...longo, gancho: g })} />
+            {tl.ganchos[g]}
+          </label>
+        ))}
+      </div>
+      {longo.gancho !== 'nenhum' && <span className="dica">{tl.ganchoDica}</span>}
+      {temVinheta ? (
+        <>
+          <span className="rotulo-campo">{tl.vinheta}</span>
+          <div className="opcoes-longo" role="radiogroup" aria-label={tl.vinheta}>
+            {(['depois-do-gancho', 'inicio', 'nenhuma'] as const).filter((v) => v !== 'depois-do-gancho' || longo.gancho !== 'nenhum').map((v) => (
+              <label key={v} className={`chip-filtro ${posicao === v ? 'ativo' : ''}`}>
+                <input type="radio" name="vinheta-longo" checked={posicao === v} onChange={() => setLongo({ ...longo, vinheta: v })} />
+                {tl.vinhetas[v]}
+              </label>
+            ))}
+          </div>
+          <VinhetaCanal api={api} canal={canal} estado={vin} setEstado={setVin} compacto />
+        </>
+      ) : (
+        <>
+          <span className="dica">{tl.semVinheta}</span>
+          <VinhetaCanal api={api} canal={canal} estado={vin} setEstado={setVin} compacto />
+        </>
+      )}
     </div>
   )
 }

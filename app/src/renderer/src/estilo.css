@@ -775,3 +775,17 @@ button.perigo-contorno:focus-visible, button.perigo-cheio:focus-visible { outlin
 .aviso-txt { color: var(--aviso); font-size: 12px; }
 .opcoes-fonte { margin: 0; padding: 6px 8px; list-style: none; display: grid; gap: 4px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--fundo-2); }
 .acoes-fato { gap: 8px; }
+
+/* vinheta do canal (só cortes longos) e o quadro dos cortes longos no passo 3 */
+.vinheta-canal { display: grid; gap: 6px; }
+.vinheta-atual { display: grid; grid-template-columns: 160px 1fr; gap: 10px; align-items: start; }
+.vinheta-canal.compacto .vinheta-atual { grid-template-columns: 96px 1fr; }
+.vinheta-atual video { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 6px; }
+.vinheta-info { display: grid; gap: 4px; min-width: 0; }
+.vinheta-info strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detalhes-vinheta { display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--borda); }
+.quadro-longos { gap: 6px; }
+.quadro-longos .rotulo-campo { font-size: 12px; font-weight: 600; margin-top: 4px; }
+.opcoes-longo { display: flex; flex-wrap: wrap; gap: 6px; }
+.opcoes-longo label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.opcoes-longo input[type='radio'] { position: absolute; opacity: 0; pointer-events: none; }

@@ -58,7 +58,7 @@ class Regras(_Base):
     corte_longo_min: float = Field(480, ge=120)
     corte_longo_max: float = Field(1200, le=3600)
     quantidade: int = Field(8, ge=1, le=50)
-    modo_ia: ModoIA = "economico"
+    modo_ia: ModoIA = "completo"
     nivel_ia: NivelIA = "assistido"
     candidatos_para_ia: int = Field(20, ge=1, le=60)
     pesos: Pesos = Field(default_factory=Pesos)
@@ -91,6 +91,9 @@ class Regras(_Base):
         return lo + 0.75 * (hi - lo)
 
 
+PosicaoVinheta = Literal["inicio", "depois-do-gancho"]
+
+
 class Canal(_Base):
     """canal.md: identidade do canal."""
 
@@ -107,6 +110,10 @@ class Canal(_Base):
     direcao_de_arte: dict[str, Any] = Field(default_factory=dict, description="Ficha do canal (cores, fontes) por cima da do estilo")
     chamada_automatica: Literal["nenhuma", "inicio", "fim", "inicio-e-fim"] = Field(
         "nenhuma", description="Sugerir o sticker animado de Inscreva-se no começo e/ou no fim dos clips")
+    vinheta: str | None = Field(None, description="Vinheta do canal (arquivo em assets/), só para os cortes longos")
+    vinheta_posicao: PosicaoVinheta = Field(
+        "depois-do-gancho", description="Onde a vinheta entra por padrão: inicio (antes de tudo) ou depois-do-gancho "
+        "(gancho forte, vinheta e o corte; sem gancho, ela vai para o começo)")
 
 
 class Legenda(_Base):
@@ -168,9 +175,10 @@ class Abertura(_Base):
     """Abertura com ganchos: os momentos mais fortes do próprio corte, em preto e branco, antes do corte inteiro."""
 
     ativa: bool = False
-    duracao: float = Field(6.0, ge=2.0, le=15.0, description="Duração total desejada dos ganchos (s)")
+    duracao: float = Field(6.0, ge=2.0, le=25.0, description="Duração total desejada dos ganchos (s)")
     max_trechos: int = Field(2, ge=1, le=4, description="Quantos momentos entram na abertura")
-    max_trecho: float = Field(4.5, ge=1.0, le=8.0, description="Duração máxima de cada momento (s)")
+    max_trecho: float = Field(4.5, ge=1.0, le=25.0, description="Duração máxima de cada momento (s); com um "
+                              "momento só e mais de 8 s, vira um trecho corrido de várias frases (o gancho dos cortes longos)")
     inicio_minimo: float = Field(0.15, ge=0.0, le=0.8, description="Não pega ganchos desta fração inicial do corte, "
                                  "que o público vai ver logo em seguida")
     preto_e_branco: bool = True
@@ -258,6 +266,9 @@ class Estilo(_Base):
     posicao_logo: Literal["topo-esquerda", "topo-direita", "baixo-esquerda", "baixo-direita"] = "topo-direita"
     normalizar_audio: bool = True
     corte_longo: bool = False
+    vinheta: Literal["nenhuma", "canal", "inicio", "depois-do-gancho"] = Field(
+        "nenhuma", description="Só nos cortes longos: a vinheta do canal no começo (inicio), entre o gancho forte e o "
+        "corte (depois-do-gancho) ou onde o canal mandar (canal: vinheta_posicao do canal.md)")
     direcao: DirecaoArte = Field(default_factory=DirecaoArte, description="Direção de arte: cenas animadas e layout")
     requer_ia: bool = Field(False, description="Só funciona com a IA integrada (Claude Code ou Codex): sem ela, o render recusa")
 

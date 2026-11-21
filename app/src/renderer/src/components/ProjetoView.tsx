@@ -327,7 +327,7 @@ export function ProjetoView(props: Props): React.JSX.Element {
               )}
               <div className="linha">
                 <button disabled={!!jobAtivo} onClick={() => void refazer()}>{t.rodarDeNovo}</button>
-                <button disabled={!!jobAtivo || !cands.length} onClick={() => void api.post(`${base}/ranquear`, { modo_ia: 'economico' })}>
+                <button disabled={!!jobAtivo || !cands.length} onClick={() => void api.post(`${base}/ranquear`, { modo_ia: 'completo' })}>
                   {t.ranquearIA}
                 </button>
                 {analiseFeita && !longos && (

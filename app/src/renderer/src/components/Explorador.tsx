@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { hms, type Api, type Job } from '../api'
 import { useT } from '../i18n'
 import { ponte } from '../ponte'
+import { VinhetaCanal, useVinheta } from './VinhetaCanal'
 
 type CanalItem = { slug: string; nome: string; idioma: string; projetos: number }
 type VideoItem = { id: string; titulo: string; criado_em: string; fase: string; clips: number; cortes: number; thumb: string | null }
@@ -400,6 +401,7 @@ function DialogoExplorador(props: {
             {linha(e.pasta, <code className="caminho">{det.pasta}</code>)}
           </div>
         )}
+        {d.tipo === 'detalhes' && !v && <VinhetaDoCanal api={api} canal={c.slug} />}
         {d.tipo === 'apagar' && det && (
           <>
             <p className="erro-txt" style={{ margin: 0 }}>{v ? e.apagarVideoAviso(bytes(det.bytes)) : e.apagarCanalAviso(Number(det.videos), Number(det.clips), bytes(det.bytes))}</p>
@@ -425,6 +427,17 @@ function DialogoExplorador(props: {
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function VinhetaDoCanal({ api, canal }: { api: Api; canal: string }): React.JSX.Element {
+  const t = useT()
+  const [estado, setEstado] = useVinheta(api, canal)
+  return (
+    <div className="detalhes-vinheta">
+      <strong>{t.vinheta.titulo}</strong>
+      <VinhetaCanal api={api} canal={canal} estado={estado} setEstado={setEstado} />
     </div>
   )
 }
