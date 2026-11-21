@@ -1,17 +1,145 @@
 name: release
 
-# Gera os instaladores do app (Windows .exe, macOS .dmg, Linux .AppImage) e publica
-# numa release do GitHub quando uma tag v* é enviada, por exemplo: git tag v0.1.0 && git push --tags
+# Gera os instaladores do app (Windows .exe, macOS .dmg, Linux .AppImage), publica numa release
+# do GitHub e avisa no Discord. Começa de três jeitos:
+#
+# - Merge de PR na main (o caminho normal): a versão sobe sozinha (0.1.1 -> 0.1.2), o commit
+#   "Versão 0.1.2" e a tag v0.1.2 vão para a main, a release nasce como rascunho, recebe os
+#   instaladores e só é publicada (e anunciada no Discord) quando os três sistemas terminam.
+#   Etiquetas no PR mudam o salto: "versao: minor" (0.1.2 -> 0.2.0), "versao: major"
+#   (0.2.0 -> 1.0.0) e "sem release" (não lança nada).
+# - Tag v* enviada à mão: git tag v0.1.0 && git push --tags (a versão do app/package.json tem
+#   que ser a mesma da tag).
+# - "Run workflow" na aba Actions: só gera os instaladores, sem publicar.
+#
+# O aviso no Discord usa o segredo DISCORD_WEBHOOK_CLIPATOR_URL. Sem ele, o passo é pulado.
 on:
   push:
+    branches: [main]
     tags: ["v*"]
   workflow_dispatch:
 
 permissions:
   contents: write
+  pull-requests: read
+
+# Dois merges seguidos viram duas versões, uma depois da outra, sem cancelar nenhuma.
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
+  versao:
+    # Só no push da main. Os commits de versão abaixo são enviados com o GITHUB_TOKEN, que não
+    # dispara workflows, então não há laço.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.nova.outputs.tag }}
+    steps:
+      - name: PR do merge
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pr="$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
+            --jq '[.[] | select(.merged_at != null and .base.ref == "main")][0]')"
+          if [ -z "$pr" ] || [ "$pr" = null ]; then
+            echo "Push direto na main, sem PR: nada a lançar."
+            echo "lancar=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          printf '%s' "$pr" > "$RUNNER_TEMP/pr.json"
+          etiquetas="$(jq -r '[.labels[].name | ascii_downcase] | join(",")' "$RUNNER_TEMP/pr.json")"
+          salto=patch
+          case ",$etiquetas," in
+            *",sem release,"*) echo "PR com a etiqueta \"sem release\"."; echo "lancar=false" >> "$GITHUB_OUTPUT"; exit 0 ;;
+            *",versao: major,"*) salto=major ;;
+            *",versao: minor,"*) salto=minor ;;
+          esac
+          echo "lancar=true" >> "$GITHUB_OUTPUT"
+          echo "salto=$salto" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.pr.outputs.lancar == 'true'
+        with:
+          ref: main          # a main de agora, que já tem a versão do merge anterior
+          fetch-depth: 0
+
+      - name: Sobe a versão, faz o commit e a tag
+        id: nova
+        if: steps.pr.outputs.lancar == 'true'
+        env:
+          SALTO: ${{ steps.pr.outputs.salto }}
+        run: |
+          atual="$(jq -r .version app/package.json)"
+          IFS=. read -r ma mi pa <<< "${atual%%-*}"
+          case "$SALTO" in
+            major) nova="$((ma + 1)).0.0" ;;
+            minor) nova="$ma.$((mi + 1)).0" ;;
+            *)     nova="$ma.$mi.$((pa + 1))" ;;
+          esac
+          # Se a tag já existe (release feita à mão), pula para a próxima livre.
+          while git rev-parse -q --verify "refs/tags/v$nova" > /dev/null; do
+            IFS=. read -r ma mi pa <<< "$nova"; nova="$ma.$mi.$((pa + 1))"
+          done
+          echo "Versão $atual -> $nova"
+
+          # App e motor saem com o mesmo número.
+          for f in app/package.json app/package-lock.json; do
+            jq --arg v "$nova" '.version = $v | if .packages[""] then .packages[""].version = $v else . end' "$f" > "$f.novo"
+            mv "$f.novo" "$f"
+          done
+          sed -i -E "s/^version = \"[^\"]*\"/version = \"$nova\"/" motor/pyproject.toml
+          sed -i -E "s/^__version__ = \"[^\"]*\"/__version__ = \"$nova\"/" motor/src/clipator/__init__.py
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Versão $nova"
+          git tag "v$nova"
+          # Se outro push entrou na main nesse meio tempo, junta e tenta de novo.
+          enviado=false
+          for tentativa in 1 2 3; do
+            if git push origin HEAD:main; then enviado=true; break; fi
+            git tag -d "v$nova"; git pull --rebase origin main; git tag "v$nova"
+          done
+          if [ "$enviado" != true ]; then echo "::error::Não consegui enviar o commit de versão para a main."; exit 1; fi
+          git push origin "v$nova"
+          echo "tag=v$nova" >> "$GITHUB_OUTPUT"
+
+      - name: Rascunho da release
+        if: steps.pr.outputs.lancar == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.nova.outputs.tag }}
+        run: |
+          # Notas: título e descrição do PR, sem as linhas de atribuição automática.
+          numero="$(jq -r .number "$RUNNER_TEMP/pr.json")"
+          titulo="$(jq -r .title "$RUNNER_TEMP/pr.json")"
+          jq -r '.body // ""' "$RUNNER_TEMP/pr.json" | tr -d '\r' \
+            | grep -v -E '^<!--.*-->$|^_Requested by|^🤖 Generated with|^https://claude\.ai/code/' \
+            | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' > "$RUNNER_TEMP/corpo.md" || true
+          {
+            echo "## $titulo (#$numero)"
+            echo
+            cat "$RUNNER_TEMP/corpo.md"
+            echo
+            echo "### Como instalar ou atualizar"
+            echo
+            echo "O app avisa sozinho quando abre. Para instalar do zero, baixe o instalador do seu sistema logo abaixo, em **Assets**."
+          } > "$RUNNER_TEMP/notas.md"
+          gh release create "$TAG" --repo "${{ github.repository }}" --draft \
+            --title "${TAG#v}" --notes-file "$RUNNER_TEMP/notas.md" --verify-tag
+
   app:
+    needs: versao
+    # Roda depois do job de versão quando ele lançou algo, numa tag enviada à mão, ou pelo botão.
+    if: >-
+      always() && (
+        needs.versao.outputs.tag != '' ||
+        startsWith(github.ref, 'refs/tags/v') ||
+        github.event_name == 'workflow_dispatch'
+      )
     strategy:
       fail-fast: false
       matrix:
@@ -28,6 +156,8 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.versao.outputs.tag || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -39,4 +169,56 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: "false"   # sem certificado de assinatura por enquanto
-        run: npx electron-builder ${{ matrix.alvo }} --publish ${{ startsWith(github.ref, 'refs/tags/v') && 'always' || 'never' }}
+        # Publica (envia os instaladores para a release da versão do package.json) só quando há tag.
+        run: npx electron-builder ${{ matrix.alvo }} --publish ${{ (needs.versao.outputs.tag != '' || startsWith(github.ref, 'refs/tags/v')) && 'always' || 'never' }}
+
+  publicar:
+    needs: [versao, app]
+    # Só quando os três instaladores ficaram prontos. Se algum falhar, a release fica em
+    # rascunho: dá para rodar de novo o job que falhou ou publicar à mão na aba Releases.
+    if: >-
+      always() && needs.app.result == 'success' && (
+        needs.versao.outputs.tag != '' || startsWith(github.ref, 'refs/tags/v')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publica a release
+        id: rel
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.versao.outputs.tag || github.ref_name }}
+        run: |
+          gh release edit "$TAG" --repo "${{ github.repository }}" --draft=false --latest
+          gh release view "$TAG" --repo "${{ github.repository }}" --json url,body,assets > "$RUNNER_TEMP/release.json"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Avisa no Discord
+        env:
+          DISCORD_WEBHOOK_CLIPATOR_URL: ${{ secrets.DISCORD_WEBHOOK_CLIPATOR_URL }}
+          TAG: ${{ steps.rel.outputs.tag }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_CLIPATOR_URL" ]; then
+            echo "::notice::Sem o segredo DISCORD_WEBHOOK_CLIPATOR_URL: aviso no Discord pulado."
+            exit 0
+          fi
+          # O Discord aceita até 4096 caracteres na descrição; ficam 1500 das notas, mais os links.
+          jq --arg tag "$TAG" '
+            def link($ext; $nome):
+              ([.assets[] | select(.name | endswith($ext))][0].url) as $u
+              | if $u then "[\($nome)](\($u))" else empty end;
+            (.body | split("### Como instalar")[0] | gsub("\\s+$"; "") | gsub("^#+ (?<t>[^\n]*)"; "**\(.t)**")) as $notas
+            | {
+                username: "Clipator",
+                embeds: [{
+                  title: "Clipator \($tag) saiu!",
+                  url: .url,
+                  color: 5814783,
+                  description: (
+                    (if ($notas | length) > 1500 then ($notas[0:1500] + "…") else $notas end)
+                    + "\n\n**Baixar:** "
+                    + ([link(".exe"; "Windows"), link("-arm64.dmg"; "Mac (M1 em diante)"), link("\($tag[1:]).dmg"; "Mac (Intel)"), link(".AppImage"; "Linux")] | join(" · "))
+                    + "\nQuem já tem o app recebe o aviso de atualização ao abrir."
+                  )
+                }]
+              }' "$RUNNER_TEMP/release.json" > "$RUNNER_TEMP/discord.json"
+          curl -fsS -H "Content-Type: application/json" --data @"$RUNNER_TEMP/discord.json" "$DISCORD_WEBHOOK_CLIPATOR_URL"
