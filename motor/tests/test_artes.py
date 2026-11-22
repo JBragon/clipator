@@ -43,7 +43,7 @@ def test_sao_28_direcoes_com_renderizador_preset_e_ficha(ws):
     for s in SLUGS:
         est = ws.carregar_estilo(f"arte-{s}")[0]
         assert est.direcao.modo == "arte" and est.direcao.arte == s and est.direcao.layout == "em-cima"
-        assert not est.requer_ia, "os estilos de arte funcionam sem IA"
+        assert est.requer_ia, "toda animação usa IA: sem ela o estilo fica bloqueado"
         assert f"arte-{s}" in estilos
 
 
@@ -320,6 +320,10 @@ def test_ia_nas_tres_etapas_recebe_so_texto_e_a_ficha_certa(ws, monkeypatch):
         pedidos.append(prompt)
         if "ideias" in schema["properties"]:
             return {"tema": "processo", "ideias": []}
+        if "planos" in schema["properties"]:
+            from .conftest import direcao_de_roteiro
+
+            return direcao_de_roteiro({"cenas": [{"ancora": "O processo começa aqui.", "etiqueta": "INÍCIO", "descricao": "a"}]})
         if "indice" in schema["properties"]["cenas"]["items"]["properties"]:
             return {"cenas": [{"indice": 0, "texto": "O processo começa aqui", "itens": [], "nota": "começa", "dado": "", "peca": ""}]}
         return {"cenas": [{"ancora": "O processo começa aqui.", "ate": "", "etiqueta": "INÍCIO", "descricao": "a", "dado": "", "balao": ""}]}
@@ -382,3 +386,16 @@ def test_rota_do_painel_recusa_parametro_antes_de_entrar_na_fila(ws):
     assert cl.post(f"{base}/ajustar", json={"parametros": {"xss": 1}}, headers=h).status_code == 400 and not enviados
     r = cl.post(f"{base}/ajustar", json={"parametros": {"max_linhas": 2}}, headers=h)
     assert r.json() == {"job": "job1"} and enviados[0][0] == "ajustar_arte"
+
+
+def test_atlas_em_3d_guarda_o_plano_e_abre_as_notas_na_hora_do_cursor(monkeypatch):
+    from clipator import maquete3d
+
+    doc = camada("atlas-de-percursos")
+    assert '<canvas id="arte3d">' in doc and 'class="so-2d"' in doc and 'class="so-3d"' in doc and "'atlas-de-percursos'" in doc
+    dados = json.loads(re.search(r"window\.ARTE3D = (\{.*?\});</script>", doc, re.S).group(1))
+    c = dados["cenas"][0]
+    assert len(c["chegadas"]) == c["marcos"] and c["chegadas"] == sorted(c["chegadas"]) and c["chegadas"][0] == c["t_ini"]
+    monkeypatch.setattr(maquete3d, "caminho_three", lambda: None)
+    sem = camada("atlas-de-percursos")
+    assert "<canvas" not in sem and 'class="so-2d"' in sem

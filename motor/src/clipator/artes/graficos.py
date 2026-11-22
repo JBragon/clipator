@@ -1,10 +1,14 @@
-"""Direções de desenho plano: acervo, mapa de ideias, painel, atlas, gesto de papel e tinta. Formas próprias, em SVG e CSS."""
+"""Direções de desenho plano: acervo, mapa de ideias, painel, atlas, gesto de papel e tinta. Formas próprias, em SVG e CSS.
+
+O atlas também tem 3D (three.js, em tres.py): terreno em relevo, a rota que se desenha e o cursor que a percorre; o SVG fica
+como alternativa leve e sem WebGL."""
 
 from __future__ import annotations
 
 from types import SimpleNamespace
 
 from .editoriais import _papel, _sombra
+from .tres import Direcao3D
 from .kit import ALTURA_LINHA, T0, Ctx, ajustar, g, imagem, largura, linhas, peca, retangulo, traco, txt
 
 
@@ -144,13 +148,12 @@ def _atlas_fundo(c: Ctx) -> str:
         f'<path d="M0 {c.H * (i + 1) / 8:.0f}H{c.W:.0f}M{c.W * (i + 1) / 8:.0f} 0V{c.H:.0f}" stroke="var(--suave)" stroke-width="1" opacity=".18"/>' for i in range(7))
 
 
-def _atlas(c: Ctx) -> str:
+def _atlas_rota(c: Ctx) -> tuple[list[str], list[float], list[tuple[float, float]], list[float], float, float, float, float]:
+    """(marcos, fases, pontos, comprimentos acumulados, total, altura do rodapé, início e fim da rota): o mesmo para o SVG e o 3D."""
     n = max(2, min(int(c.par["max_marcos"]), len(c.itens(int(c.par["max_marcos"])))))
     marcos = c.itens(n)
     n = len(marcos)
-    simult = int(c.par["rotulos_simultaneos"])
     mg = float(c.par["margem_enquadramento"])
-    esp = int(c.par["espessura_rota_px"])
     r = c.rng(1)
     ts = c.fases(max(2, n) + 1, leitura=1.3)
     hb = min(130.0, c.lh * 0.2)
@@ -161,14 +164,20 @@ def _atlas(c: Ctx) -> str:
         x = ax0 + (ax1 - ax0) * i / max(1, n - 1)
         y = ay0 + (ay1 - ay0) * (0.5 + 0.5 * (1 if i % 2 else -1) * r.uniform(0.45, 1))
         pts.append((x, y))
-    d = f"M{pts[0][0]:.0f} {pts[0][1]:.0f}" + "".join(f"L{b[0]:.0f} {b[1]:.0f}" for b in pts[1:])
-    out = []
-    # a rota é desenhada pelo comprimento: o ponto de progresso anda na mesma velocidade até cada marco
     comp = [0.0]
     for a, b in zip(pts, pts[1:]):
         comp.append(comp[-1] + ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5)
-    total = comp[-1] or 1
-    t_ini, t_fim = ts[0], ts[-2] + 0.3
+    return marcos, ts, pts, comp, comp[-1] or 1, hb, ts[0], ts[-2] + 0.3
+
+
+def _atlas(c: Ctx) -> str:
+    marcos, ts, pts, comp, total, hb, t_ini, t_fim = _atlas_rota(c)
+    n = len(marcos)
+    simult = int(c.par["rotulos_simultaneos"])
+    esp = int(c.par["espessura_rota_px"])
+    d = f"M{pts[0][0]:.0f} {pts[0][1]:.0f}" + "".join(f"L{b[0]:.0f} {b[1]:.0f}" for b in pts[1:])
+    out = []
+    # a rota é desenhada pelo comprimento: o ponto de progresso anda na mesma velocidade até cada marco
     kf = "".join(f"{100 * k / total:.1f}% {{ transform: translate({p[0]:.0f}px, {p[1]:.0f}px); }}" for k, p in zip(comp, pts))
     nome = f"a-rota{c.k}"
     out.append(f"<style>@keyframes {nome} {{ {kf} }}</style>")
@@ -188,8 +197,27 @@ def _atlas(c: Ctx) -> str:
             by = y - hh - 26 if y - hh - 26 > c.y0 else y + 26
             out.append(g(retangulo(bx, by, w, hh, "var(--fundo)", 4, 'stroke="var(--texto)" stroke-width="2"') + linhas(bx + 14, by + 6 + tam, ls, tam), chegada + 0.15, "a-sobe", 0.35))
     ls, tam = ajustar(c.texto, c.fonte_corpo, c.lw, hb - 34, 2, 44, 34)
-    out.append(g(linhas(c.x0, c.y1 - hb + 4 + tam, ls, tam) + txt(c.x1, c.y1, "trajeto esquemático", 28, "var(--texto)", "t", "end"), ts[-1], "a-fade", 0.4))
-    return "".join(out)
+    rodape = g(linhas(c.x0, c.y1 - hb + 4 + tam, ls, tam) + txt(c.x1, c.y1, "trajeto esquemático", 28, "var(--texto)", "t", "end"), ts[-1], "a-fade", 0.4)
+    # em 3D (three.js), o mapa plano some e os marcos viram notas numeradas na lateral, abertas quando o cursor chega
+    notas, ys = "", [c.y0 + 8, c.y0 + 8]  # duas colunas, cada uma empilhada pela altura real das notas
+    for i in range(n):
+        chegada = t_ini + (t_fim - t_ini) * comp[i] / total
+        ls2, tam2 = ajustar(f"{i + 1} · {marcos[i]}", c.fonte_corpo, c.lw * 0.46, 100, 2, 38, 32)
+        w = max(largura(q, c.fonte_corpo, tam2) for q in ls2) + 30
+        hh = len(ls2) * tam2 * ALTURA_LINHA + 14
+        x, y = (c.x0 if i % 2 == 0 else c.x1 - w), ys[i % 2]
+        notas += g(retangulo(x, y, w, hh, "var(--fundo)", 6, 'stroke="var(--primaria)" stroke-width="3" opacity=".94"') + linhas(x + 15, y + 6 + tam2, ls2, tam2),
+                   chegada + 0.15, "a-sobe", 0.35)
+        ys[i % 2] += hh + 12
+    return f'<g class="so-2d">{"".join(out)}</g><g class="so-3d">{notas}</g>{rodape}'
+
+
+def _atlas_dados(c: Ctx) -> dict:
+    """Os mesmos tempos do desenho plano: o cursor chega a cada marco quando a nota dele abre."""
+    marcos, _, pts, comp, total, _, t_ini, t_fim = _atlas_rota(c)
+    lado = [(1 if i % 2 else -1) for i in range(len(marcos))]  # o marco fica acima ou abaixo da linha, como no plano
+    return {"marcos": len(marcos), "chegadas": [round(t_ini + (t_fim - t_ini) * k / total, 3) for k in comp], "lados": lado,
+            "t_ini": round(t_ini, 3), "t_fim": round(t_fim, 3)}
 
 
 # ---- 19 · Gesto de papel -----------------------------------------------------------------------------------------
@@ -281,11 +309,14 @@ def _tinta(c: Ctx) -> str:
 
 _LAMINA = "@keyframes a-lamina { 0% { opacity: 1; transform: translateX(0); } 95% { opacity: 1; } 100% { opacity: 0; transform: translateX(var(--x)); } }"
 
+
+_CSS_SO3D = ".so-3d { display: none; } body.tres-d .so-3d { display: inline; }\n"
+
 DIRECOES = {
     "acervo-natural": SimpleNamespace(cena=_acervo, fundo=lambda c: _papel(c, 0.03), css=""),
     "mapa-de-ideias": SimpleNamespace(cena=_mapa, fundo=lambda c: retangulo(0, 0, c.W, c.H, "var(--fundo)"), css=""),
     "painel-de-variacoes": SimpleNamespace(cena=_painel, fundo=lambda c: retangulo(0, 0, c.W, c.H, "var(--fundo)"), css=""),
-    "atlas-de-percursos": SimpleNamespace(cena=_atlas, fundo=_atlas_fundo, css=""),
+    "atlas-de-percursos": Direcao3D(_atlas, _atlas_fundo, _CSS_SO3D, {"perspectiva": 34, "semChao": True}, _atlas_dados),
     "gesto-de-papel": SimpleNamespace(cena=_gesto, fundo=lambda c: _papel(c, 0.05, 0.5), css=""),
     "tinta-em-etapas": SimpleNamespace(cena=_tinta, fundo=lambda c: _papel(c, 0.05), css=_LAMINA),
 }

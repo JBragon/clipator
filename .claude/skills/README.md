@@ -14,6 +14,7 @@ As pastas de terceiros vieram de projetos abertos, copiadas sem alterações (s�
 | `property-based-testing` | Testes com Hypothesis para cortes, legendas e parsers | trailofbits/skills |
 | `supply-chain-risk-auditor` | Auditar as dependências npm e PyPI | trailofbits/skills |
 | `mcp-builder` | Evoluir o servidor MCP local do motor | anthropics/skills |
+| `threejs-*` (13 skills) | API atual do three.js (r186) para as cenas 3D das artes, curtas, maquete e mapas. No Clipator o render é por quadro buscado pelo HyperFrames: nada de `Timer`, `Clock` ou `setAnimationLoop`; cada quadro sai de `t` (ou de `AnimationMixer.setTime(t)`), sem Math.random | CloudAI-X/threejs-skills |
 | `webapp-testing` | Testar a interface com Playwright | anthropics/skills |
 | `clipator-artes` e `clipator-arte-*` | Autoria das direções de arte: o método geral e uma skill para cada uma de 22 das 28 direções (`docs/artes.md`) | escritas para o Clipator, AGPL-3.0-or-later |
 

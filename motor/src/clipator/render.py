@@ -273,7 +273,8 @@ def _camada_referencias(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Time
         if not refs:
             return None
         pasta_r = pasta / "referencias-camada"
-        jan = referencias.preparar(referencias.janelas(refs, tl.duracao), pasta, pasta_r)
+        titulo_ate = min(estilo.cartela.duracao, tl.duracao) if clip.cartela and clip.titulo else 0.0
+        jan = referencias.preparar(referencias.janelas(refs, tl.duracao, titulo_ate), pasta, pasta_r)
         visual = referencias.visual_do_estilo(estilo, clip.estilo or "")
         fonte = estilo.legenda.fonte
         _, p_fonte = hyperframes._fonte_css(fonte, [projeto.canal.path / "assets" / "fontes"])
@@ -390,39 +391,18 @@ def _preparar_direcao(projeto: ProjetoWS, clip: Clip, estilo: Estilo, tl: Timeli
             doc = doc.model_copy(update={"itens": doc.itens + novos, "cenas_planejadas": True})
             doc = _edicao.salvar(pasta, doc, tl.duracao)
             cenas = [i for i in doc.itens if i.tipo == "cena"]
-    if arte and not cenas and not doc.cenas_planejadas and edicao_doc is None:  # sem IA: uma cena por frase, só com o que foi dito
-        novos = [_edicao.Item(tipo="cena", origem="heuristica", **c)
-                 for c in artes.planejar_regras(arte, pals_clip, tl.duracao, artes.assinatura_timeline(tl), da.parametros)]
-        if arte_estilo is not None and novos:  # o ritmo é da direção de arte; a cena fica no ar até a próxima
-            from .arte.guia import filtrar_cenas
+    if not cenas and not doc.cenas_planejadas and edicao_doc is None:  # toda animação nasce da direção de vídeo da IA
+        from .melhorar import MSG_SEM_IA, SemIA
 
-            novos, fora = filtrar_cenas(novos, arte_estilo, tl.duracao)
-            novos = artes.encostar(novos, tl.duracao)
-            if fora:
-                rel.passo(f"direção de arte “{arte_estilo.da.nome}”: {len(fora)} cena(s) fora — " + "; ".join(fora[:4]))
-        rel.passo(f"{len(novos)} cena(s) tiradas das frases da fala")
-        doc = doc.model_copy(update={"itens": doc.itens + novos, "cenas_planejadas": True})
-        doc = _edicao.salvar(pasta, doc, tl.duracao)
-        cenas = [i for i in doc.itens if i.tipo == "cena"]
+        if ad is None:
+            raise SemIA(f"O estilo “{estilo.nome}” é animado e as animações usam IA. {MSG_SEM_IA}")
+        raise ValueError("A IA não montou a direção de vídeo deste corte (nenhuma cena presa à fala). "
+                         "Tente “Refazer a direção” ou escolha um estilo sem animação.")
     if arte and cenas:  # o corte mudou: as cenas voltam a seguir a âncora, e o trecho removido sai com aviso
         cenas, avs, mudou = artes.reancorar(cenas, pals_clip, tl.duracao, artes.assinatura_timeline(tl))
         avisos_arte += avs
         if mudou and edicao_doc is None:
             doc = _edicao.salvar(pasta, doc.model_copy(update={"itens": [i for i in doc.itens if i.tipo != "cena"] + cenas}), tl.duracao)
-    if not arte and not cenas and not doc.cenas_planejadas and edicao_doc is None:
-        planejadas = direcao.planejar_regras(pals_clip, tl.duracao, clip.titulo, da.densidade)
-        rel.passo(f"{len(planejadas)} cena(s) pelas regras (números, listas, nomes e citações da fala)")
-        if arte_estilo is not None and planejadas:  # confere as cenas contra a DA do estilo
-            from .arte.guia import filtrar_cenas
-
-            planejadas, fora = filtrar_cenas(planejadas, arte_estilo, tl.duracao)
-            if fora:
-                rel.passo(f"direção de arte “{arte_estilo.da.nome}”: {len(fora)} cena(s) fora — " + "; ".join(fora[:4]))
-        novos = [_edicao.Item(tipo="cena", inicio=c.inicio, fim=c.fim, params=c.params, origem="heuristica", motivo=c.motivo)
-                 for c in planejadas]
-        doc = doc.model_copy(update={"itens": doc.itens + novos, "cenas_planejadas": True})
-        doc = _edicao.salvar(pasta, doc, tl.duracao)
-        cenas = [i for i in doc.itens if i.tipo == "cena"]
     lista = [{"inicio": c.inicio, "fim": c.fim, "params": c.params} for c in cenas]
     if arte and any(c.params.get("cores") for c in cenas):  # as cores do painel moram na cena (e voltam com a versão)
         cores_cena = next(c.params["cores"] for c in cenas if c.params.get("cores"))
@@ -675,10 +655,6 @@ def renderizar_clip(
     if estilo.direcao.modo == "arte" and da_canal is not None:  # o volume dos efeitos também é da DA
         estilo = estilo.model_copy(update={"volume_sons": da_canal.da.som.volume_efeitos})
     ad = None
-    if estilo.direcao.modo == "arte" and not preview:  # a IA melhora o plano, mas o estilo funciona sem ela
-        from .melhorar import ia_do_workspace
-
-        ad = ia_do_workspace(projeto.ws)
     if estilo.requer_ia:
         from .melhorar import MSG_SEM_IA, SemIA, ia_do_workspace
 

@@ -125,7 +125,7 @@ def test_cinco_estilos_com_nomes_e_presets(ws):
     assert set(SLUGS) == set(nomes)
     for s, n in nomes.items():
         est = ws.carregar_estilo(f"arte-{s}")[0]
-        assert est.nome == n and est.direcao.arte == s and est.direcao.janela_canto == "inferior-direito" and est.direcao.proporcao == 0.5 and not est.requer_ia
+        assert est.nome == n and est.direcao.arte == s and est.direcao.janela_canto == "inferior-direito" and est.direcao.proporcao == 0.5 and est.requer_ia
 
 
 def test_motor_e_deterministico_e_nao_depende_de_fora():

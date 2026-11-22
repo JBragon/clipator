@@ -25,6 +25,14 @@ def test_janelas_seguram_o_cartao_e_o_proximo_nome_encurta_o_anterior():
     assert [(x["t0"], x["t1"]) for x in j] == [(0.85, 2.25), (2.35, 3.55), (3.65, 3.65 + rf.REFERENCIA)]  # o terceiro espera o segundo
 
 
+def test_cartao_espera_a_cartela_de_titulo_sair():
+    # react real: Tabata dita em 1.36 s e Janones em 4.54 s com o título no ar até 3 s; o cartão cobria o título
+    j = rf.janelas([{"t": 1.36}, {"t": 4.54}, {"t": 0.5}], 20, livre_desde=3.0)
+    assert [(x["t"], x["t0"]) for x in j] == [(0.5, 3.1), (1.36, 4.4), (4.54, 5.7)]  # na fila, depois do título
+    assert rf.janelas([{"t": 0.5}], 20, livre_desde=6.0) == []  # o nome passou faz tempo demais: fica de fora
+    assert rf.janelas([{"t": 1.36}], 20)[0]["t0"] == 1.21  # sem cartela, entra no nome
+
+
 def test_visual_combina_com_o_estilo_e_o_cartao_fica_no_painel_ou_longe_da_legenda():
     sem = SimpleNamespace(ativa=False, layout="", arte=None, ficha=None)
     assert rf.visual_do_estilo(SimpleNamespace(direcao=sem), "dossie-investigativo") == "dossie"

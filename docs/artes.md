@@ -1,6 +1,6 @@
 # Direções de arte
 
-São 28 estilos com renderizador próprio (`dados/estilos/arte-<id>.md`, `direcao: {modo: arte, arte: <id>}`). Cada cena ilustra uma frase da fala e o vídeo original continua embaixo, no layout `em-cima`. Funcionam sem IA e sem rede depois que o HyperFrames está instalado.
+São 28 estilos com renderizador próprio (`dados/estilos/arte-<id>.md`, `direcao: {modo: arte, arte: <id>}`). Cada cena ilustra uma frase da fala e o vídeo original continua embaixo, no layout `em-cima`. Exigem a IA integrada: antes das cenas, a IA escreve e o motor confere a direção de vídeo do clip (`direcao_video.py`: história, elenco fixo, cenários, posições, câmera e continuidade, com uma rodada de correção). O render continua local e sem rede depois que o HyperFrames está instalado. O planejador por frases (`planejar_regras`) ficou só para as amostras da galeria e as demos.
 
 ## Como funciona
 
@@ -78,7 +78,7 @@ Na galeria são cinco recortes da mesma direção, cada um com sua amostra: `art
 
 **Pendências.** Lugar ambíguo, ausente ou cidade não desenha nada: vira aviso no render e no painel, onde o usuário escolhe entre as opções daquela pendência.
 
-**Mapa.** Canvas 2D em `geo.js`, função do tempo, sem rede. O lugar acende na palavra (depois dos cortes internos) e apaga na próxima cena com lugar. A câmera enquadra no `foco` do layout com um fator só para os dois eixos, e os rótulos ficam dentro dele. Anéis em longitude contínua, com cópia a ±360°, cuidam do antimeridiano; destaque de continente é a interseção com a terra. Projeção equiretangular ou Mercator, dita na tela. `leve` corta a câmera em vez de voar.
+**Mapa.** Em 3D por padrão (`geo3d.js`, three.js): a terra é uma maquete com luz do sol, o lugar citado sobe do chão (bloco extrudado) e projeta sombra, e a câmera inclinada voa de um lugar ao outro, subindo no meio do caminho. Sem three.js, sem WebGL ou com `leve`, o `geo.js` desenha o mesmo mapa em canvas 2D (e `leve` corta a câmera em vez de voar). Os dois são função do tempo e sem rede. O lugar acende na palavra (depois dos cortes internos) e apaga na próxima cena com lugar. A câmera enquadra no `foco` do layout com um fator só para os dois eixos (no 3D, `setViewOffset` põe o ponto olhado no centro do foco), e os rótulos ficam dentro dele. Anéis em longitude contínua, com cópia a ±360°, cuidam do antimeridiano; destaque de continente é a interseção com a terra no 2D e, no 3D, os países cujo miolo fica dentro do continente. Projeção equiretangular ou Mercator, dita na tela. Custo medido sem placa de vídeo: a prévia em meia resolução leva cerca de 3 vezes o tempo do mapa 2D.
 
 ## Composição
 
@@ -102,4 +102,8 @@ python -m clipator.ferramentas.gerar_demos_cortes <pasta> --quadros --videos --s
 pytest -q tests/test_curta.py                                         # modo curta e pesquisa (rede simulada)
 ```
 
-Mudou o desenho de uma direção: suba `VERSAO_RENDERER` em `artes/__init__.py` e gere as amostras de novo. Nas cinco guiadas pela fala, o hash da amostra já inclui o `motor.js` e o léxico: basta gerar de novo. No Geo em Cena, inclui o `geo.js` e os hashes da base.
+Mudou o desenho de uma direção: suba `VERSAO_RENDERER` em `artes/__init__.py` e gere as amostras de novo. Nas cinco guiadas pela fala, o hash da amostra já inclui o `motor.js` e o léxico: basta gerar de novo. No Geo em Cena, inclui o `geo.js`, o `geo3d.js` e os hashes da base.
+
+## Atlas de percursos em 3D
+
+Com three.js, o atlas vira um mapa de mesa (`atlas-de-percursos` no `tres.JS`): terreno em relevo com água nos vales (ruído de senos pela semente da cena, sem `Math.random`), a rota em tubo que se desenha pelo comprimento, o cursor que chega a cada marco no mesmo segundo em que a nota dele abre e a câmera que acompanha o cursor. As notas numeradas ficam em SVG na lateral (`.so-3d`), e o desenho plano continua como alternativa leve (`.so-2d`). Os tempos saem de `_atlas_rota`, o mesmo cálculo do SVG.

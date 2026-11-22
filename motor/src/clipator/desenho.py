@@ -360,6 +360,28 @@ def composicao_padrao(cena: dict) -> list[dict]:
     return [x for x in (normalizar_camada(c) for c in out) if x]
 
 
+def _descricao_estilo(est: Any, modo: str, ficha_nome: str) -> str:
+    """O que o estilo sabe desenhar, para a direção de vídeo escrever um filme que ele consegue mostrar."""
+    from .artes import cortes as _cortes
+
+    if modo == "desenho":
+        pecas = ", ".join(PECAS)
+        return (f"{est.nome}: desenho animado em traço simples sobre o vídeo (explicador com bonequinhos, objetos, dados grandes, "
+                f"check e X, balanças, gráficos simples). Ficha '{ficha_nome}'. {DICAS_FICHA.get(ficha_nome, '')} "
+                f"Peças que existem: {pecas}. Personagens viram bonecos de traço; a posição vale no palco.")
+    if modo == "arte":
+        from . import artes
+
+        slug = est.direcao.arte or ""
+        curta = (" Curta animado em three.js: cenário 3D, personagens com poses e câmera de cinema."
+                 if slug in _cortes.ACOES else "")
+        return (f"{est.nome} ({artes.especificacao(slug)['nome']}), {LAYOUTS_CENAS.get(est.direcao.layout, LAYOUTS_CENAS['em-cima'])}."
+                f"{curta}\n{artes.texto_runtime(slug)}")
+    return (f"{est.nome}: telas animadas (números, citações, listas, comparações, linha do tempo, mapa, nomes) ligadas ao contexto; "
+            f"{LAYOUTS_CENAS.get(est.direcao.layout, LAYOUTS_CENAS['em-cima'])}. Ficha '{ficha_nome}'. Quando o assunto não tem "
+            "personagens, o elenco pode ficar vazio e os planos descrevem o que a tela mostra.")
+
+
 def _pesquisar(pals: list[dict], pasta: Path, cancelar: Any, passo: Any) -> dict[str, Any]:
     from .artes import pesquisa
 
@@ -376,17 +398,20 @@ def _pesquisar(pals: list[dict], pasta: Path, cancelar: Any, passo: Any) -> dict
 
 
 def _gerar_curta(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, ad: Any, analise: dict, extra: str, cache: Any,
-                 cancelar: Any, ctx: Any, passo: Any, pasta: Path, nome: str, chamar: Any) -> dict[str, Any]:
-    """Estilos que viram curta: pesquisa, depois a IA escreve o roteiro fechado (metáfora, elenco e planos) de uma vez."""
+                 cancelar: Any, ctx: Any, passo: Any, pasta: Path, nome: str, chamar: Any, dv: dict | None = None) -> dict[str, Any]:
+    """Estilos que viram curta: a direção de vídeo já conferida, a pesquisa, e a IA fecha o roteiro do curta seguindo a direção."""
+    from . import direcao_video
     from . import artes
     from .artes import curta, pesquisa
 
     slug = est.direcao.arte or ""
     refs = _pesquisar(pals, pasta, cancelar, passo)
-    passo("etapa 2 de 2: roteiro do curta (metáfora, elenco e planos)")
+    passo("etapa 3 de 3: roteiro do curta (efeitos, objetos e montagem) seguindo a direção")
+    extra_dv = (direcao_video.texto(dv) + "\nPlanos da direção (mantenha as mesmas âncoras, cenários, elenco, posições e câmera): "
+                + json.dumps(direcao_video.roteiro(dv), ensure_ascii=False)[:9000]) if dv and dv.get("planos") else ""
     with ctx("escrevendo o roteiro do curta") as ev:
-        r = chamar(ad, curta.prompt_roteiro(slug, pals, tl.duracao, clip.titulo, analise, extra, pesquisa.texto_para_ia(refs)),
-                   curta.schema_roteiro(), cache, cancelar, ev)
+        r = chamar(ad, curta.prompt_roteiro(slug, pals, tl.duracao, clip.titulo, analise, extra_dv + ("\n\n" + extra if extra else ""),
+                                            pesquisa.texto_para_ia(refs)), curta.schema_roteiro(), cache, cancelar, ev)
     planos, resumo = curta.de_roteiro(r, pals, tl.duracao)
     if resumo.get("metafora"):
         passo(f"metáfora: {resumo['metafora']}")
@@ -413,6 +438,8 @@ def _gerar_curta(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, a
     doc = {"versao": 1, "criado": datetime.now().isoformat(timespec="seconds"), "estilo": clip.estilo, "modo": "arte",
            "ficha": est.direcao.ficha, "analise": analise or {}, "roteiro": roteiro, "modelo": nome, "arte": slug,
            "curta": resumo, "cenas": cenas_arte}
+    if dv:
+        doc["direcao_video"] = dv
     cores = (ler(pasta) or {}).get("cores")
     if cores:
         doc["cores"] = cores
@@ -434,10 +461,10 @@ def gerar(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, ad: Any,
           analise_pronta: dict | None = None, novo: bool = False) -> dict[str, Any]:
     """As três etapas (ou só a última, se o roteiro já veio editado). Grava direcao-arte.json e devolve o documento.
 
-    No modo "cenas", se a IA não montar o roteiro o documento volta sem cenas e nada é gravado: quem chamou usa as regras.
+    Se a IA não montar a direção, o documento volta sem cenas e nada é gravado: quem chamou avisa (toda animação usa IA).
     """
     from .ai.adapter import CacheIA, chamar
-    from . import direcao, skills
+    from . import direcao, direcao_video, skills
 
     _, pasta = projeto.clip(clip.id)
     cache = None if novo else CacheIA(projeto.analise_dir / "cache_ia")  # "refazer tudo" pede uma resposta nova
@@ -460,8 +487,9 @@ def gerar(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, ad: Any,
             extra = texto_para_ia(arte_estilo) + ("\n\n" + extra if extra else "")
     except Exception:  # noqa: BLE001 - DA com erro não impede a pré-produção
         pass
+    dv: dict[str, Any] | None = None
     if roteiro_editado is None:
-        passo(f"etapa 1 de {2 if eh_curta else 3}: análise do corte ({len(pals)} palavras, {tl.duracao:.0f} s)")
+        passo(f"etapa 1 de 3: análise do corte ({len(pals)} palavras, {tl.duracao:.0f} s)")
         forma = "um desenho animado" if modo == "desenho" else "uma animação"
         with ctx("analisando o corte") as ev:
             r1 = chamar(ad, prompt_analise(pals, tl.duracao, clip.titulo, extra, forma), SCHEMA_ANALISE, cache, cancelar, ev)
@@ -469,20 +497,14 @@ def gerar(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, ad: Any,
             {k: _txt(i.get(k), 200) for k in ("ancora", "tipo", "resumo", "dado")} for i in ((r1 or {}).get("ideias") or [])[:20]
             if isinstance(i, dict)]}
         passo(f"tema: {analise['tema'] or '—'}; {len(analise['ideias'])} ideia(s) para ilustrar")
+        # etapa 2: a direção de vídeo (história, elenco, cenários, posições, câmera), conferida e corrigida
+        passo("etapa 2 de 3: direção de vídeo (história, elenco, cenários, posições e câmera)")
+        dv = direcao_video.dirigir(ad, pals, tl.duracao, clip.titulo, analise, _descricao_estilo(est, modo, ficha_nome), chamar,
+                                   cache, cancelar, ctx, passo, "2 a 5" if modo == "desenho" or eh_curta else "3 a 6", extra)
         if eh_curta:
-            return _gerar_curta(projeto, clip, tl, pals, est, ad, analise, extra, cache, cancelar, ctx, passo, pasta, nome, chamar)
-        passo(f"etapa 2 de 3: roteiro {'do desenho' if modo == 'desenho' else 'da animação'}")
-        p2 = (prompt_roteiro(analise, pals, tl.duracao, ficha_nome) if modo == "desenho"
-              else prompt_roteiro_cenas(analise, pals, tl.duracao, est.direcao.layout, ficha_nome))
-        if modo == "arte":  # só a ficha da direção escolhida entra no pedido
-            from . import artes
-
-            p2 += "\n\nDireção visual escolhida:\n" + artes.texto_runtime(est.direcao.arte or "")
-        with ctx("escrevendo o roteiro") as ev:
-            r2 = chamar(ad, p2, SCHEMA_ROTEIRO, cache, cancelar, ev)
-        roteiro = _ancorar_cenas(r2, pals, tl.duracao)
-        propostas = len((r2 or {}).get("cenas") or []) if isinstance(r2, dict) else 0
-        passo(f"roteiro: {len(roteiro)} de {propostas} cena(s) presas à fala")
+            return _gerar_curta(projeto, clip, tl, pals, est, ad, analise, extra, cache, cancelar, ctx, passo, pasta, nome, chamar, dv)
+        roteiro = direcao_video.roteiro(dv)
+        passo(f"roteiro: {len(roteiro)} cena(s) da direção, presas à fala")
         for c in roteiro[:12]:
             passo(f"{c['inicio']:.1f}–{c['fim']:.1f} s · {c['etiqueta'] or '—'}: {c['descricao']}")
     else:
@@ -490,6 +512,11 @@ def gerar(projeto: Any, clip: Any, tl: Any, pals: list[dict], est: Any, ad: Any,
         passo(f"usando o roteiro editado ({len(roteiro)} cena(s))")
     base = {"versao": 1, "criado": datetime.now().isoformat(timespec="seconds"), "estilo": clip.estilo, "modo": modo,
             "ficha": ficha_nome, "analise": analise or {}, "roteiro": roteiro, "modelo": nome}
+    if dv is None and roteiro_editado is not None:  # roteiro editado: a direção de antes continua valendo (história e elenco)
+        dv = (ler(pasta) or {}).get("direcao_video")
+    if dv:
+        base["direcao_video"] = dv
+        extra = direcao_video.texto(dv) + ("\n\n" + extra if extra else "")
     cores = (ler(pasta) or {}).get("cores")  # as cores ajustadas no painel continuam valendo
     if cores:
         base["cores"] = cores
@@ -814,7 +841,7 @@ def refazer(projeto: Any, clip_id: str, roteiro: Any = None, cores: Any = None, 
     """"Refazer com esta direção": o desenho (ou as cenas) do clip de novo, numa versão nova da edição.
 
     Com o roteiro editado só a composição roda de novo; `tudo` refaz as três etapas. Nos estilos de cenas, se a IA
-    não montar nenhuma cena, as cenas saem e o próximo render as planeja pelas regras.
+    não montar nenhuma cena, as cenas saem e o próximo render pede a direção de novo à IA.
     """
     from . import edicao, melhorar
     from .timeline import Timeline
@@ -847,7 +874,7 @@ def refazer(projeto: Any, clip_id: str, roteiro: Any = None, cores: Any = None, 
         resumo = ["Cenas refeitas do zero (análise, roteiro e composição)" if not editado
                   else "Cenas recompostas com o roteiro editado", f"{len(novos)} cena(s)"]
         if not novos:
-            resumo = ["A IA não montou as cenas: o próximo render usa as regras"]
+            resumo = ["A IA não montou as cenas: o próximo render pede a direção de novo"]
     edicao.salvar(pasta, doc_ed.model_copy(update={"itens": itens, "cenas_planejadas": bool(novos) or modo == "desenho"}), tl.duracao)
     if cores is not None:
         resumo.append("cores ajustadas")
@@ -879,7 +906,7 @@ def resumo_do_clip(projeto: Any, clip_id: str) -> dict[str, Any]:
     return {"arte": arte, "ativa": da.ativa, "modo": da.modo, "layout": da.layout, "ficha": f.nome, "estilo": est.nome,
             "composicao": {"layout": da.layout, "proporcao": da.proporcao, "janela_canto": da.janela_canto, "janela_escala": da.janela_escala,
                            "janela_encaixe": da.janela_encaixe},
-            "cores": {k: getattr(f, k) for k in CORES_EDITAVEIS}, "analise": doc.get("analise"), "roteiro": doc.get("roteiro"),
+            "cores": {k: getattr(f, k) for k in CORES_EDITAVEIS}, "analise": doc.get("analise"), "direcao_video": doc.get("direcao_video"), "roteiro": doc.get("roteiro"),
             "camadas": doc.get("camadas"), "modelo": doc.get("modelo"), "criado": doc.get("criado"), "cenas": cenas,
             "pecas": sorted({c.get("peca") for cs in doc.get("camadas") or [] for c in cs if c.get("peca")}),
             "nomes_pecas": {k: v[0] for k, v in PECAS.items()}}

@@ -2,7 +2,7 @@
 // nos dois eixos. Cada quadro é função do tempo: nada de relógio ou estado entre quadros, então buscar fora de ordem dá o mesmo
 // quadro. A câmera enquadra dentro do retângulo livre do layout (M.geo.foco) e os rótulos nunca saem dele.
 (function () {
-  const M = window.GEO; if (!M) return;
+  const M = window.GEO; if (!M || window.GEO3D) return; // com three.js e WebGL, quem desenha é o geo3d.js
   const cv = document.getElementById('geo2d'), g = cv.getContext('2d'), P = M.par || {};
   const W = cv.clientWidth, H = cv.clientHeight; cv.width = W; cv.height = H;
   const G = M.geo || { foco: { x: W * 0.05, y: H * 0.08, w: W * 0.9, h: H * 0.84 } };

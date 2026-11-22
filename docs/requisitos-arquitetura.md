@@ -8,7 +8,8 @@ O Clipator é um app local, open-source e gratuito que transforma um vídeo long
 
 - **Local primeiro:** download, transcrição, análise de áudio, detecção de cenas e rostos, corte e renderização rodam na máquina do usuário.
 - **IA só como juiz:** a IA recebe texto já resumido (trechos candidatos da transcrição), nunca o vídeo, e devolve JSON. Isso deixa cada análise em poucos milhares de tokens.
-- **Funciona sem IA:** com a IA desligada, o app ainda sugere cortes pelas heurísticas locais.
+- **Funciona sem IA:** com a IA desligada, o app ainda sugere cortes pelas heurísticas locais, legenda, corta e renderiza os estilos sem animação.
+- **Toda animação usa IA (decidido em 21/11/2026):** os estilos animados (cenas, desenho, artes, curtas, mapas, gráficos e o iceberg) nascem da direção de vídeo da IA (`direcao_video.py`). Sem IA, eles ficam bloqueados na galeria e o render recusa; nenhum planejador por regras gera animação.
 - **Tudo é arquivo:** projetos, regras de estilo e resultados vivem em pastas e arquivos legíveis (.md, .json, .ass), versionáveis com git.
 - **Humano no meio:** o usuário sempre aprova os cortes antes da renderização.
 
@@ -517,7 +518,7 @@ Os quatro workers são independentes e retomáveis: se a transcrição já exist
 **Requisitos não funcionais**
 
 - Gratuito e open-source, sem conta nem servidor do Clipator.
-- Funciona sem IA e offline depois do download do vídeo.
+- Funciona sem IA e offline depois do download do vídeo, exceto os estilos animados, que exigem a IA integrada (o render continua local).
 - Roda em CPU; GPU NVIDIA ou Apple Silicon só acelera.
 - Nenhum vídeo ou áudio sai da máquina; a IA só recebe texto e, na criação de estilo, alguns quadros em baixa resolução.
 - Resultado reproduzível: mesmo vídeo + mesmos .md = mesmo clip.
